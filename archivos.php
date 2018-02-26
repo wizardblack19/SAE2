@@ -65,16 +65,16 @@ ob_start();
 					</div>
 
 					<div class="panel-body">
-						<p class="content-group">Example of <code>bordered framed</code> table inside panel body. By default bordered table also doesn't have a border, to use border around the bordered table add <code>.table-framed</code> to the <code>&lt;table></code>.</p>
+						<p class="content-group">Edite, actualice o elimine sus archivos.</p>
 
 						<div class="table-responsive">
 							<table class="table table-bordered table-framed">
 								<thead>
 									<tr>
-										<th>#</th>
-										<th>First Name</th>
+										<th width="5%">#</th>
+										<th>Título de Archivo</th>
 										<th>Last Name</th>
-										<th>Username</th>
+										<th>Opciones</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -84,24 +84,7 @@ ob_start();
 										<td>Kopyov</td>
 										<td>@Kopyov</td>
 									</tr>
-									<tr>
-										<td>2</td>
-										<td>Victoria</td>
-										<td>Baker</td>
-										<td>@Vicky</td>
-									</tr>
-									<tr>
-										<td>3</td>
-										<td>James</td>
-										<td>Alexander</td>
-										<td>@Alex</td>
-									</tr>
-									<tr>
-										<td>4</td>
-										<td>Franklin</td>
-										<td>Morrison</td>
-										<td>@Frank</td>
-									</tr>
+
 								</tbody>
 							</table>
 						</div>
