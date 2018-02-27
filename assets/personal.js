@@ -74,4 +74,8 @@ $(function() {
                 $(".msg").html('<b>Debe seleccionar unidad a trabajar</b>');
             }
         }
+        var perfil = JSON.parse(Cookies.get('perfil'));
+
+        $("#codigo").attr("code",perfil.codigo);
+        
 });

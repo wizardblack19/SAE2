@@ -59,7 +59,7 @@ ob_start();
 						<div class="heading-elements">
 							<ul class="icons-list">
 		                		<li><a data-action="collapse"></a></li>
-		                		<li><a source="list_archivos" data-action="reload"></a></li>
+		                		<li><a codigo="<?php echo $perfil['codigo'];?>" source="list_archivos" data-action="reload"></a></li>
 		                	</ul>
 	                	</div>
 					</div>

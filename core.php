@@ -7,7 +7,7 @@ include("funciones.php");
 	}else{
 		$proceso = "";
 	}
-
+    $data = array();
 	//Procesos
 	if($proceso == "upload_file"){
 		if (!empty($_FILES)) {
@@ -126,7 +126,7 @@ exit;
 
 
 	}elseif ($proceso == "login") {
-		$data = array();
+
 		if(isset($_POST['codigo']) && isset($_POST['pass'])){
 			conectar();
         if($datos = db("select codigo,pass,tipo FROM user WHERE codigo = '".$_POST['codigo']."' and pass = '".$_POST['pass']."' LIMIT 0, 1",$mysqli)){
@@ -153,10 +153,31 @@ exit;
     salir();
   }
 
-elseif ($proceso == "data") {
-  
+elseif ($proceso == "verarchivos") {
+  $codigo = $_POST['codigo'];
+  $tabla = "";
+  conectar();
+  $archivos = db("select * FROM archivos where codocente = '".$codigo."' ",$mysqli);
+  $n = 0;
+  foreach ($archivos as $archivo) {
+    $n++;
+    $tabla .= '<tr>
+                    <td>{$n}</td>
+                    <td>Eugene</td>
+                    <td>Kopyov</td>
+                    <td>@Kopyov</td>
+                  </tr>';
+  }
+
+    if($n == 0){
+      $tabla = '<tr><td colspan="3">No se encontro ningun archivo.</td></tr>';
+    }
+
+  $data['html'] = $tabla;
+  $data['no'] = $n;
 
 
-
-
+      print json_encode($data);
+  cerrar_conex();
+exit;
 }

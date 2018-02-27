@@ -125,7 +125,11 @@ $(function() {
     // Panels
     $('.panel [data-action=reload]').click(function (e) {
         e.preventDefault();
+
+        var perfil = JSON.parse(Cookies.get('perfil'));
+        
         var action = $(this).attr('source');
+        var codigo = $(this).attr('codigo');
         var block = $(this).parent().parent().parent().parent().parent();
         $(block).block({ 
             message: '<i class="icon-spinner2 spinner"></i>',
@@ -148,7 +152,16 @@ $(function() {
                $(block).unblock();
             }, 2000);
         }else{
-            swal('vamos bien'+action);
+            
+
+            $.post( "core.php?l=verarchivos", { codigo: perfil.codigo }, function( data ) {
+              $(block).unblock();
+
+              swal('vamos bien'+action);
+            }, "json");
+
+
+            
         }
         
 
