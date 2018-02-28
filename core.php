@@ -169,9 +169,9 @@ elseif ($proceso == "verarchivos") {
                   </tr>';
   }
 
-    if($n == 0){
-      $tabla = '<tr><td colspan="3">No se encontro ningun archivo.</td></tr>';
-    }
+  if($n == 0){
+    $tabla = '<tr><td colspan="4">No se encontro ningun archivo.</td></tr>';
+  }
 
   $data['html'] = $tabla;
   $data['no'] = $n;
@@ -180,4 +180,31 @@ elseif ($proceso == "verarchivos") {
       print json_encode($data);
   cerrar_conex();
 exit;
+}
+
+elseif ($proceso == "borrar_archivo") {
+
+    conectar();
+      $archivo = db("select archivo FROM archivos where idfile = '".$_POST['id']."' WHERE LIMIT 0,1" ,$mysqli);
+  if (unlink($archivo['archivo'])){
+
+     $sql = 'DELETE FROM archivos WHERE idfile = '.$_POST['id'];
+     if (mysqli_query($mysqli, $sql)) {
+        echo "Record deleted successfully";
+     } else {
+        echo "Error deleting record: " . mysqli_error($conn);
+     }
+    cerrar_conex();
+  }
+
+
+
+
+
+      
+  print json_encode($data);
+
+
+ 
+
 }

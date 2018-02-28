@@ -125,12 +125,47 @@ $(function() {
     // Panels
     $('.panel [data-action=reload]').click(function (e) {
         e.preventDefault();
-
         var perfil = JSON.parse(Cookies.get('perfil'));
-        
         var action = $(this).attr('source');
-        var codigo = $(this).attr('codigo');
         var block = $(this).parent().parent().parent().parent().parent();
+        post_data(codigo,action,block);
+    });
+
+    $('.borrar').click(function( event ){
+        event.preventDefault();
+
+        var perfil  = JSON.parse(Cookies.get('perfil'));
+        var action  = $(this).attr('source');
+        var id      = $(this).attr('idb');
+        var block   = '#archivos';
+
+        if(action == 'del_file'){
+            $.post( "core.php?l=borrar_archivo", { id: id }, function( data ) {  
+                $("#resultado1").html(data.html);
+                window.setTimeout(function () {
+                   $(block).unblock();
+                }, 500);
+           }, "json");
+
+
+
+            swal(block);
+        }
+
+        post_data(perfil.codigo,action,block);
+
+        //swal(tipo+block);
+        
+    });
+
+
+
+
+
+
+
+
+    function post_data(codigo, action, block){
         $(block).block({ 
             message: '<i class="icon-spinner2 spinner"></i>',
             overlayCSS: {
@@ -147,33 +182,19 @@ $(function() {
         });
 
         if(action === undefined){
-            // For demo purposes
             window.setTimeout(function () {
                $(block).unblock();
             }, 2000);
         }else{
-            
-
-            $.post( "core.php?l=verarchivos", { codigo: perfil.codigo }, function( data ) {
-              $(block).unblock();
-
-              swal('vamos bien'+action);
-            }, "json");
-
-
-            
+            $.post( "core.php?l=verarchivos", { codigo: perfil.codigo, action:action }, function( data ) {  
+                $("#resultado1").html(data.html);
+                window.setTimeout(function () {
+                   $(block).unblock();
+                }, 500);
+           }, "json");
         }
-        
 
-
-
-
-
-
-
-
-    });
-
+    }
 
     // Sidebar categories
     $('.category-title [data-action=reload]').click(function (e) {
@@ -239,10 +260,8 @@ $(function() {
     // Hide if collapsed by default
     $('.category-collapsed').children('.category-content').hide();
 
-
     // Rotate icon if collapsed by default
     $('.category-collapsed').find('[data-action=collapse]').addClass('rotate-180');
-
 
     // Collapse on click
     $('.category-title [data-action=collapse]').click(function (e) {
@@ -256,7 +275,6 @@ $(function() {
         $categoryCollapse.slideToggle(150);
     });
 
-
     //
     // Panels
     //
@@ -264,10 +282,8 @@ $(function() {
     // Hide if collapsed by default
     $('.panel-collapsed').children('.panel-heading').nextAll().hide();
 
-
     // Rotate icon if collapsed by default
     $('.panel-collapsed').find('[data-action=collapse]').addClass('rotate-180');
-
 
     // Collapse on click
     $('.panel [data-action=collapse]').click(function (e) {
@@ -280,8 +296,6 @@ $(function() {
 
         $panelCollapse.slideToggle(150);
     });
-
-
 
     // Remove elements
     // -------------------------
@@ -297,7 +311,6 @@ $(function() {
             $(this).remove();
         });
     });
-
 
     // Sidebar categories
     $('.category-title [data-action=close]').click(function (e) {
@@ -347,8 +360,6 @@ $(function() {
         container: 'body'
     });
 
-
-
     // Collapsible functionality
     // -------------------------
 
@@ -364,8 +375,7 @@ $(function() {
             $(this).parent('li').not('.disabled').not($('.sidebar-xs').not('.sidebar-xs-indicator').find('.navigation-main').children('li')).siblings(':has(.has-ul)').removeClass('active').children('ul').slideUp(250);
         }
     });
-
-        
+ 
     // Alternate navigation
     $('.navigation-alt').find('li').has('ul').children('a').on('click', function (e) {
         e.preventDefault();
@@ -378,7 +388,6 @@ $(function() {
             $(this).parent('li').not('.disabled').siblings(':has(.has-ul)').removeClass('active').children('ul').slideUp(200);
         }
     }); 
-
 
 
 
@@ -400,8 +409,6 @@ $(function() {
         $('body').toggleClass('sidebar-xs');
     });
 
-
-
     // Sidebar controls
     // -------------------------
 
@@ -410,12 +417,10 @@ $(function() {
         e.preventDefault();
     });
 
-
     // Adjust page height on sidebar control button click
     $(document).on('click', '.sidebar-control', function (e) {
         containerHeight();
     });
-
 
     // Hide main sidebar in Dual Sidebar
     $(document).on('click', '.sidebar-main-hide', function (e) {
@@ -423,13 +428,11 @@ $(function() {
         $('body').toggleClass('sidebar-main-hidden');
     });
 
-
     // Toggle second sidebar in Dual Sidebar
     $(document).on('click', '.sidebar-secondary-hide', function (e) {
         e.preventDefault();
         $('body').toggleClass('sidebar-secondary-hidden');
     });
-
 
     // Hide all sidebars
     $(document).on('click', '.sidebar-all-hide', function (e) {
@@ -437,8 +440,6 @@ $(function() {
 
         $('body').toggleClass('sidebar-all-hidden');
     });
-
-
 
     //
     // Opposite sidebar
@@ -467,7 +468,6 @@ $(function() {
         }
     });
 
-
     // Hide main sidebar if opposite sidebar is shown
     $(document).on('click', '.sidebar-opposite-main-hide', function (e) {
         e.preventDefault();
@@ -487,7 +487,6 @@ $(function() {
             $('body').removeClass('sidebar-main-hidden');
         }
     });
-
 
     // Hide secondary sidebar if opposite sidebar is shown
     $(document).on('click', '.sidebar-opposite-secondary-hide', function (e) {
@@ -509,7 +508,6 @@ $(function() {
             $('body').removeClass('sidebar-secondary-hidden');
         }
     });
-
 
     // Hide all sidebars if opposite sidebar is shown
     $(document).on('click', '.sidebar-opposite-hide', function (e) {
@@ -534,7 +532,6 @@ $(function() {
         }
     });
 
-
     // Keep the width of the main sidebar if opposite sidebar is visible
     $(document).on('click', '.sidebar-opposite-fix', function (e) {
         e.preventDefault();
@@ -542,8 +539,6 @@ $(function() {
         // Toggle opposite sidebar visibility
         $('body').toggleClass('sidebar-opposite-visible');
     });
-
-
 
     // Mobile sidebar controls
     // -------------------------
@@ -554,21 +549,17 @@ $(function() {
         $('body').toggleClass('sidebar-mobile-main').removeClass('sidebar-mobile-secondary sidebar-mobile-opposite');
     });
 
-
     // Toggle secondary sidebar
     $('.sidebar-mobile-secondary-toggle').on('click', function (e) {
         e.preventDefault();
         $('body').toggleClass('sidebar-mobile-secondary').removeClass('sidebar-mobile-main sidebar-mobile-opposite');
     });
 
-
     // Toggle opposite sidebar
     $('.sidebar-mobile-opposite-toggle').on('click', function (e) {
         e.preventDefault();
         $('body').toggleClass('sidebar-mobile-opposite').removeClass('sidebar-mobile-main sidebar-mobile-secondary');
     });
-
-
 
     // Mobile sidebar setup
     // -------------------------
@@ -614,23 +605,91 @@ $(function() {
     }).resize();
 
 
+    cargarcookie();
+        $('#ver').click(function(){
+            var pathname = window.location.pathname;
+            alert(window.location);
+        });
+
+        $('.cosa').click(function(){
+            $('.cosa').removeClass( "active" );
+           $(this).addClass( "active" );
+
+        });        
+        
+        $('.unidad').click(function( event ){
+            event.preventDefault();
+            var unidad = $(this).attr('unidad');
+            Cookies.set('UNIDAD', unidad);
+            bimestre();
+        });
+        
+        function bimestre(){
+            if(Cookies.get('UNIDAD')){
+                var unidad = Cookies.get('UNIDAD');
+            }else{
+                var unidad = 0;
+            }
+            if(unidad == 1){
+                $('#verUNIDAD').html(unidad+"ra. Unidad");
+                $('#verUNIDAD1').html(unidad);
+            }else if(unidad == 2){
+                $('#verUNIDAD').html(unidad+"da. Unidad");
+                $('#verUNIDAD1').html(unidad);
+            }else if(unidad == 3){
+                $('#verUNIDAD').html(unidad+"ra. Unidad");
+                $('#verUNIDAD1').html(unidad);
+            }else if(unidad == 4){
+                $('#verUNIDAD').html(unidad+"ta. Unidad");
+                $('#verUNIDAD1').html(unidad);
+            }
+            desbloquea(unidad);
+            swal("Usted seleccionó la unidad numero: "+unidad);
+        }
+
+        function cargarcookie(){
+            if(Cookies.get('UNIDAD')){
+                var unidad = Cookies.get('UNIDAD');
+            }else{
+                var unidad = 0;
+            }
+            if(unidad == 1){
+                $('#verUNIDAD').html(unidad+"ra. Unidad");
+                $('#verUNIDAD1').html(unidad);
+            }else if(unidad == 2){
+                $('#verUNIDAD').html(unidad+"da. Unidad");
+                $('#verUNIDAD1').html(unidad);
+            }else if(unidad == 3){
+                $('#verUNIDAD').html(unidad+"ra. Unidad");
+                $('#verUNIDAD1').html(unidad);
+            }else if(unidad == 4){
+                $('#verUNIDAD').html(unidad+"ta. Unidad");
+                $('#verUNIDAD1').html(unidad);
+            }
+            desbloquea(unidad);
+            return unidad;
+        }
+        
+        function desbloquea(unidad){
+            if(unidad>0){
+                $(".bloqueo").show();
+                $(".msg").html("");
+
+            }else{
+                $(".bloqueo").hide();
+                $(".msg").html('<b>Debe seleccionar unidad a trabajar</b>');
+            }
+        }
+        var perfil = JSON.parse(Cookies.get('perfil'));
+        $("#codigo").attr("code",perfil.codigo);
 
 
-    // ========================================
-    //
-    // Other code
-    //
-    // ========================================
 
 
-    // Plugins
-    // -------------------------
-
-    // Popover
-    $('[data-popup="popover"]').popover();
 
 
-    // Tooltip
-    $('[data-popup="tooltip"]').tooltip();
+
+
+
 
 });

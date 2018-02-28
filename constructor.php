@@ -377,7 +377,6 @@ define('MENU',$menu_s);
 	$head .= '
 			<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 			<script type="text/javascript" src="assets/js.cookie.js"></script>
-			<script type="text/javascript" src="assets/personal.js"></script>
 			';
 
 	if(lugar()=="index" || lugar()==""){
