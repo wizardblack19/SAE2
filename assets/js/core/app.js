@@ -131,9 +131,9 @@ $(function() {
         post_data(codigo,action,block);
     });
 
-    $('.borrar').click(function( event ){
-        event.preventDefault();
 
+    $(document).on('click touchstart', '.borrar', function(event){
+        event.preventDefault();
         var perfil  = JSON.parse(Cookies.get('perfil'));
         var action  = $(this).attr('source');
         var id      = $(this).attr('idb');
@@ -141,27 +141,21 @@ $(function() {
 
         if(action == 'del_file'){
             $.post( "core.php?l=borrar_archivo", { id: id }, function( data ) {  
-                $("#resultado1").html(data.html);
+                post_data(perfil.codigo,action,block); 
                 window.setTimeout(function () {
                    $(block).unblock();
                 }, 500);
            }, "json");
-
-
-
-            swal(block);
         }
-
-        post_data(perfil.codigo,action,block);
-
-        //swal(tipo+block);
-        
     });
 
 
-
-
-
+    $(document).on('click touchstart', '.verDOC', function(event){
+        event.preventDefault();
+        var url = $(this).attr('rel');
+        $('#iframe').attr('src', url);
+        $("#modal_remote").modal();
+    });
 
 
 
@@ -195,6 +189,10 @@ $(function() {
         }
 
     }
+
+
+
+
 
     // Sidebar categories
     $('.category-title [data-action=reload]').click(function (e) {

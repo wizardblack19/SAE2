@@ -354,20 +354,16 @@ $head = '
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta id="codigo" source="SAE2" code="" />
 		<title>SAE - Sistema Administrativo Educativo</title>
-		<!-- Global stylesheets -->
 		<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
 		<link href="assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
 		<link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css">
 		<link href="assets/css/core.css" rel="stylesheet" type="text/css">
 		<link href="assets/css/components.css" rel="stylesheet" type="text/css">
 		<link href="assets/css/colors.css" rel="stylesheet" type="text/css">
-		<!-- /global stylesheets -->
-		<!-- Core JS files -->
 		<script type="text/javascript" src="assets/js/plugins/loaders/pace.min.js"></script>
 		<script type="text/javascript" src="assets/js/core/libraries/jquery.min.js"></script>
 		<script type="text/javascript" src="assets/js/core/libraries/bootstrap.min.js"></script>
 		<script type="text/javascript" src="assets/js/plugins/loaders/blockui.min.js"></script>
-		<!-- /core JS files -->
 		';
 
 
@@ -375,15 +371,13 @@ define('FOOTHER',$foother);
 define('MENU',$menu_s);
 
 	$head .= '
-			<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/notifications/sweet_alert.min.js"></script>
 			<script type="text/javascript" src="assets/js.cookie.js"></script>
 			';
 
 	if(lugar()=="index" || lugar()==""){
 		//js req
 		$head .= '
-			<!-- Theme JS files -->
-
 			<script type="text/javascript" src="assets/js/plugins/visualization/d3/d3.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/visualization/d3/d3_tooltip.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/forms/styling/switchery.min.js"></script>
@@ -395,12 +389,10 @@ define('MENU',$menu_s);
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
 			<script type="text/javascript" src="assets/js/pages/dashboard.js"></script>
 			<script type="text/javascript" src="assets/js/pages/layout_sidebar_sticky_custom.js"></script>
-			<!-- /theme JS files -->
 			</head>';
 			include("dashboard.php");
 	}elseif(lugar()=="newcrono"){
 		$head .= '
-			<!-- Theme JS files -->
 			<script type="text/javascript" src="assets/js/plugins/uploaders/dropzone.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/tables/handsontable/handsontable.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/tables/handsontable/languages.js"></script>
@@ -411,19 +403,15 @@ define('MENU',$menu_s);
 			//include("newcrono.php");
 	}elseif(lugar()=="listCrono"){
 		$head .= '
-			<!-- Theme JS files -->
 			<script type="text/javascript" src="assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
-			<!-- /theme JS files -->
 			</head>
 			';
 	}elseif(lugar()=="archivos"){
 		$head .= '
-			<!-- Theme JS files -->
 			<script type="text/javascript" src="assets/js/plugins/uploaders/dropzone.min.js"></script>
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
 			<script type="text/javascript" src="assets/js/pages/archivos.js"></script>
-			<!-- /theme JS files -->
 			</head>
 			';
 	}

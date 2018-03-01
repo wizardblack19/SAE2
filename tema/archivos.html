@@ -2,7 +2,7 @@
 			<div class="content-wrapper">
 				<div class="panel panel-flat">
 					<div class="panel-heading">
-						<h5 class="panel-title">Manejar Archivos {codigo}</h5>
+						<h5 class="panel-title">Manejar Archivos</h5>
 						<div class="heading-elements">
 							<ul class="icons-list">
 		                		<li><a data-action="collapse"></a></li>
@@ -30,7 +30,7 @@
 									<div class="panel-body">
 										<div class="hot-container">
 											<form action="core.php?l=upload_file" class="dropzone" id="files_multiple">
-												<input type="hidden" name="country" value="Norway" />
+												<input type="hidden" name="codigo" value="{codigo}" />
 											</form>
 										</div>
 									</div>
@@ -52,19 +52,29 @@
 					<div class="panel-body">
 						<p class="content-group">Edite, actualice o elimine sus archivos.</p>
 						<div class="table">
-							<table class="table table-bordered table-framed">
-								<thead>
-									<tr>
-										<th width="5%">#</th>
-										<th>Título de Archivo</th>
-										<th>Enlace a Cursos</th>
-										<th width="10%">Opciones</th>
-									</tr>
-								</thead>
-								<tbody id="resultado1">
-									{tabla}
-								</tbody>
-							</table>
+							<div id="resultado1">{tabla}</div>
+						</div>
+					</div>
+				</div>
+				<div id="modal_remote" class="modal">
+					<div class="modal-dialog modal-full">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h5 class="modal-title">Recurso Externo - API REST Microsoft Viewer and PDF View</h5>
+							</div>
+
+							<div class="modal-body">
+								
+								<div class="embed-container">
+									<iframe scrolling="no" height="520px" width="100%" src="" frameborder="0" id="iframe"></iframe>
+								</div>
+
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar Vista Previa</button>
+							</div>
 						</div>
 					</div>
 				</div>

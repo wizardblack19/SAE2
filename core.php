@@ -11,16 +11,37 @@ include("funciones.php");
 	//Procesos
 	if($proceso == "upload_file"){
 		if (!empty($_FILES)) {
+      $codigo = $_POST['codigo'];
 			if(!is_dir("files/"))
 		    mkdir("files/", 0777);	
 		  	$tempFile = $_FILES['file']['tmp_name']; 
-		  	$targetFile = uniqid().$_FILES['file']['name'];
-		  	$targetFile = 'files/'.basename(urlencode($targetFile));
-		  	move_uploaded_file($tempFile, $targetFile);
-		echo $_POST['country'];
+        $namefile = $_FILES['file']['name']; 
+		  	$targetFile = basename(urlencode(uniqid().$_FILES['file']['name']));
+		  	$saveFile = 'files/'.$targetFile;
+		  	if(move_uploaded_file($tempFile, $saveFile)){
+          conectar();
+            //Guardamos registro en base
+            $idfile = uniqid();
+            $sql = "INSERT into archivos (idfile, nombre, archivo, codocente) VALUES ('$idfile', '$namefile',  '$targetFile', '$codigo')";
+            if(mysqli_query($mysqli, $sql)){
+              echo "Se guardo bien";
+            }else{
+              echo "algo no anda bien ".mysqli_error($mysqli);
+            }
+          cerrar_conex();
+        }else{
+          echo "Error al guardar";
+        }
+
 		}
 		exit;
-	}elseif ($proceso == "SaveIndividualCrono") {
+	}
+
+
+
+
+
+  elseif ($proceso == "SaveIndividualCrono") {
 	  
     $colMap = array(
 	    0 => 'actividad',
@@ -154,30 +175,10 @@ exit;
   }
 
 elseif ($proceso == "verarchivos") {
+  //Cambios de tabla en funcion archivos
   $codigo = $_POST['codigo'];
-  $tabla = "";
-  conectar();
-  $archivos = db("select * FROM archivos where codocente = '".$codigo."' ",$mysqli);
-  $n = 0;
-  foreach ($archivos as $archivo) {
-    $n++;
-    $tabla .= '<tr>
-                    <td>{$n}</td>
-                    <td>Eugene</td>
-                    <td>Kopyov</td>
-                    <td>@Kopyov</td>
-                  </tr>';
-  }
-
-  if($n == 0){
-    $tabla = '<tr><td colspan="4">No se encontro ningun archivo.</td></tr>';
-  }
-
-  $data['html'] = $tabla;
-  $data['no'] = $n;
-
-
-      print json_encode($data);
+    $data['html'] = tabla_archivos($codigo);
+    print json_encode($data);
   cerrar_conex();
 exit;
 }
@@ -185,17 +186,35 @@ exit;
 elseif ($proceso == "borrar_archivo") {
 
     conectar();
-      $archivo = db("select archivo FROM archivos where idfile = '".$_POST['id']."' WHERE LIMIT 0,1" ,$mysqli);
-  if (unlink($archivo['archivo'])){
+    $archivo = db("select archivo FROM archivos where id = '".$_POST['id']."' LIMIT 0,1" ,$mysqli);
+    $nombre_fichero = './files/'.$archivo[0]['archivo'];
 
-     $sql = 'DELETE FROM archivos WHERE idfile = '.$_POST['id'];
-     if (mysqli_query($mysqli, $sql)) {
-        echo "Record deleted successfully";
-     } else {
-        echo "Error deleting record: " . mysqli_error($conn);
-     }
-    cerrar_conex();
+  if(file_exists($nombre_fichero)){
+    if (unlink($nombre_fichero)){
+       $sql = 'DELETE FROM archivos WHERE id = '.$_POST['id'];
+       if (mysqli_query($mysqli, $sql)) {
+          $data['msg'] = "Record deleted successfully";
+       } else {
+          $data['msg'] = "Error deleting record: " . mysqli_error($mysqli);
+       }
+      cerrar_conex();
+    }
+
+
+  }else {
+     $data['msg'] = "algo no esta bien el archivo no existe, se borrara registro\n";
+
+       $sql = 'DELETE FROM archivos WHERE id = '.$_POST['id'];
+       if (mysqli_query($mysqli, $sql)) {
+          $data['msg'] .= "Record deleted successfully";
+       } else {
+          $data['msg'] .= "Error deleting record: " . mysqli_error($mysqli);
+       }
+
   }
+
+
+
 
 
 
@@ -206,5 +225,12 @@ elseif ($proceso == "borrar_archivo") {
 
 
  
+exit;
+}
 
+elseif($proceso == "ver_DOC"){
+  $url = $_POST['url'];
+  $data['html'] = verDOC($url);
+  print json_encode($data);
+exit;
 }
