@@ -15,12 +15,11 @@ session_start();
 	<link href="assets/css/core.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/components.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/colors.css" rel="stylesheet" type="text/css">
-	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script type="text/javascript" src="assets/js/plugins/notifications/sweet_alert.min.js"></script>
 	<script type="text/javascript" src="assets/js/plugins/loaders/pace.min.js"></script>
 	<script type="text/javascript" src="assets/js/core/libraries/jquery.min.js"></script>
 	<script type="text/javascript" src="assets/js/core/libraries/bootstrap.min.js"></script>
 	<script type="text/javascript" src="assets/js/plugins/loaders/blockui.min.js"></script>
-	<script type="text/javascript" src="assets/js/core/app.js"></script>
 	<script type="text/javascript" src="assets/js/pages/login.js"></script>
 </head>
 <body class="navbar-bottom login-container">
@@ -35,7 +34,7 @@ session_start();
 	<div class="page-container">
 		<div class="page-content">
 			<div class="content-wrapper">
-				<form action="core.php?l=login" method="POST" autocomplete="off" id="login">
+				<form action="core.php?l=login" method="POST" id="login" autocomplete="off">
 					<div class="panel panel-body login-form">
 						<div class="text-center">
 							<div class="icon-object border-slate-300 text-slate-300"><i class="icon-reading"></i></div>
@@ -74,7 +73,7 @@ session_start();
 			</div>
 			<div class="navbar-right">
 				<ul class="nav navbar-nav">
-					<li><a href="#">Compilación: <?php echo date("F d Y H:i:s.", filectime('login.php'));?></a></li>
+					<li><a href="#">Dev: <?php echo date("F d Y H:i:s.", filectime('login.php'));?></a></li>
 				</ul>
 			</div>
 		</div>
