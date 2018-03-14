@@ -150,7 +150,7 @@ exit;
 
 		if(isset($_POST['codigo']) && isset($_POST['pass'])){
 			conectar();
-        if($datos = db("select codigo,pass,tipo FROM user WHERE codigo = '".$_POST['codigo']."' and pass = '".$_POST['pass']."' LIMIT 0, 1",$mysqli)){
+        if($datos = db("select codigo,pass,tipo FROM user WHERE codigo = '{$_POST['codigo']}' and pass = '".base64_encode($_POST['pass'])."' LIMIT 0, 1",$mysqli)){
             session_start();
             $_SESSION['codigo']   =   $_POST['codigo'];
             $_SESSION['tipo']     =   $datos[0]['tipo'];
@@ -176,17 +176,16 @@ exit;
 
 elseif ($proceso == "verarchivos") {
   //Cambios de tabla en funcion archivos
-  $codigo = $_POST['codigo'];
+    $codigo = $_POST['codigo'];
     $data['html'] = tabla_archivos($codigo);
     print json_encode($data);
-  cerrar_conex();
+    cerrar_conex();
 exit;
 }
 
 elseif ($proceso == "borrar_archivo") {
-
     conectar();
-    $archivo = db("select archivo FROM archivos where id = '".$_POST['id']."' LIMIT 0,1" ,$mysqli);
+    $archivo = db("select archivo FROM archivos where id = '{$_POST['id']}' LIMIT 0,1",$mysqli);
     $nombre_fichero = './files/'.$archivo[0]['archivo'];
 
   if(file_exists($nombre_fichero)){
@@ -211,16 +210,7 @@ elseif ($proceso == "borrar_archivo") {
           $data['msg'] .= "Error deleting record: " . mysqli_error($mysqli);
        }
 
-  }
-
-
-
-
-
-
-
-
-      
+  }   
   print json_encode($data);
 
 
@@ -234,3 +224,7 @@ elseif($proceso == "ver_DOC"){
   print json_encode($data);
 exit;
 }
+
+
+
+

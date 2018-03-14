@@ -170,3 +170,24 @@ if($info->getExtension() == "pdf"){
 }
 	echo $result;
 }
+
+
+
+	function vermiscursos($codigo){
+		//Construir tabla con datos de mi asignación
+			$tabla = '
+			<table class="table table-bordered table-framed">
+				<thead>
+					<tr>
+						<th width="5%">#</th>
+						<th></th>
+						<th width="15%"># adjunto</th>
+						<th width="15%">Opciones</th>
+					</tr>
+				</thead>
+				<tbody>';
+
+
+	}
+
+	E28 

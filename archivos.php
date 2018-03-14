@@ -11,22 +11,5 @@ $llave[] = '{codigo}';
 $enlace[] = $perfil['codigo'];
 $llave[] = '{tabla}';
 $enlace[] =tabla_archivos($perfil['codigo']);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $page = str_replace($llave, $enlace, $page);
 echo $page;

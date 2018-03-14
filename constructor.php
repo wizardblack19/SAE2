@@ -398,9 +398,7 @@ define('MENU',$menu_s);
 			<script type="text/javascript" src="assets/js/plugins/tables/handsontable/languages.js"></script>
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
 			<script type="text/javascript" src="assets/js/pages/newcrono.js"></script>
-			</head>
-			';
-			//include("newcrono.php");
+			</head>';
 	}elseif(lugar()=="listCrono"){
 		$head .= '
 			<script type="text/javascript" src="assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
@@ -412,6 +410,13 @@ define('MENU',$menu_s);
 			<script type="text/javascript" src="assets/js/plugins/uploaders/dropzone.min.js"></script>
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
 			<script type="text/javascript" src="assets/js/pages/archivos.js"></script>
+			</head>
+			';
+	}elseif(lugar()=="asignarme"){
+		$head .= '
+			<script type="text/javascript" src="assets/js/plugins/uploaders/dropzone.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/app.js"></script>
+			<script type="text/javascript" src="assets/js/pages/asignarme.js"></script>
 			</head>
 			';
 	}
