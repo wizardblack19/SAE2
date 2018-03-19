@@ -4,9 +4,7 @@ ob_start();
 include("index.php");
 $page = ob_get_contents();
 ob_end_clean();
-
 $perfil['codigo'];
-
 
 
 
