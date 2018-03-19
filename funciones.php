@@ -10,7 +10,6 @@
 		return $nombre_archivo;
 	}
 
-
 	function conectar(){
 	global $mysqli;	
 		define("HOST", "localhost");
@@ -80,7 +79,6 @@
 		$datosGE = array(); 	
 		global $mysqli;
 		    if($codigo && $tipo){
-		    	//conectar();
 		    	$datosGE['hora'] = date('1998');
 		    	if($user = db("select codigo,tipo from user where codigo = '".$codigo."' and tipo = '".$tipo."' limit 0,1 ",$mysqli)){
 		   		 	$datosGE['nombres'] = "Marvin Adolfo";
@@ -89,105 +87,96 @@
 		    		$datosGE['codigo'] = $codigo;
 		    	}
 		    		$perfil = json_encode($datosGE);
-		    		setcookie("perfil", $perfil);		    	
-		    	//cerrar_conex();
+		    		setcookie("perfil", $perfil);
 		    }
 	}
 
-function tabla_archivos($codigo){
-	global $mysqli;
-	conectar();	
-	$tabla = "";
-	$n = 0;
-	//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
-	if($archivos = db("select * from archivos where codocente like '{$codigo}' ", $mysqli)){
-		$enlace = "";
-		$tabla = '
-			<table class="table table-bordered table-framed">
-				<thead>
-					<tr>
-						<th width="5%">#</th>
-						<th>Título de Archivo</th>
-						<th width="15%"># adjunto</th>
-						<th width="15%">Opciones</th>
-					</tr>
-				</thead>
-				<tbody>';
-		foreach ($archivos as $archivo) {
-			$n++;
-			$file = $archivo['archivo'];
-			$info = new SplFileInfo($file);
-			if($info->getExtension() == "pdf"){
-				$enlace = "files/";
-			}else{
-				$enlace = "https://view.officeapps.live.com/op/view.aspx?src=";
-			}
-			$tabla .= "
-			<tr>
-                <td>{$n}</td>
-                <td>{$archivo['nombre']}</td>
-                <td>{conteo}</td>
-                <td>
-					<div class='btn-group'>
-                    	<button type='button' class='btn border-warning text-warning-600 btn-flat btn-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
-	                    	<i class='icon-gear'></i> &nbsp;<span class='caret'></span>
-                    	</button>
-                    	<ul class='dropdown-menu dropdown-menu-right'>
-                    		<li><a class='verDOC' href='#verDOC' rel='{$enlace}{$archivo['archivo']}'><i class='icon-file-eye'></i> Ver</a></li>
-							<li><a href='#'><i class='icon-pencil7'></i> Editar</a></li>
-							<li class='divider'></li>
-							<li><a source='del_file' idb='{$archivo['id']}' class='borrar' href='#borrar'><i class='icon-trash'></i> Borrar</a></li>
-						</ul>
-					</div>
-                </td>
-            </tr>";
-		}
-		$tabla .= '</tbody></table>';
-	}else{
-		$tabla = "<h3>No se encontro archivos con su codigo.</h3>";
+	function ext($ext){
+		$info = new SplFileInfo($ext);
+		$ext = $info->getExtension();
+		return $ext;
 	}
-	return $tabla;
-}
 
+	function microsoft_view($archivo){
+		if( ext($archivo) == "pdf"){
+			$enlace = "files/";
+		}else{
+			$enlace = "https://view.officeapps.live.com/op/view.aspx?src=";
+		}
+		return $enlace.$archivo;
+	}
 
-function verDOC($url){
-$file = $url;
-$info = new SplFileInfo($file);
-if($info->getExtension() == "pdf"){
-	 header('Content-type: application/pdf');
-	 header('Content-Disposition: inline; filename="' . $file. '"');
-	 header('Content-Transfer-Encoding: binary');
-	 header('Accept-Ranges: bytes');
-	 $result = readfile($file);
-}else{
-	$url = "https://view.officeapps.live.com/op/view.aspx?src=".$url;
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	$result = curl_exec($ch);
-	curl_close($ch);
-}
-	echo $result;
-}
+	function tabla_archivos($codigo){
+		global $mysqli;
+		conectar();	
+		$tabla = "";
+		$n = 0;
+		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
+		if($archivos = db("select * from archivos where codocente like '{$codigo}' ", $mysqli)){
+			$enlace = "";
+			$tabla = '
+				<table class="table table-bordered table-framed">
+					<thead>
+						<tr>
+							<th width="5%">#</th>
+							<th>Título de Archivo</th>
+							<th width="15%"># adjunto</th>
+							<th width="15%">Opciones</th>
+						</tr>
+					</thead>
+					<tbody>';
+			foreach ($archivos as $archivo) {
+				$n++;
+				$enlace = microsoft_view($archivo['archivo']);
+				$tabla .= "
+				<tr>
+	                <td>{$n}</td>
+	                <td>{$archivo['nombre']}</td>
+	                <td>{conteo}</td>
+	                <td>
+						<div class='btn-group'>
+	                    	<button type='button' class='btn border-warning text-warning-600 btn-flat btn-icon dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
+		                    	<i class='icon-gear'></i> &nbsp;<span class='caret'></span>
+	                    	</button>
+	                    	<ul class='dropdown-menu dropdown-menu-right'>
+	                    		<li><a class='verDOC' href='#verDOC' rel='{$enlace}'><i class='icon-file-eye'></i> Ver</a></li>
+								<li><a href='#'><i class='icon-pencil7'></i> Editar</a></li>
+								<li class='divider'></li>
+								<li><a source='del_file' idb='{$archivo['id']}' class='borrar' href='#borrar'><i class='icon-trash'></i> Borrar</a></li>
+							</ul>
+						</div>
+	                </td>
+	            </tr>";
+			}
+			$tabla .= '</tbody></table>';
+		}else{
+			$tabla = "<h3>No se encontro archivos con su codigo.</h3>";
+		}
+		return $tabla;
+	}
 
 
 
 	function vermiscursos($codigo){
-		//Construir tabla con datos de mi asignación
-			$tabla = '
-			<table class="table table-bordered table-framed">
-				<thead>
-					<tr>
-						<th width="5%">#</th>
-						<th></th>
-						<th width="15%"># adjunto</th>
-						<th width="15%">Opciones</th>
-					</tr>
-				</thead>
-				<tbody>';
+	//Construir tabla con datos de mi asignación
+		$tabla = '
+		<table class="table table-bordered table-framed">
+			<thead>
+				<tr>
+					<th width="5%">#</th>
+					<th width="10%">Codigo</th>
+					<th>Curso</th>
+					<th>Grado</th>
+					<th>N / C</th>
+					<th>Sección</th>
+					<th width="15%">Opciones</th>
+				</tr>
+			</thead>
+			<tbody>';
 
 
+
+
+
+		$tabla .= '</tbody></table>';
 	}
-
-	E28 
