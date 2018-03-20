@@ -244,7 +244,7 @@ function menu(){
 		<li>
 			<a href="#"><i class="icon-stack2"></i> <span>Mis opciones</span></a>
 			<ul>
-				<li '; if($este_lugar == "asignarme"){$data .= "class='active'";}; $data .= '><a href="asignarme.php">Manejar Cursos</a></li>
+				<li '; if($este_lugar == "miscursos"){$data .= "class='active'";}; $data .= '><a href="miscursos.php">Mis Cursos</a></li>
 				<li '; if($este_lugar == "archivos"){$data .= "class='active'";}; $data .= '><a href="archivos.php">Archivos</a></li>
 				<li class="cosa "><a href="layout_navbar_main_hideable.html">Hideable main navbar</a></li>
 				<li class="cosa "><a href="layout_navbar_secondary_hideable.html">Hideable secondary navbar</a></li>
@@ -412,11 +412,12 @@ define('MENU',$menu_s);
 			<script type="text/javascript" src="assets/js/pages/archivos.js"></script>
 			</head>
 			';
-	}elseif(lugar()=="asignarme"){
+	}elseif(lugar()=="miscursos"){
 		$head .= '
-			<script type="text/javascript" src="assets/js/plugins/uploaders/dropzone.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/datatables.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
-			<script type="text/javascript" src="assets/js/pages/asignarme.js"></script>
+			<script type="text/javascript" src="assets/js/pages/miscursos.js"></script>
 			</head>
 			';
 	}

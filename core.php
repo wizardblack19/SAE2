@@ -146,7 +146,7 @@ exit;
 
 
 
-	}elseif ($proceso == "login") {
+	}elseif ($proceso == "login"){
 
 		if(isset($_POST['codigo']) && isset($_POST['pass'])){
 			conectar();
@@ -169,6 +169,8 @@ exit;
 			$msg = "Ups, estas intentando hacer trampa, por favor inicia sesión.";
 		}
 		exit;
+
+
 
 	}elseif ($proceso == "logout") {
     salir();

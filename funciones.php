@@ -1,5 +1,9 @@
 <?php
 
+	function version(){
+		$ver = '3.0';
+		echo $ver;
+	}
 
 	function lugar(){
 		$nombre_archivo = parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
@@ -9,6 +13,7 @@
 			}
 		return $nombre_archivo;
 	}
+
 
 	function conectar(){
 	global $mysqli;	
@@ -155,12 +160,25 @@
 		return $tabla;
 	}
 
-
-
 	function vermiscursos($codigo){
-	//Construir tabla con datos de mi asignación
+		global $mysqli;
+		conectar();	
+		$tabla = "";
+		$n = 0;		
+		if($asignaciones = db("SELECT
+		cursos.codigo,
+		cursos.nombre,
+		cursos.grado,
+		cursos.carrera,
+		asignaciones.seccion,
+		cursos.jornada
+		FROM
+		asignaciones
+		INNER JOIN cursos ON asignaciones.curso = cursos.codigo
+		WHERE
+		asignaciones.maestro LIKE '{$codigo}'",$mysqli)){
 		$tabla = '
-		<table class="table table-bordered table-framed">
+		<table class="table datatable-column-search-selects table-framed">
 			<thead>
 				<tr>
 					<th width="5%">#</th>
@@ -173,10 +191,49 @@
 				</tr>
 			</thead>
 			<tbody>';
+		foreach ($asignaciones as $curso) {
+			$n++;
+			$tabla .= "
+			<tr>
+                <td>{$n}</td>
+                <td>{$curso['codigo']}</td>
+                <td>{$curso['nombre']}</td>
+                <td>{$curso['grado']}</td>
+                <td>{cursos}</td>
+                <td>{$curso['seccion']}</td>
+                <td> </td>
+            </tr>";
+
+			
+		}
 
 
 
 
 
-		$tabla .= '</tbody></table>';
+
+
+		$tabla .= '</tbody>
+						<tfoot>
+							<tr>
+					<td width="5%">#</th>
+					<td width="10%">Codigo</th>
+					<td>Curso</td>
+					<td>Grado</td>
+					<td>N / C</td>
+					<td>Sección</td>
+					<td widtd="15%">Opciones</td>
+					</tr>
+						</tfoot>
+
+
+
+
+		</table>';
+
+	}else{
+
+		$tabla = "<h3>No tiene cursos asignados, puede asignarse en cualquier momento.</h3>";
+	}
+		return $tabla;
 	}

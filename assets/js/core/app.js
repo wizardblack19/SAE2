@@ -603,7 +603,7 @@ $(function() {
     }).resize();
 
 
-    cargarcookie();
+    //cargarcookie();
         $('#ver').click(function(){
             var pathname = window.location.pathname;
             alert(window.location);
@@ -644,7 +644,7 @@ $(function() {
             desbloquea(unidad);
             swal("Usted seleccionó la unidad numero: "+unidad);
         }
-
+/*
         function cargarcookie(){
             if(Cookies.get('UNIDAD')){
                 var unidad = Cookies.get('UNIDAD');
@@ -683,7 +683,7 @@ $(function() {
 
 
 
-
+*/
 
 
 

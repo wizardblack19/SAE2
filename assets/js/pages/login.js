@@ -14,6 +14,7 @@ $(function() {
 		}, "json")
 		.fail(function() {
     		swal("Imposible acceder", "...error en su conexión o servidor.", "error");
+    		$("[name='pass']").val('');
   		})
 	});
 
