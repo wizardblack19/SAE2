@@ -416,6 +416,11 @@ define('MENU',$menu_s);
 		$head .= '
 			<script type="text/javascript" src="assets/js/plugins/tables/datatables/datatables.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/jszip/jszip.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/pdfmake/pdfmake.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/pdfmake/vfs_fonts.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+			
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
 			<script type="text/javascript" src="assets/js/pages/miscursos.js"></script>
 			</head>

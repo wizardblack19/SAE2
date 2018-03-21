@@ -157,6 +157,7 @@
 		}else{
 			$tabla = "<h3>No se encontro archivos con su codigo.</h3>";
 		}
+					cerrar_conex();
 		return $tabla;
 	}
 
@@ -165,27 +166,20 @@
 		conectar();	
 		$tabla = "";
 		$n = 0;		
-		if($asignaciones = db("SELECT
-		cursos.codigo,
-		cursos.nombre,
-		cursos.grado,
-		cursos.carrera,
-		asignaciones.seccion,
-		cursos.jornada
-		FROM
-		asignaciones
-		INNER JOIN cursos ON asignaciones.curso = cursos.codigo
-		WHERE
-		asignaciones.maestro LIKE '{$codigo}'",$mysqli)){
+		if($asignaciones = db("SELECT asignaciones.maestro as 'cod_maestro', asignaciones.curso as 'cod_curso', cursos.nombre as 'curso', CONCAT(cursos.grado,' ',carreras.nombre) as 'grado', asignaciones.seccion, cursos.jornada 
+		FROM 
+		asignaciones 
+		INNER JOIN cursos ON asignaciones.curso = cursos.codigo 
+		INNER JOIN carreras ON (cursos.carrera = carreras.codigo OR cursos.nivel = carreras.codigo) 
+		WHERE asignaciones.maestro LIKE '{$codigo}' ",$mysqli)){
 		$tabla = '
-		<table class="table datatable-column-search-selects table-framed">
+		<table class="table datatable-column-search-selects table-bordered">
 			<thead>
 				<tr>
 					<th width="5%">#</th>
 					<th width="10%">Codigo</th>
 					<th>Curso</th>
 					<th>Grado</th>
-					<th>N / C</th>
 					<th>Sección</th>
 					<th width="15%">Opciones</th>
 				</tr>
@@ -196,12 +190,11 @@
 			$tabla .= "
 			<tr>
                 <td>{$n}</td>
-                <td>{$curso['codigo']}</td>
-                <td>{$curso['nombre']}</td>
+                <td>{$curso['cod_curso']}</td>
+                <td>{$curso['curso']}</td>
                 <td>{$curso['grado']}</td>
-                <td>{cursos}</td>
                 <td>{$curso['seccion']}</td>
-                <td> </td>
+                <td>{$curso['jornada']}</td>
             </tr>";
 
 			
@@ -213,22 +206,18 @@
 
 
 
-		$tabla .= '</tbody>
-						<tfoot>
-							<tr>
-					<td width="5%">#</th>
+		$tabla .= '
+		</tbody>
+			<tfoot>
+				<tr>
+					<th width="5%">#</th>
 					<td width="10%">Codigo</th>
 					<td>Curso</td>
 					<td>Grado</td>
-					<td>N / C</td>
 					<td>Sección</td>
-					<td widtd="15%">Opciones</td>
-					</tr>
-						</tfoot>
-
-
-
-
+					<th widtd="15%">Opciones</td>
+				</tr>
+			</tfoot>
 		</table>';
 
 	}else{
@@ -236,4 +225,5 @@
 		$tabla = "<h3>No tiene cursos asignados, puede asignarse en cualquier momento.</h3>";
 	}
 		return $tabla;
+		cerrar_conex();
 	}

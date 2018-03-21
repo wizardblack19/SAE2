@@ -25,10 +25,10 @@ $(function() {
         }],
         dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
         language: {
-            search: '<span>Filter:</span> _INPUT_',
-            searchPlaceholder: 'Type to filter...',
-            lengthMenu: '<span>Show:</span> _MENU_',
-            paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+            search: '<span>Buscar:</span> _INPUT_',
+            searchPlaceholder: 'Escribe para Buscar...',
+            lengthMenu: '<span>Ver:</span> _MENU_',
+            paginate: { 'first': 'primero', 'ultimo': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
         },
         drawCallback: function () {
             $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
@@ -44,7 +44,27 @@ $(function() {
         var title = $('.datatable-column-search-selects thead th').eq($(this).index()).text();
         $(this).html('<input type="text" class="form-control input-sm" placeholder="Search '+title+'" />');
     });
-    var table = $('.datatable-column-search-selects').DataTable();
+    var table = $('.datatable-column-search-selects').DataTable({
+            stateSave: true,
+            dom: '<"datatable-header dt-buttons-right"fB><"datatable-scroll"tS><"datatable-footer"i>',
+            buttons: {            
+                dom: {
+                    button: {
+                        className: 'btn btn-default'
+                    }
+                },
+                buttons: [
+                    'copyHtml5',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5'
+                ]
+            }
+
+
+        });
+
+
     table.columns().every( function () {
         var that = this;
         $('input', this.footer()).on('keyup change', function () {
@@ -55,6 +75,8 @@ $(function() {
     $('.datatable-column-search-selects tbody').on('click', 'tr', function() {
         $(this).toggleClass('success');
     });
+
+    // Saving state in scroller
 
 
     // External table additions
