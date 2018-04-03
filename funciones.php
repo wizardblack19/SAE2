@@ -1,4 +1,8 @@
 <?php
+	//Valores Forzados para php
+	date_default_timezone_set('America/Guatemala');
+	ini_set('memory_limit', '1G');
+
 
 	function version(){
 		$ver = '3.0';
@@ -69,12 +73,12 @@
       $_SESSION = array();
       if (ini_get("session.use_cookies")) {
           $params = session_get_cookie_params();
-          setcookie(session_name(), '', time() - 42000,
+          setcookie(session_name(), '', time() - 420000,
               $params["path"], $params["domain"],
               $params["secure"], $params["httponly"]
           );
       session_destroy();
-      setcookie("perfil", $perfil,time() - 3600);
+      setcookie("perfil", 0,time() - 3600);
       }
       header("Location: login.php");
       exit;
@@ -85,9 +89,9 @@
 		global $mysqli;
 		    if($codigo && $tipo){
 		    	$datosGE['hora'] = date('1998');
-		    	if($user = db("select codigo,tipo from user where codigo = '".$codigo."' and tipo = '".$tipo."' limit 0,1 ",$mysqli)){
-		   		 	$datosGE['nombres'] = "Marvin Adolfo";
-		    		$datosGE['apellidos'] = "Lopez Garcia";
+		    	if($user = db("select codigo,tipo,nombres,apellidos from user where codigo = '".$codigo."' and tipo = '".$tipo."' limit 0,1 ",$mysqli)){
+		   		 	$datosGE['nombres'] = $user[0]['nombres'];
+		    		$datosGE['apellidos'] = $user[0]['apellidos'];
 		    		$datosGE['hora'] = date('YmdHis');
 		    		$datosGE['codigo'] = $codigo;
 		    	}
@@ -166,55 +170,58 @@
 		conectar();	
 		$tabla = "";
 		$n = 0;		
-		if($asignaciones = db("SELECT asignaciones.maestro as 'cod_maestro', asignaciones.curso as 'cod_curso', cursos.nombre as 'curso', CONCAT(cursos.grado,' ',carreras.nombre) as 'grado', asignaciones.seccion, cursos.jornada 
-		FROM 
-		asignaciones 
-		INNER JOIN cursos ON asignaciones.curso = cursos.codigo 
-		INNER JOIN carreras ON (cursos.carrera = carreras.codigo OR cursos.nivel = carreras.codigo) 
-		WHERE asignaciones.maestro LIKE '{$codigo}' ",$mysqli)){
+		if($asignaciones = db("SELECT cursos.codigo,cursos.nombre,cursos.grado,cursos.nivel,cursos.carrera,asignaciones.seccion,cursos.jornada 
+			FROM asignaciones INNER JOIN cursos ON asignaciones.curso = cursos.codigo
+			WHERE asignaciones.maestro LIKE '{$codigo}' ",$mysqli)){
 		$tabla = '
 		<table class="table datatable-column-search-selects table-bordered">
 			<thead>
 				<tr>
-					<th width="5%">#</th>
-					<th width="10%">Codigo</th>
+					<th width="10">#</th>
+					<th width="50">Codigo</th>
 					<th>Curso</th>
 					<th>Grado</th>
-					<th>Sección</th>
-					<th width="15%">Opciones</th>
+					<th width="40">Sección</th>
+					<td width="150"></td>
 				</tr>
 			</thead>
 			<tbody>';
 		foreach ($asignaciones as $curso) {
 			$n++;
+			$grado = grado($curso['grado'],$curso['nivel'],$curso['carrera']);
 			$tabla .= "
 			<tr>
                 <td>{$n}</td>
-                <td>{$curso['cod_curso']}</td>
-                <td>{$curso['curso']}</td>
-                <td>{$curso['grado']}</td>
-                <td>{$curso['seccion']}</td>
-                <td>{$curso['jornada']}</td>
-            </tr>";
+                <td>{$curso['codigo']}</td>
+                <td>{$curso['nombre']}</td>
+                <td>{$grado}</td>
+                <td>{$curso['seccion']}</td>";
+            $tabla .= '<td>
+
+					<ul class="icons-list">
+						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Edit"><i class="icon-pencil7"></i></a></li>
+						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Remove"><i class="icon-trash"></i></a></li>
+						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Options"><i class="icon-cog7"></i></a></li>
+					</ul>
+
+
+				</td>
+            </tr>
+            ';
 
 			
 		}
-
-
-
-
-
 
 		$tabla .= '
 		</tbody>
 			<tfoot>
 				<tr>
-					<th width="5%">#</th>
-					<td width="10%">Codigo</th>
+					<th width="10">#</th>
+					<td width="50">Codigo</th>
 					<td>Curso</td>
 					<td>Grado</td>
-					<td>Sección</td>
-					<th widtd="15%">Opciones</td>
+					<td width="40">Sección</td>
+					<th width="150"></td>
 				</tr>
 			</tfoot>
 		</table>';
@@ -225,4 +232,35 @@
 	}
 		return $tabla;
 		cerrar_conex();
+	}
+
+	function grado_t($g){
+		if($g==1){
+			$g = "Primero";
+		}elseif ($g==2) {
+			$g = "Segundo";
+		}elseif ($g==3) {
+			$g = "Tercero";
+		}elseif ($g==4) {
+			$g = "Cuarto";
+		}elseif ($g==5) {
+			$g = "Quinto";
+		}elseif ($g==6) {
+			$g = "Sexto";
+		}else{
+			$g = 0;
+		}
+		return $g;
+	}
+	function grado($g,$n,$c){
+		global $mysqli;
+		$nivel = "";
+		if($n=="DIVER" || $n=="DIVERF"){
+			$n = $c;
+		}
+		if($niv = db("select * from carreras where codigo like '{$n}' limit 0,1 ",$mysqli)){
+			$nivel = $niv[0]['nombre'];
+		}
+		$g = grado_t($g).' '.$nivel;
+		return $g;
 	}

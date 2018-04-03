@@ -42,11 +42,14 @@ $(function() {
     // Individual column searching with text inputs
     $('.datatable-column-search-selects tfoot td').not(':last-child').each(function () {
         var title = $('.datatable-column-search-selects thead th').eq($(this).index()).text();
-        $(this).html('<input type="text" class="form-control input-sm" placeholder="Search '+title+'" />');
+        $(this).html('<input type="text" class="form-control input-sm" placeholder="'+title+'" />');
     });
     var table = $('.datatable-column-search-selects').DataTable({
             stateSave: true,
-            dom: '<"datatable-header dt-buttons-right"fB><"datatable-scroll"tS><"datatable-footer"i>',
+            dom: '<"datatable-header dt-buttons-right"fB><"datatable-scroll"tS><"datatable-footer"pl>',
+            ordering: false,
+
+            
             buttons: {            
                 dom: {
                     button: {
