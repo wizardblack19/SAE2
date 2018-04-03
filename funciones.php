@@ -205,7 +205,6 @@
 
 
 
-
 		$tabla .= '
 		</tbody>
 			<tfoot>
