@@ -161,7 +161,7 @@
 		}else{
 			$tabla = "<h3>No se encontro archivos con su codigo.</h3>";
 		}
-					cerrar_conex();
+					//cerrar_conex();
 		return $tabla;
 	}
 
