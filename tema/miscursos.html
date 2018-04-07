@@ -1,10 +1,13 @@
 	<div class="content-wrapper">
-		<div class="panel panel-flat">
+		<div class="panel panel-flat" id="miscursos">
 			<div class="panel-heading">
 				<h5 class="panel-title">Cursos Asignados</h5>
 				<div class="heading-elements">
+
+
+					<a data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#asignarme" href="#"><span class="label bg-indigo-400 heading-text">+ Asignar</span></a>
+					
 					<ul class="icons-list">
-                		<li><a data-action="collapse"></a></li>
                 		<li><a data-action="reload"></a></li>
                 	</ul>
             	</div>
@@ -16,4 +19,80 @@
 				</div>
 			</div>
 		</div>
+	
+
+        <!-- Buscar curso modal -->
+		<div id="asignarme" class="modal fade">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h5 class="modal-title">Buscar Cursos</h5>
+					</div>
+
+					<form id="bCursos" action="core.php?l=bCursos">
+						<div class="modal-body">
+							<div class="form-group">
+								<div class="row">
+
+									<div class="col-sm-3">
+										{Sgrado}
+									</div>
+
+									<div class="col-sm-3">
+										{Snivel}
+									</div>		
+
+									<div class="col-sm-3">
+		                            	<select name="select" class="form-control">
+			                                <option value="">Carrera</option>
+			                                <option value="opt2">Option 2</option>
+			                                <option value="opt3">Option 3</option>
+			                                <option value="opt4">Option 4</option>
+			                                <option value="opt5">Option 5</option>
+			                                <option value="opt6">Option 6</option>
+			                                <option value="opt7">Option 7</option>
+			                                <option value="opt8">Option 8</option>
+			                            </select>
+									</div>
+
+									<div class="col-sm-3">
+		                            	<select name="select" class="form-control">
+			                                <option value="opt1">Jornada</option>
+			                                <option value="opt2">Option 2</option>
+			                                <option value="opt3">Option 3</option>
+			                                <option value="opt4">Option 4</option>
+			                                <option value="opt5">Option 5</option>
+			                                <option value="opt6">Option 6</option>
+			                                <option value="opt7">Option 7</option>
+			                                <option value="opt8">Option 8</option>
+			                            </select>
+									</div>
+
+
+								</div>
+							</div>
+
+
+
+
+
+
+
+
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-link" data-dismiss="modal">Cerrar</button>
+							<button type="submit" class="btn btn-primary">Buscar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- /vertical form modal -->
+
+
+
+
 	</div>

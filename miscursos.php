@@ -12,12 +12,14 @@ $llave[] = '{codigo}';
 $enlace[] = $perfil['codigo'];
 $llave[] = '{tabla_miscursos}';
 $enlace[] = vermiscursos($perfil['codigo']);
+
+$llave[] = '{Sgrado}';
+$enlace[] = Sgrado(2);
+
+$llave[] = '{Snivel}';
+$enlace[] = Snivel();
+
+
+
 $page = str_replace($llave, $enlace, $page);
-
-
-
-
-
-
-
 echo $page;

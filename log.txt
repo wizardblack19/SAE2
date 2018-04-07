@@ -1,0 +1,10 @@
+
+06-04-2018
+* agregado funcion Sgrado 	--> 	Genera el select para grados, recibe parametro limit **268
+	* $limit 0 - 6
+	* name grado
+	* requerid
+
+* agregado Snivel -- > Genera un select que contiene los niveles educativos, basado en la base de datos, tipo de dato db 1
+	* requerid
+	* name nivel

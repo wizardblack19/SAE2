@@ -228,5 +228,17 @@ exit;
 }
 
 
+elseif($proceso == "refreshMisCursos"){
 
+
+  //Cambios de tabla en funcion archivos
+    $codigo = $_POST['codigo'];
+    $data['html'] = vermiscursos($codigo);
+    print json_encode($data);
+    cerrar_conex();
+
+
+
+  exit;
+}
 

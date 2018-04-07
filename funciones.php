@@ -264,3 +264,47 @@
 		$g = grado_t($g).' '.$nivel;
 		return $g;
 	}
+
+	function Sgrado($limite){
+		$select = '';
+		//Select para grados
+		if ($limite == 0 || $limite > 6) {
+			$limite = 6;
+		}
+		$select = '
+		<select name="grado" class="form-control" required>
+        <option value="">Grado</option>';
+        for ($i = 1; $i <= $limite; $i++) {
+        	$select .= "<option value=\"{$i}\">".grado_t($i).'</option>';
+		}
+		$select .= '</select>';
+		return $select;
+	}
+
+	function Snivel(){
+		global $mysqli;
+		$niveles = db("select codigo, nombre from carreras where tipo = 1",$mysqli);
+		$select = '
+        <select name="nivel" class="form-control" required>
+            <option value="">Nivel</option>';
+    	foreach ($niveles as $nivel) {
+        	$select .= "<option value=\"{$nivel['codigo']}\">{$nivel['nombre']}</option>";
+        }
+        $select .= '</select>';
+        return $select;
+	}
+
+	function Sjornada(){
+		global $mysqli;
+		$i = 0;
+		$jornadas = db("select valor from opciones where opcion LIKE 'JORNADAS' limit 0,1",$mysqli);
+		$select = '
+        <select name="jornada" class="form-control" required>
+            <option value="">Nivel</option>';
+    	foreach ($jornadas as $jornada) {
+    		$i++;
+        	$select .= "<option value=\"{$i}\">{$nivel['nombre']}</option>";
+        }
+        $select .= '</select>';
+        return $select;
+	}		
