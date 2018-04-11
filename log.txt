@@ -8,3 +8,5 @@
 * agregado Snivel -- > Genera un select que contiene los niveles educativos, basado en la base de datos, tipo de dato db 1
 	* requerid
 	* name nivel
+
+* Agregado Scarrera	--> Genera un select que contiene las carreras.

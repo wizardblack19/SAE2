@@ -14,11 +14,16 @@ $llave[] = '{tabla_miscursos}';
 $enlace[] = vermiscursos($perfil['codigo']);
 
 $llave[] = '{Sgrado}';
-$enlace[] = Sgrado(2);
+$enlace[] = Sgrado(0);
 
 $llave[] = '{Snivel}';
-$enlace[] = Snivel();
+$enlace[] = Snivel(0);
 
+$llave[] = '{Sjornada}';
+$enlace[] = Sjornada();
+
+$llave[] = '{Scarrera}';
+$enlace[] = Snivel(2);
 
 
 $page = str_replace($llave, $enlace, $page);

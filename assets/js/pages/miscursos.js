@@ -72,12 +72,6 @@ $(function() {
 
     //llamado de DataTable
     tablaCursos();
-    //Buscar cursos event submit
-
-    $( "#bCursos" ).submit(function( event ) {
-      alert( "Handler for .submit() called." );
-      event.preventDefault();
-    });
 
     function post_data(codigo, action, block){
         $(block).block({ 
@@ -118,6 +112,20 @@ $(function() {
         var block = '#miscursos';
         post_data(perfil.codigo,action,block);
     });
+
+    //Buscar cursos event submit
+
+    $( "#bCursos" ).submit(function( event ) {
+      event.preventDefault();
+
+
+
+
+
+      
+    });
+
+
 
     
 });

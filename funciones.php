@@ -3,10 +3,9 @@
 	date_default_timezone_set('America/Guatemala');
 	ini_set('memory_limit', '1G');
 
-
 	function version(){
 		$ver = '3.0';
-		echo $ver;
+		return $ver;
 	}
 
 	function lugar(){
@@ -17,7 +16,6 @@
 			}
 		return $nombre_archivo;
 	}
-
 
 	function conectar(){
 	global $mysqli;	
@@ -281,17 +279,33 @@
 		return $select;
 	}
 
-	function Snivel(){
+	function Snivel($n){
 		global $mysqli;
-		$niveles = db("select codigo, nombre from carreras where tipo = 1",$mysqli);
+		$t = 'Carrera';
+		$r = "";
+		if($n==0){$n = 1;$t='Nivel';$r='required';}
+		$niveles = db("select codigo, nombre from carreras where tipo = {$n}",$mysqli);
 		$select = '
-        <select name="nivel" class="form-control" required>
-            <option value="">Nivel</option>';
+        <select name="nivel" class="form-control" '.$r.' >
+            <option value="">'.$t.'</option>';
     	foreach ($niveles as $nivel) {
         	$select .= "<option value=\"{$nivel['codigo']}\">{$nivel['nombre']}</option>";
         }
         $select .= '</select>';
         return $select;
+	}
+
+	function jornada($n){
+		if($n==1){
+			$n = "Diaria";
+		}elseif($n==2){
+			$n = "Sabado";
+		}elseif($n==3){
+			$n = "Domingo";
+		}else{
+			$n = "";
+		}
+		return $n;
 	}
 
 	function Sjornada(){
@@ -300,11 +314,11 @@
 		$jornadas = db("select valor from opciones where opcion LIKE 'JORNADAS' limit 0,1",$mysqli);
 		$select = '
         <select name="jornada" class="form-control" required>
-            <option value="">Nivel</option>';
-    	foreach ($jornadas as $jornada) {
-    		$i++;
-        	$select .= "<option value=\"{$i}\">{$nivel['nombre']}</option>";
-        }
+            <option value="">Jornada</option>';
+	        for ($i = 1; $i <= $jornadas[0]['valor']; $i++) {
+	        	$select .= "<option value=\"{$i}\">".jornada($i).'</option>';
+			}
         $select .= '</select>';
         return $select;
-	}		
+	}
+
