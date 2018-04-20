@@ -185,10 +185,16 @@
 			</thead>
 			<tbody>';
 		foreach ($asignaciones as $curso) {
+
+
+			$crono 		=		buscaCrono($curso['codigo'],$curso['seccion'],$b);
+
+
+
 			$n++;
 			$grado = grado($curso['grado'],$curso['nivel'],$curso['carrera']);
 			$tabla .= "
-			<tr>
+			<tr class='success'>
                 <td>{$n}</td>
                 <td>{$curso['codigo']}</td>
                 <td>{$curso['nombre']}</td>
@@ -279,18 +285,54 @@
 		return $select;
 	}
 
-	function Snivel($n){
+	function Snivel($n=0,$t=0){
 		global $mysqli;
-		$t = 'Carrera';
-		$r = "";
-		if($n==0){$n = 1;$t='Nivel';$r='required';}
-		$niveles = db("select codigo, nombre from carreras where tipo = {$n}",$mysqli);
+		//por defecto
+		if($n==0){
+			$name 		= 	'nivel';
+			$required	=	'required';
+			$grup1 		=	'';
+			$grup2 		=	'';
+			$texto		=	'Nivel';
+			$t 			=	' = 1';
+		}elseif($n<>0){
+			$name 		= 	'carrera';
+			$required	=	'';
+			$grup1 		=	'Carreras en Jornada Diaria';
+			$grup2 		=	'Carreras en Jornada Fin de Semana';
+			$grup1		=	'<optgroup class="text-success" label="Carreras en Jornada Diaria">';
+			$grup2		=	'<optgroup class="text-info" label="Carreras en Jornada Fin de Semana">';
+			$texto		=	'Carreras';
+			if($t==0){
+				$t 		= 	' > 1';
+			}else{
+				$t 		=	" = {$t}";
+			}
+		}
+
 		$select = '
-        <select name="nivel" class="form-control" '.$r.' >
-            <option value="">'.$t.'</option>';
-    	foreach ($niveles as $nivel) {
-        	$select .= "<option value=\"{$nivel['codigo']}\">{$nivel['nombre']}</option>";
-        }
+        <select name="'.$name.'" class="form-control" '.$required.' >
+            <option value="">'.$texto.'</option>';
+		if($niveles = db("select codigo, nombre, tipo from carreras where tipo {$t}",$mysqli)){
+	    	foreach ($niveles as $nivel) {
+	        	if($nivel['tipo']==2){
+	        		$grup1 	.= 	"<option value=\"{$nivel['codigo']}\">{$nivel['nombre']}</option>";
+	        	}elseif ($nivel['tipo'] == 3) {
+	        		$grup2	.=	"<option value=\"{$nivel['codigo']}\">{$nivel['nombre']}</option>";
+	        	}else{
+	        		$select .=		"<option value=\"{$nivel['codigo']}\">{$nivel['nombre']}</option>";
+	        	}
+	        }
+
+		    if($n<>0){
+				$grup1		.=		"/<optgroup>";
+				$grup2		.=		"</optgroup>";
+			}
+		}
+	
+		$select 	.=		$grup1;
+		$select 	.=		$grup2;
+
         $select .= '</select>';
         return $select;
 	}
@@ -322,3 +364,137 @@
         return $select;
 	}
 
+	function cursos($g,$n,$c,$j,$t,$d,$s){
+		global $mysqli;
+		$tabla = "";
+		if($c == "" ){
+          $carreras = "";
+        }else{
+          $carreras = " and carrera like '{$c}' ";
+        }
+		if($cursos = db("select * FROM cursos where grado = {$g} AND nivel LIKE '{$n}' AND jornada = {$j} {$carreras} ",$mysqli)){
+		
+		$n=0;
+		$tabla = '
+			<table class="table table-xxs table-bordered">
+			<thead>
+				<tr>
+					<th width="2">#</th>
+					<th width="50">Codigo</th>
+					<th>Nombre</th>
+					<th width="5">P</th>
+					<td width="15"> </td>
+				</tr>
+			</thead>
+			<tbody>';
+		foreach ($cursos as $curso) {
+			$clase = 'fila';
+			$bclase	=	'asignar label-info';
+			$label = 'Asignarme';
+			if($d != ""){
+				$asignado = buscar_asignacion($curso['codigo'],$d,$s);
+				if($asignado){
+					$clase 	= 	'success';
+					$bclase	=	'desasignar label-danger';
+					$label = 'Desasignar';
+				}
+			}
+
+
+			$n++;
+			$tabla .="
+			<tr class='{$clase}'>
+                <td>{$n}</td>
+                <td>{$curso['codigo']}</td>
+                <td>{$curso['nombre']}</td>
+                <td>
+                <span class='badge badge-success pull-right'> <i class='icon-checkmark2'></i>  </span>
+                </td>
+                <td>
+					<a data-curso='{$curso['codigo']}' data-seccion='{$s}' data-maestro='{codigo}' class='{$bclase} label  pull-right'> {$label} </a>
+                </td>
+            </tr>";
+
+		}
+
+		$tabla .= '
+		</tbody>
+		</table>';
+
+
+
+}else{
+	$tabla 	=	'<h3>No se encontró ningún curso para este grado, verifique la información ingresada.</h3>';
+}
+
+		return $tabla;
+
+
+	}
+
+	function Sseccion($l=0){
+		global $mysqli;
+		$list = '
+        <select name="seccion" class="form-control" required>
+            <option value="">Sección</option>';
+			if($limite = db('select valor from opciones where opcion like "SECCIONES" limit 0,1',$mysqli)){
+				$g = $limite['0']['valor'] + 65;
+				for ($i = 65; $i < $g; $i++) {
+					$s = chr($i);
+				    $list .= "<option value=\"{$s}\">{$s}</option>";
+				}
+			}else{
+				$list .= '<option value="A">A</option>';
+			}
+
+        $list .= '</select>';
+        return $list;
+	}
+
+	function buscar_asignacion($codigo,$docente,$seccion){
+		global $mysqli;
+		if($busca = db("select id from asignaciones where maestro like '{$docente}' and curso like '{$codigo}' and seccion like '{$seccion}' limit 0,1",$mysqli)){
+			$a = TRUE;
+		}else{
+			$a = FALSE;
+		}
+		return $a;
+	}
+
+
+	function saveAsignacion($codigo,$docente,$seccion){
+		global $mysqli;
+		$ciclo = date('Y');
+		if ($guardar = $mysqli->prepare("INSERT INTO asignaciones (maestro, curso, seccion, ciclo) VALUES (?,?,?,?)")) {
+			$guardar->bind_param('sssi', $docente, $codigo, $seccion, $ciclo);
+	    	$guardar->execute();
+			$id	=	$mysqli->insert_id;
+		}
+		if($id){
+			$id = $id;
+		}else{
+			$id = 0;
+		}
+		return $id;
+	}
+
+	function borrarAsignacion($m,$c,$s){
+		global $mysqli;
+		$ciclo = date('Y');
+		$borrar = "DELETE FROM asignaciones WHERE maestro like '{$m}' and curso like '{$c}' and seccion like '{$s}' and ciclo = ".$ciclo;
+        if($mysqli->query($borrar)){
+        	return TRUE;
+        }else{
+        	return FALSE;
+        }
+	}
+
+	function buscaCrono($c,$s,$b){
+		global $mysqli;
+		if($busca = db("select estado from crono_seg where curso like '{$c}' and seccion like '{$s}' and bim = {$b} limit 0,1",$mysqli)){
+			$r = $busca['0']['estado'];
+		}else{
+			$r = 0;
+		}
+		return $r;
+	}

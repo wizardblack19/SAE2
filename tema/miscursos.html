@@ -23,7 +23,7 @@
 
         <!-- Buscar curso modal -->
 		<div id="asignarme" class="modal fade">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -35,38 +35,44 @@
 							<div class="form-group">
 								<div class="row">
 
-									<div class="col-sm-3">
+									<div class="col-sm-2">
 										{Sgrado}
 									</div>
 
-									<div class="col-sm-3">
+									<div class="col-sm-2">
 										{Snivel}
-									</div>		
+									</div>
 
-									<div class="col-sm-3">
+									<div class="col-sm-2">
 		                            	{Scarrera}
 									</div>
 
-									<div class="col-sm-3">
+									<div class="col-sm-2">
+		                            	{Sseccion}
+									</div>
+									<div class="col-sm-2">
 		                            	{Sjornada}
 									</div>
 
+									<input type="hidden" name="docente" value="{codigo}" />
 
-								</div>
+									<div class="col-sm-2">
+		                            	<button type="submit" class="btn btn-primary">Buscar</button>
+									</div>
+
+								</div>							
+
 							</div>
 
-
-
-
-
-
+							<div id="rbusqueda" style="display: none;">
+							</div>
 
 
 						</div>
 
 						<div class="modal-footer">
 							<button type="button" class="btn btn-link" data-dismiss="modal">Cerrar</button>
-							<button type="submit" class="btn btn-primary">Buscar</button>
+							
 						</div>
 					</form>
 				</div>

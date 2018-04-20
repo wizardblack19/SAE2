@@ -242,3 +242,89 @@ elseif($proceso == "refreshMisCursos"){
   exit;
 }
 
+elseif($proceso == "bCurso"){
+    $grado    =   $_POST['grado'];
+    $nivel    =   $_POST['nivel'];
+    $carrera  =   $_POST['carrera'];
+    $jornada  =   $_POST['jornada'];
+    $seccion  =   $_POST['seccion'];
+    $docente  =   $_POST['docente'];
+    conectar();
+    $t="";
+      if($grado !="" and $nivel !="" and $jornada !=""){
+        $data['html'] = cursos($grado,$nivel,$carrera,$jornada,$t,$docente,$seccion);
+        $data['seccion'] = $seccion;
+        $data['docente'] = $docente;
+
+      }else{
+        $data['error']  = "Algo raro pasa aquí, se esta intentando saltar las politicas de seguridad.";
+      }
+    cerrar_conex();
+    print json_encode($data);
+
+  exit;
+}
+
+elseif($proceso == "Asignarme"){
+    $data     =   array(); 
+    $docente  =   $_POST['docente'];
+    $seccion  =   $_POST['seccion'];
+    $codigo   =   $_POST['codigo'];
+    $ciclo    =   date('Y');
+    if($docente !="" and $seccion !="" and $codigo !=""){
+    conectar();
+    $buscar_asignacion = buscar_asignacion($codigo,$docente,$seccion);
+      if($buscar_asignacion){
+          $data['error_code']   =     1;
+          $data['error']        =     "Ya tiene asignado este curso, no es posible asignar el mismo curso más de una vez.";
+      }else{
+          $guardar = saveAsignacion($codigo,$docente,$seccion);
+          if($guardar == 0){
+            $data['error_code']   =     1;
+            $data['error']        =     "Algo raro pasó cuando se intentaba guardar está asignación, por favor repórtelo al departamento de desarrollo.";
+          }else{
+            $data['error_code']   =     0;
+            $data['error']        =     "Asignación Correcta, numero de seguimiento ".$guardar;          
+          }
+      }
+    }else{
+      $data['error_code']   =     1;
+      $data['error']  = "Algo raro pasa aquí, se esta intentando saltar las politicas de seguridad.";
+    }
+    cerrar_conex();
+    print json_encode($data);
+  exit;
+}
+
+elseif($proceso == "Desasignarme"){
+    $data     =   array(); 
+    $docente  =   $_POST['docente'];
+    $seccion  =   $_POST['seccion'];
+    $codigo   =   $_POST['codigo'];
+    $ciclo    =   date('Y');
+    if($docente !="" and $seccion !="" and $codigo !=""){
+    conectar();
+    $buscar_asignacion = buscar_asignacion($codigo,$docente,$seccion);
+      if($buscar_asignacion){
+          $borrar = borrarAsignacion($docente,$codigo,$seccion);
+          if($borrar){
+            $data['error_code']   =     0;
+            $data['error']        =     "Se ha borrado el curso correctamente.";
+          }else{
+            $data['error_code']   =     1;
+            $data['error']        =     "No fue posible eliminar la asignación.";           
+          }
+
+
+      }else{
+          $data['error_code']   =     1;
+          $data['error']        =     "No puede eliminar un curso que no tiene asignado, este debe ser un error.";
+      }
+    }else{
+      $data['error_code']   =     1;
+      $data['error']  = "Algo raro pasa aquí, se esta intentando saltar las politicas de seguridad.";
+    }
+    cerrar_conex();
+    print json_encode($data);
+  exit;
+}

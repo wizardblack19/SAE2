@@ -1,6 +1,5 @@
 $(function() {
 
- 
     // Tabla
     // ------------------------------
     function tablaCursos(){
@@ -55,9 +54,8 @@ $(function() {
             that.search(this.value).draw();
         });
     });
-    $('.datatable-column-search-selects tbody').on('click', 'tr', function() {
-        $(this).toggleClass('success');
-    });
+
+
 
     // Enable Select2 select for the length option
     $('.dataTables_length select').select2({
@@ -116,15 +114,72 @@ $(function() {
     //Buscar cursos event submit
 
     $( "#bCursos" ).submit(function( event ) {
-      event.preventDefault();
-
-
-
-
-
-      
+    event.preventDefault();
+        $("#rbusqueda").html('<p class="alert">Cargado, espere...</p>');
+        $("#rbusqueda").show();
+        $.post( "core.php?l=bCurso",$("#bCursos").serialize(), function( data ) {
+            $("#rbusqueda").hide();
+            $("#rbusqueda").html(data.html);
+            $(".asignar").attr('data-seccion',data.seccion);
+            $(".asignar").attr('data-maestro',data.docente);
+            $("#rbusqueda").show('slow');
+        }, "json")
+        .fail(function() {
+            $("#rbusqueda").hide('fast');
+            swal('Ocurrió un error en el scripts o servidor, no hay datos para este grado. ');
+        });
     });
 
+    //Asignarme el curso seleccionado /class="success"
+
+    $(document).on('click', '.asignar', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var docente     =       $("#codigo").attr('code');
+        var seccion     =       $(this).attr('data-seccion');
+        var codigo      =       $(this).attr('data-curso');
+        var id          =       $(this).parent().parent();
+        var este        =       $(this);
+        $.post( "core.php?l=Asignarme",{docente: docente,seccion:seccion,codigo:codigo}, function( data ) {
+            if(data.error_code == 1){
+                swal("Oh noes!", data.error, "error");
+            }else if(data.error_code == 0){
+                swal({title: "Buen Trabajo!",text: data.error,type: "success",timer: 2000,showConfirmButton: false});
+                id.removeClass( "fila" ).addClass( "success" );
+                este.removeClass( "asignar label-info" ).addClass( "desasignar label-danger" );
+                este.html('Desasignar');
+            }
+        }, "json")
+        .fail(function() {
+            $("#rbusqueda").hide();
+            swal("Oh noes!",'Ocurrió un error en el scripts o servidor, no hay datos para este grado. ', "error");
+        });
+    });
+
+    //desasignar
+    $(document).on('click', '.desasignar', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var docente     =       $("#codigo").attr('code');
+        var seccion     =       $(this).attr('data-seccion');
+        var codigo      =       $(this).attr('data-curso');
+        var id          =       $(this).parent().parent();
+        var este        =       $(this);
+        $.post( "core.php?l=Desasignarme",{docente: docente,seccion:seccion,codigo:codigo}, function( data ) {
+            if(data.error_code == 1){
+                swal("Oh noes!", data.error, "error");
+            }else if(data.error_code == 0){
+                swal({title: "Deleted!",text: data.error,type: "warning",timer: 1000,showConfirmButton: false});
+                id.removeClass( "success" ).addClass( "fila" );
+                este.removeClass( "desasignar label-danger" ).addClass( "asignar label-info" );
+                este.html('Asignarme');
+            }
+        }, "json")
+        .fail(function() {
+            $("#rbusqueda").hide();
+            swal("Oh noes!",'Ocurrió un error en el scripts o servidor, no hay datos para este grado. ', "error");
+        });
+    });
 
 
     
