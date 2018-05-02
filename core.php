@@ -328,3 +328,75 @@ elseif($proceso == "Desasignarme"){
     print json_encode($data);
   exit;
 }
+
+
+elseif($proceso == "cronoForm"){
+    $data     =   array(); 
+
+
+    conectar();
+    
+      $data['html']   =   cronoForm();
+
+    cerrar_conex();
+    print json_encode($data);
+  exit;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+elseif($proceso == "conf"){
+    $data     =   array(); 
+
+    $data['opciones']   =   $_POST['opciones'];
+    $data['minimo']     =   $_POST['minimo'];
+    $data['maximo']     =   $_POST['maximo'];
+    $datos              =   $_POST['titulo'];
+    
+
+
+    for ($i = 0; $i < count($datos); $i++) {
+      $data['titulos'][] = $datos[$i];
+    }
+
+    
+
+    print json_encode($data);
+  exit;
+}

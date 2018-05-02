@@ -240,13 +240,13 @@ function menu(){
 	<ul class="navigation navigation-main navigation-accordion">
 		<!-- Main -->
 		<li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li>
-		<li '; if($este_lugar == "index" || $este_lugar == ""){$data .= "class='active'";}; $data .= '><a href="index.php"><i class="icon-home4"></i> <span>Inicio</span></a></li>
+		<li '; if( $este_lugar == "index" || $este_lugar == ""){$data .= "class='active'";}; $data .= '><a href="index.php"><i class="icon-home4"></i> <span>Inicio</span></a></li>
 		<li>
 			<a href="#"><i class="icon-stack2"></i> <span>Mis opciones</span></a>
 			<ul>
 				<li '; if($este_lugar == "miscursos"){$data .= "class='active'";}; $data .= '><a href="miscursos.php">Mis Cursos</a></li>
 				<li '; if($este_lugar == "archivos"){$data .= "class='active'";}; $data .= '><a href="archivos.php">Archivos</a></li>
-				<li class="cosa "><a href="layout_navbar_main_hideable.html">Hideable main navbar</a></li>
+				<li '; if($este_lugar == "configuracion"){$data .= "class='active'";}; $data .= '><a href="configuracion.php">Hideable main navbar</a></li>
 				<li class="cosa "><a href="layout_navbar_secondary_hideable.html">Hideable secondary navbar</a></li>
 				<li class="cosa "><a href="layout_sidebar_sticky_custom.html">Sticky sidebar (custom scroll)</a></li>
 				<li class="cosa "><a href="layout_sidebar_sticky_native.html">Sticky sidebar (native scroll)</a></li>
@@ -353,7 +353,7 @@ $head = '
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta id="codigo" source="SAE2" code="" />
-		<meta id="verUNIDAD1" source="SAE2" code="" />
+		<meta id="verUNIDAD1" source="SAE2" code="0" />
 		<title>SAE - Sistema Administrativo Educativo</title>
 		<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
 		<link href="assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
@@ -421,13 +421,22 @@ define('MENU',$menu_s);
 			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/pdfmake/pdfmake.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/pdfmake/vfs_fonts.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
-			
+			<script type="text/javascript" src="assets/js/plugins/tables/handsontable/handsontable.min.js"></script>
+
+
+			<script type="text/javascript" src="assets/js/plugins/loaders/blockui.min.js"></script>
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
 			<script type="text/javascript" src="assets/js/pages/miscursos.js"></script>
 			</head>
 			';
-	}
-
+	}elseif(lugar()=="configuracion"){
+		$head .= '
+			<script type="text/javascript" src="assets/js/plugins/uploaders/dropzone.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/app.js"></script>
+			<script type="text/javascript" src="assets/js/pages/configuracion.js"></script>
+			</head>
+			';
+		}
 
 
 

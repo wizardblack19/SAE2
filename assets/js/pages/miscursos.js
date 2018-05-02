@@ -182,5 +182,110 @@ $(function() {
     });
 
 
+
+
+
+    $(document).on("click", ".permiso_unidad", function (e) {
+        e.preventDefault();
+        
+
+            $.post( "core.php?l=cronoForm", { func: "getNameAndTime" }, function( data ) {
+                $('#cronoNuevo').html(data.html);
+                $('#miscursos').hide('slow');
+                $('#cronograma').show('slow');           
+            }, "json");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    });
+
+
+
+
+
+    $(document).on("click", ".cancelar", function (e) {
+        e.preventDefault();
+        var ver = $(this).attr('data-show');
+        var ocultar = $(this).attr('data-hide');
+        $('#'+ver).show('slow');
+        $('#'+ocultar).hide('slow');
+    });
+
+
+
+
+
+
+
+
+
     
 });
+
+
+
+
+$(document).keydown(
+
+
+    function(e)
+    { 
+
+        
+        var datos = $(".move:focus").focus().attr('data-id').split('|');
+        var id = parseInt(datos['0']);
+        var li = parseInt(datos['1']);
+
+
+        if (e.keyCode == 107 ) {
+            e.preventDefault();
+            var sig = (id+1);
+            $("#C"+sig).focus();
+        }else
+        
+        if (e.keyCode == 13 ) {      
+            var sig = (id+li);
+            $("#C"+sig).focus();
+        }else    
+        
+        if (e.keyCode == 109) {
+            e.preventDefault();
+            var sig = (id-1);
+            $("#C"+sig).focus();
+   
+        }else    
+        
+        if (e.keyCode == 40) {      
+            var sig = (id+li);
+            $("#C"+sig).focus();
+   
+        }else    
+        
+        if (e.keyCode == 38) {      
+            var sig = (id-li);
+            $("#C"+sig).focus();
+   
+        }
+
+
+
+    }
+);

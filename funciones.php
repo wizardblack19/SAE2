@@ -3,6 +3,40 @@
 	date_default_timezone_set('America/Guatemala');
 	ini_set('memory_limit', '1G');
 
+	function eliminar_tildes($cadena){
+	    $cadena = str_replace(
+	        array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'),
+	        array('a', 'a', 'a', 'a', 'a', 'A', 'A', 'A', 'A'),
+	        $cadena);
+	    $cadena = str_replace(
+	        array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'),
+	        array('e', 'e', 'e', 'e', 'E', 'E', 'E', 'E'),
+	        $cadena );
+	    $cadena = str_replace(
+	        array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'),
+	        array('i', 'i', 'i', 'i', 'I', 'I', 'I', 'I'),
+	        $cadena );
+	    $cadena = str_replace(
+	        array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'),
+	        array('o', 'o', 'o', 'o', 'O', 'O', 'O', 'O'),
+	        $cadena );
+	    $cadena = str_replace(
+	        array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'),
+	        array('u', 'u', 'u', 'u', 'U', 'U', 'U', 'U'),
+	        $cadena );
+	    $cadena = str_replace(
+	        array('ñ', 'Ñ', 'ç', 'Ç'),
+	        array('n', 'N', 'c', 'C'),
+	        $cadena
+	    );
+	    return $cadena;
+	}
+	if(isset($_COOKIE["UNIDAD"])){
+		$unidad = $_COOKIE["UNIDAD"];
+	}else{
+		$unidad = 0;
+	}
+
 	function version(){
 		$ver = '3.0';
 		return $ver;
@@ -163,8 +197,22 @@
 		return $tabla;
 	}
 
+	function color_mis_cursos($c){
+		if($c==0){
+			$r = 'fila';
+		}elseif($c==1){
+			$r = 'success';
+		}elseif($c==2){
+			$r = 'warning';
+		}elseif($c==3){
+			$r = 'alert';
+		}elseif($c==4){
+			$r = 'info';
+		}
+		return $r;
+	}
 	function vermiscursos($codigo){
-		global $mysqli;
+		global $mysqli, $unidad;
 		conectar();	
 		$tabla = "";
 		$n = 0;		
@@ -185,16 +233,18 @@
 			</thead>
 			<tbody>';
 		foreach ($asignaciones as $curso) {
-
-
-			$crono 		=		buscaCrono($curso['codigo'],$curso['seccion'],$b);
-
-
+				$clase 		=		'fila';
+			if($unidad > 0){
+				$crono 		=		buscaCrono($curso['codigo'],$curso['seccion'],$unidad);
+				$clase 		=		color_mis_cursos($crono);
+			}else{
+				$crono 		= 		0;
+			}
 
 			$n++;
 			$grado = grado($curso['grado'],$curso['nivel'],$curso['carrera']);
 			$tabla .= "
-			<tr class='success'>
+			<tr class='{$clase} '>
                 <td>{$n}</td>
                 <td>{$curso['codigo']}</td>
                 <td>{$curso['nombre']}</td>
@@ -203,7 +253,7 @@
             $tabla .= '<td>
 
 					<ul class="icons-list">
-						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Edit"><i class="icon-pencil7"></i></a></li>
+						<li><a class="permiso_unidad" data-animation="bounceOutLeft" href="#" title="Edit"><i class="icon-pencil7"></i></a></li>
 						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Remove"><i class="icon-trash"></i></a></li>
 						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Options"><i class="icon-cog7"></i></a></li>
 					</ul>
@@ -497,4 +547,51 @@
 			$r = 0;
 		}
 		return $r;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function cronoForm(){
+		global $mysqli;
+			$titulos = array();
+			$celda = 0;
+			$busca = db("select valor from opciones where opcion like 'CRONOGRAMAS' limit 0,1",$mysqli);
+			$crono = json_decode($busca['0']['valor'], TRUE);
+			$col   = count($crono['titulos']);
+
+			$tabla = '<table class="table table-bordered table-framed crono"><thead><tr><th width="50px">#</th>';
+				    for ($i = 0; $i < $col; $i++) {
+				    	$tabla .= "<th>{$crono['titulos'][$i]}</th>";
+		    		}
+			$tabla .= '<th>Fecha</th></tr></thead><tbody>';
+							for ($i = 1; $i <= $crono['maximo']; $i++) {
+				    		$tabla .= '<tr><td style="margin: 0px; padding: 3px;">'.($i).'</td>';
+								for ($ii = 0; $ii < $col; $ii++) {
+									$celda++;
+									$t = eliminar_tildes(strtolower($crono['titulos'][$ii])); 
+							    	$tabla .= '<td style="margin: 0px; padding: 3px;">';
+									$tabla .= "<input name=\"{$t}[]\" id=\"C{$celda}\" data-id=\"{$celda}|{$col}|\" type=\"text\" class=\"move\"  /> </td>";
+					    		}
+				    		$tabla .= '<td style="margin: 0px; padding: 3px;"><input style="border:none;" type="date" name="fecha[]"/></td>
+				    				</tr>';
+				}
+				$tabla .= '</tbody></table>';
+			return $tabla;
 	}

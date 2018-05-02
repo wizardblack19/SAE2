@@ -21,6 +21,48 @@
 		</div>
 	
 
+
+
+		<div class="panel panel-flat" id="cronograma" style="display: none;">
+			<div class="panel-heading">
+				<h5 class="panel-title">Cronograma de Tareas</h5>
+				<div class="heading-elements">
+
+					
+					<ul class="icons-list">
+                		<li><a data-action="reload"></a></li>
+                	</ul>
+            	</div>
+			</div>
+			<div class="panel-body">
+				
+				<div class="table">
+					
+
+							<div class="table-responsive" id="cronoNuevo">
+
+								
+
+							</div>
+
+				</div>
+			</div>
+
+			<div class="panel-footer">
+				<div class="heading-elements">
+					
+					<div class="heading-btn pull-right">
+						
+						<button type="button" data-show="miscursos" data-hide="cronograma" class="btn cancelar btn-default">Cancelar</button>
+						<button type="button" class="btn btn-info">Clonar Cronograma</button>
+						<button type="button" class="btn btn-info">Adjuntar Archivo</button>
+						<button type="button" class="btn btn-info">Guardar</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
         <!-- Buscar curso modal -->
 		<div id="asignarme" class="modal fade">
 			<div class="modal-dialog modal-lg">
@@ -78,9 +120,38 @@
 				</div>
 			</div>
 		</div>
-		<!-- /vertical form modal -->
+		<!-- /Buscar curso modal -->
+
+        <!-- Retornar Cronogramas edit -->
+		<div id="cronograma" class="modal fade">
+			<div class="modal-dialog modal-full">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h5 class="modal-title">Cronograma de Tareas</h5>
+					</div>
+
+						<div class="modal-body">
 
 
+
+
+
+						
+
+
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-link" data-dismiss="modal">Cerrar</button>
+							
+						</div>
+
+
+				</div>
+			</div>
+		</div>
+		<!-- /Retornar Cronogramas edit -->
 
 
 	</div>
