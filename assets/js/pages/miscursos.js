@@ -183,32 +183,24 @@ $(function() {
 
 
 
-
-
     $(document).on("click", ".permiso_unidad", function (e) {
         e.preventDefault();
-        
-
-            $.post( "core.php?l=cronoForm", { func: "getNameAndTime" }, function( data ) {
+        if(cargarcookie() == 0){
+            swal("Error!", "Debe seleccionar unidad a trabajar!", "error");
+        }else{
+        var result = $(this).attr('data-crono').split('|');
+        var docente = $("#codigo").attr('code');
+            $.post( "core.php?l=cronoForm", { docente: docente,unidad: cargarcookie(),curso: result[3],seccion: result[2]  }, function( data ) {
                 $('#cronoNuevo').html(data.html);
                 $('#miscursos').hide('slow');
-                $('#cronograma').show('slow');           
+                $('#cronograma').show('slow');
+                $('#curso').html(
+                    '<span class="label border-left-info label-striped">'+result[0] + 
+                    ' | '+result[1]+
+                    ' | sección: '+result[2]+
+                    ' | Código: '+result[3]+'</span>');
             }, "json");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 
@@ -219,10 +211,33 @@ $(function() {
 
 
 
+    $(document).on("click", ".guardar", function (e) {
+        e.preventDefault();
+        var estado = $(this).attr('estado');
+        $('#estado').val(estado);
+
+        $.post( "core.php?l=SaveIndividualCrono",$("#cronoForm").serialize(), function( data ) {
+            
+            if(data.alert=="0"){
+                swal("Mensaje",data.msg,data.alert);
+            }else if(data.alert > "0"){
+                $("#id").val(data.idD);
+                swal("Mensaje",data.msg,data.alert);
+            }
+
+
+        }, "json");
+
+
+    });
 
 
     $(document).on("click", ".cancelar", function (e) {
         e.preventDefault();
+        var perfil = JSON.parse(Cookies.get('perfil'));
+        var action = 'ver';
+        var block = '#miscursos';
+        post_data(perfil.codigo,action,block);
         var ver = $(this).attr('data-show');
         var ocultar = $(this).attr('data-hide');
         $('#'+ver).show('slow');
@@ -230,9 +245,92 @@ $(function() {
     });
 
 
+    $(document).on("click", ".clonar", function (e) {
+        e.preventDefault();
+        var codigo = $('#codigo').attr('code');
+
+        $.post( "core.php?l=clonar",{codigo: codigo, tipo:'clonar'}, function( data ) {
+            if(data){
+
+                $('#miscursose').html(data.html);
+                $('#Copciones').hide('fast');
+                $('#cursosA').show('fast');
+            }
+
+        }, "json");
 
 
 
+
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+    $(document).on("click", ".enlazar", function (e) {
+        e.preventDefault();
+        $('#Copciones').hide('fast');
+        $('#cursosA').show('fast');
+
+    });    
+
+
+     $("#Clonar").on('hidden.bs.modal', function () {
+
+        $('#Copciones').show();
+        $('#cursosA').hide();
+    });
+
+
+    $(document).on("click", ".borrar", function (e) {
+        e.preventDefault();
+        var idK =   $(this).attr('idK');
+        var idD =   $(this).attr('idD');
+
+
+        swal({ 
+         title: "¿Seguro que desea Borrar?", 
+         text: "No podrá deshacer este paso...", 
+         type: "warning", 
+         showCancelButton: true,
+         cancelButtonText: "Cancelar",
+         confirmButtonColor: "#DD6B55", 
+         confirmButtonText: "Borrar!", 
+         closeOnConfirm: false }, 
+         function(){ 
+             
+
+        $.post( "core.php?l=borrarCrono",{idD:idD, idK:idK,data: 'key'}, function( data ) {
+            if(data.msg=="1"){
+                var perfil = JSON.parse(Cookies.get('perfil'));
+                var action = 'ver';
+                var block = '#miscursos';
+                post_data(perfil.codigo,action,block);
+                $('#cronograma').hide();
+                $('#miscursos').show();
+                 swal("¡Hecho!", 
+                 "cronograma Borrado.", 
+                 "success"); 
+            }else{
+                swal("Error!", 
+                 "Algo raro paso, no fue posible borrar este cronograma.", 
+                 "alert"); 
+            }
+
+        }, "json");
+
+
+         });
+    });
 
 
 
@@ -243,25 +341,24 @@ $(function() {
 
 
 
+
+
+
+
+
 $(document).keydown(
-
-
-    function(e)
-    { 
-
-        
-        var datos = $(".move:focus").focus().attr('data-id').split('|');
+    function(e){
+    var datos = $(".move:focus").focus().attr('data-id');
+    if (typeof datos !== 'undefined') {
+    datos = datos.split('|');
         var id = parseInt(datos['0']);
         var li = parseInt(datos['1']);
-
 
         if (e.keyCode == 107 ) {
             e.preventDefault();
             var sig = (id+1);
             $("#C"+sig).focus();
-        }else
-        
-        if (e.keyCode == 13 ) {      
+        }else if (e.keyCode == 13 ) {      
             var sig = (id+li);
             $("#C"+sig).focus();
         }else    
@@ -284,6 +381,7 @@ $(document).keydown(
             $("#C"+sig).focus();
    
         }
+}
 
 
 

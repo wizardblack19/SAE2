@@ -1,0 +1,277 @@
+		*{
+  	box-sizing: border-box;
+  	-moz-box-sizing: border-box;
+
+	}
+	body{
+	  font-family: Verdana, Geneva, sans sarif;
+	 width:100%;
+	margin:0px;
+	padding:0px;
+	background:#eee;
+
+	}
+	header{
+		background: #111;
+
+		position: relative;;
+		width: 70%;
+		background: #ccc;
+		height: 90%;
+		left: 15%;
+	}
+	header div{
+		position: relative;
+		background: #fff;
+		width: 100%;
+		height: 143px;
+
+	}
+	header img{
+		background: #fff;
+position: relative;
+left: 1%;
+top: 18px;
+	}
+	header h3{
+position: relative;
+left: 10%;
+top:-72px;
+	}
+	header h4{
+position: relative;
+left: 10%;
+top:-72px;
+	}
+
+
+	a{
+	  text-decoration:none;
+	}
+	.nav-bar{
+
+	  background-color: #FC7323;
+	  width: 100%;
+	  padding:0;
+
+	}
+	.nav-hold{
+
+	  display:block;
+	  width: 60%;
+	}
+	.nav-logo{
+		position: relative;
+	  left: 30%;
+	  display: block;
+	height: 100%;
+	  font-weight: 600;
+		padding: 4px;
+	}
+	.nav-logo a{
+
+	  color: #FFFFFF;
+	}
+	.nav-items{
+		position: relative;
+		top: 5px;
+	  float: right;
+		left: 90%;
+	}
+	.nav-items li{
+
+	  display:block;
+	  float: left;
+	  padding: 30px 30px;
+	  margin-left:10px;
+	}
+	.nav-items li a {
+	  color: #FFFFFF;
+		font-size: 22px;
+	}
+	.nav-items li:hover {
+	  background-color:  #FC7323;
+	  border-left:2px solid #FFFFFF;
+	  border-right:2px solid #FFFFFF;
+	}
+	.nav-hold{
+	  overflow:hidden;
+	}
+	.nav-menu{
+		position: relative;
+
+	  d;
+	}
+	.footer{
+		font-size: 12px;
+ 	 position: fixed;
+ 	 bottom: 0;
+  	left: 0;
+  	height: 20px;
+ 	 background-color: white;
+  	width: 100%;
+	border-left:1px solid #FC7323;
+	  border-right:1px solid #FC7323;
+	  border-top:1px solid #FC7323;
+	}
+
+#ContenedorCuerpo{
+	padding:5px;
+	position:absolute;
+		background:#fff;
+		width:70%;
+		height:100%;
+		left:15%;
+
+		z-index:-2;
+
+
+	}
+	#miVentana{
+position: fixed;
+		background: #fff;
+left: 27%;
+		width: 40%;
+		top: 200px;
+		height: 40%;
+	}
+	#mimiVentana{
+		background: #eee;
+		width: 90%;
+	}
+
+	#ContenedorIzquierdo{
+
+	position:relative;
+background:#eee;
+		width:20%;
+		left:-39%;
+border-radius: 29px 29px 29px 29px;
+-moz-border-radius: 29px 29px 29px 29px;
+-webkit-border-radius: 29px 29px 29px 29px;
+border: 2px solid #ddd;
+top:30px;
+
+
+	}
+	#ContenedorIzquierdo h3{
+		border-radius: 29px 29px 0px 0px;
+-moz-border-radius: 29px 29px 0px 0px;
+-webkit-border-radius: 29px 29px 0px 0px;
+border: 2px solid #ddd;
+	top:-20px;
+	width:100%;
+	position:relative;
+background:#FEB476;
+font-size:100%;
+
+
+
+	}
+
+
+	#ContenedorIzquierdo button{
+
+	position:relative;
+background:#59B548;
+	padding:10px;
+width:101%;
+height:40%;
+border-radius: 0px 0px 29px 29px;
+-moz-border-radius: 0px 0px 29px 29px;
+-webkit-border-radius: 0px 0px 29px 29px;
+border: 0px solid #ddd;
+	}
+	#ContenedorInformacion{
+		position:relative;
+		background:#F7F4E6;
+		height:100%;
+
+border-radius: 29px 29px 29px 29px;
+-moz-border-radius: 29px 29px 29px 29px;
+-webkit-border-radius: 29px 29px 29px 29px;
+border: 2px solid #ddd;
+
+	}
+
+#SectionTablas{
+	position:relative;
+	background:#EBFCFA;
+	width:52%;
+	height:90%;
+	left:31%;
+	top:30px;
+	padding:20px;
+}
+#ContenedorTablas{
+height:100%;
+
+}
+td{
+
+width:0%;
+padding:10px;
+position:relative;
+
+
+}
+table{
+	position:relative;
+
+	width:100%;
+}
+#btnEnviarHorario{
+	position:absolute;
+	left:80%;
+	background:#43A695;
+	color:#FFF;
+	border: #fff 0px solid;
+}
+#btnEnviarHorario:hover{
+background:#43A660;
+position:absolute;
+
+
+}
+.nav-logo img{
+	position: relative;
+
+
+}
+
+	/*media Queries*/
+	@media screen and (max-width: 768px){
+		.nav-menu{
+		  display: block;
+		  float: right;
+		  width: 100%;
+		  padding: 5px 100%;
+		  cursor: pointer;
+		  color: white;
+		}
+		.nav-items{
+		  width: 100%;
+		  float: left;
+		  height: 0px;
+		  padding:0px;
+		  margin:0px;
+
+		}
+		.nav-items li{
+		  width: 100%;
+		  display: block;
+		}
+	}
+	.nav-open{
+		height: auto;
+	}
+table {
+    width: 100%;
+}
+th{
+	background: #FC7323;
+	color: white;
+}
+th, td {
+    border-bottom: 1px solid #ddd;
+}

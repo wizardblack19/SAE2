@@ -1,0 +1,39 @@
+	.Principal {
+	padding: 0px 5px;
+  	  border:1px solid #000000;
+  	}
+	.aprendiz {
+	padding: 0px 5px;
+	top: 2px;
+  	  background: #5EB319;
+  	  color:white;
+  	  border: 1px solid #000000; 
+  	  	border-radius:2px; 
+-moz-border-radius:2px; /* Firefox */ 
+-webkit-border-radius:2px; /* Safari y Chrome */
+  	}
+  	.instructor {
+	padding: 0px 5px;
+	top: 1px;
+  	  border:1px solid #000000;
+  	  background: #FC7323;
+  	  color:white;
+  	  border: 1px solid #000000; 
+  	  	border-radius:2px; 
+-moz-border-radius:2px; /* Firefox */ 
+-webkit-border-radius:2px; /* Safari y Chrome */
+  	}
+
+li{
+	  display:block;
+	  float: left;
+	  margin-left:10px;
+	}
+li a {
+	  color: #FFFFFF;
+	}
+li:hover {
+	  background-color:  white;
+	  border-left:1px solid #FFFFFF;
+
+	}

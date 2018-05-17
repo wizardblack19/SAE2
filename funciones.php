@@ -53,10 +53,10 @@
 
 	function conectar(){
 	global $mysqli;	
-		define("HOST", "localhost");
-		define("USER", "root"); 
-		define("PASSWORD", "ceci5652");
-		define("DATABASE", "fuentede_sae");
+		define("HOST", "saerds.cjotq8aa2kgw.us-east-2.rds.amazonaws.com");
+		define("USER", "sae_system"); 
+		define("PASSWORD", "Sae5621*");
+		define("DATABASE", "sae");
 		@$mysqli = mysqli_connect(HOST, USER, PASSWORD) or die ("No se ha podido conectar al servidor. <br />Error: ".mysqli_connect_error());
 		@$db = mysqli_select_db( $mysqli, DATABASE ) or die ( "Upps! No es posible conectar con la base de datos." );
 		$acentos = $mysqli->query("SET NAMES 'utf8'");
@@ -121,9 +121,9 @@
 		global $mysqli;
 		    if($codigo && $tipo){
 		    	$datosGE['hora'] = date('1998');
-		    	if($user = db("select codigo,tipo,nombres,apellidos from user where codigo = '".$codigo."' and tipo = '".$tipo."' limit 0,1 ",$mysqli)){
-		   		 	$datosGE['nombres'] = $user[0]['nombres'];
-		    		$datosGE['apellidos'] = $user[0]['apellidos'];
+		    	if($user = db("select codigo,tipo,nombre,apellido from usuarios where codigo = '{$codigo}' and tipo = '{$tipo}' limit 0,1 ",$mysqli)){
+		   		 	$datosGE['nombres'] = $user[0]['nombre'];
+		    		$datosGE['apellidos'] = $user[0]['apellido'];
 		    		$datosGE['hora'] = date('YmdHis');
 		    		$datosGE['codigo'] = $codigo;
 		    	}
@@ -205,13 +205,13 @@
 		}elseif($c==2){
 			$r = 'warning';
 		}elseif($c==3){
-			$r = 'alert';
+			$r = 'danger';
 		}elseif($c==4){
 			$r = 'info';
 		}
 		return $r;
 	}
-	function vermiscursos($codigo){
+	function vermiscursos($codigo,$datos=""){
 		global $mysqli, $unidad;
 		conectar();	
 		$tabla = "";
@@ -250,18 +250,24 @@
                 <td>{$curso['nombre']}</td>
                 <td>{$grado}</td>
                 <td>{$curso['seccion']}</td>";
+            if($datos==""){
+            $data = $curso["nombre"].'|'.$grado.'|'.$curso["seccion"].'|'.$curso['codigo'];	
             $tabla .= '<td>
-
 					<ul class="icons-list">
-						<li><a class="permiso_unidad" data-animation="bounceOutLeft" href="#" title="Edit"><i class="icon-pencil7"></i></a></li>
+						<li><a class="permiso_unidad" href="?crear" data-crono="'.$data.'" title="Crear"><i class="icon-pencil7"></i></a></li>
 						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Remove"><i class="icon-trash"></i></a></li>
 						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Options"><i class="icon-cog7"></i></a></li>
 					</ul>
+				</td>';
+			}elseif($datos == "clonar"){
+				$tabla .= '<td> <input type="checkbox" class="styled" > </td>';
+			}
 
 
-				</td>
-            </tr>
-            ';
+
+
+
+			$tabla .= '</tr>';
 
 			
 		}
@@ -541,7 +547,7 @@
 
 	function buscaCrono($c,$s,$b){
 		global $mysqli;
-		if($busca = db("select estado from crono_seg where curso like '{$c}' and seccion like '{$s}' and bim = {$b} limit 0,1",$mysqli)){
+		if($busca = db("select estado from crono_key where curso like '{$c}' and seccion like '{$s}' and unidad = {$b} limit 0,1",$mysqli)){
 			$r = $busca['0']['estado'];
 		}else{
 			$r = 0;
@@ -560,38 +566,118 @@
 
 
 
-
-
-
-
-
-
-
-
-	function cronoForm(){
+	function cronograma($datos){
 		global $mysqli;
+		$dato = explode("|", $datos);
+		$c 	  = $dato['1'];
+		$s 	  = $dato['2'];
+		$b 	  = $dato['3'];
+		//buscamos cronograma
+		if($busca = db("select * from crono_key where curso like '{$c}' and seccion like '{$s}' and unidad = {$b} limit 0,1",$mysqli)){
+			if($busca[0]['estado'] == 2){
+				$responde = '
+				<div class="alert alert-warning no-border">
+					<button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Cerrar</span></button>
+					<span class="text-semibold">Enviado!</span> <br />Este cronograma ya fue enviado, esta esperando revisión, por favor espere, si este mensaje tarda mucho, verifique con el auxiliar de nivel. <br /><br /> ID:';
+				$responde .= $busca[0]['id'].' <br /> INS: ';
+				$responde .= $busca[0]['fecha_ins'].' <br /> MOD:';
+				$responde .= $busca[0]['mod'].'</div>|'.$busca[0]['estado'];
+			}elseif($busca[0]['estado'] == 1){
+				$responde = vercrono($busca[0]['llave'],$busca[0]['fecha_ins']).$busca[0]['estado'];
+
+			}
+
+
+
+
+
+		}else{
+			$responde = cronoForm($datos).'|0';
+		}
+
+
+
+
+		return $responde;
+
+	}
+
+	function vercrono($d,$f){
+		global $mysqli;
+		if($f< '2018-05-01 00:00:00'){
+			$responde = '
+			<div class="alert alert-danger no-border">
+				<button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Cerrar</span></button>
+					<span class="text-semibold">Error!</span> <br /><br />
+					Este cronograma ya existe, sin embargo, no se puede mostrar en esta versión de software, si es necesario visualizar este cronograma, verifique con el administrador de sistema.
+			</div>';
+
+		}else{
+			$responde = 'falta';
+		}
+
+		return $responde;
+
+
+
+
+	}
+
+
+	function cronoForm($datos=""){
+		global $mysqli;
+			
+				$dato = explode("|", $datos);
+				$c 	  = $dato['1'];
+				$s 	  = $dato['2'];
+				$b 	  = $dato['3'];
+				$d 	  = $dato['0'];
+	
+
+
+
+
 			$titulos = array();
 			$celda = 0;
 			$busca = db("select valor from opciones where opcion like 'CRONOGRAMAS' limit 0,1",$mysqli);
 			$crono = json_decode($busca['0']['valor'], TRUE);
 			$col   = count($crono['titulos']);
 
-			$tabla = '<table class="table table-bordered table-framed crono"><thead><tr><th width="50px">#</th>';
+			$tabla = '<form id="cronoForm" autocomplete="off">
+			<input type="hidden" name="seccion" value="'.$s.'">
+			<input type="hidden" name="docente" value="'.$d.'">
+			<input type="hidden" name="curso" value="'.$c.'">
+			<input type="hidden" name="unidad" value="'.$b.'">
+			<input id="id" type="hidden" name="id" value="0">
+			<input id="estado" type="hidden" name="estado" value="0">
+
+			<table class="table table-bordered table-framed crono"><thead><tr><th width="50px">#</th>';
 				    for ($i = 0; $i < $col; $i++) {
 				    	$tabla .= "<th>{$crono['titulos'][$i]}</th>";
 		    		}
 			$tabla .= '<th>Fecha</th></tr></thead><tbody>';
 							for ($i = 1; $i <= $crono['maximo']; $i++) {
-				    		$tabla .= '<tr><td style="margin: 0px; padding: 3px;">'.($i).'</td>';
+				    		$tabla .= '<tr class="numero"><td style="margin: 0px; padding: 3px;">'.($i).'</td>';
 								for ($ii = 0; $ii < $col; $ii++) {
 									$celda++;
+									if($celda <= $crono['maximo']){$d='required';}else{$d='';}
 									$t = eliminar_tildes(strtolower($crono['titulos'][$ii])); 
 							    	$tabla .= '<td style="margin: 0px; padding: 3px;">';
-									$tabla .= "<input name=\"{$t}[]\" id=\"C{$celda}\" data-id=\"{$celda}|{$col}|\" type=\"text\" class=\"move\"  /> </td>";
+									$tabla .= "<input name=\"{$t}[]\" id=\"C{$celda}\" data-id=\"{$celda}|{$col}|\" type=\"text\" class=\"move\" {$d} /> </td>";
 					    		}
 				    		$tabla .= '<td style="margin: 0px; padding: 3px;"><input style="border:none;" type="date" name="fecha[]"/></td>
 				    				</tr>';
 				}
-				$tabla .= '</tbody></table>';
+				$tabla .= '</tbody></table></form>';
 			return $tabla;
 	}
+
+
+
+
+	class alumno {
+		public $nombre;
+		public $grado;
+		public $seccion;
+	}
+

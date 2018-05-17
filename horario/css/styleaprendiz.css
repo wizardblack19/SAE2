@@ -1,0 +1,388 @@
+				*{
+  	box-sizing: border-box;
+  	-moz-box-sizing: border-box;
+text-decoration: none;
+	}
+	body{
+	  font-family: Verdana, Geneva, sans sarif;
+	 width:100%;
+	 
+	margin:0px;
+	padding-left:5%;
+	padding-right:5%;
+	background:#eee;
+	float: left;
+	 
+	
+	}
+	
+	header{
+		background:#FFf;
+		
+	
+	}
+	
+
+.navMenu{
+    width: 100%;
+    background: #5EB319;
+    height: 100%;
+    padding: 10px;
+    top: -20px;
+    position: relative;
+
+  }   
+.navMenu button
+{
+	left: 59%;
+	position: relative;
+	background: transparent;
+	border: 0px solid;
+	border-left: 1.3px #fff solid;
+	padding: 4px 4px 4px 7px;
+	font-size: 85%;
+	color: #eee;
+	width: 10%;
+
+}
+.navMenu button:hover
+{left: 59%;
+	position: relative;
+	background: #95D85E;
+  cursor: pointer;
+	border: 0px solid;
+	border-left: 1.3px #fff solid;
+	padding: 4px 4px 4px 7px;
+	font-size: 85%;
+
+}
+
+
+  .tdImagen{
+	
+    left:1%;
+     	width:10%;
+     }
+     .tdLetras{
+width:50%;
+
+     }
+     .imagenFondo {
+	position:absolute;
+	top:20%;
+	left:10%;
+	width:80%;
+	height:86%;
+}
+.iD{
+
+	width:30%;
+}
+.iD div{
+text-align:right;
+	left:400px;
+
+}
+
+
+
+
+
+	
+
+	.footer{
+		font-size: 12px;
+ 	 position: fixed;
+ 	 bottom: 0;
+  	left: 0;
+  	height: 20px;
+ 	 background-color: white;
+  	width: 100%;
+	border-left:1px solid #59B549;
+	  border-right:1px solid #59B549;
+	  border-top:1px solid #59B549;
+	}
+
+#ContenedorCuerpo{
+	
+		background:#fff;
+		width:100%;
+		height:100%;
+		float:left;
+		z-index:0;
+		margin: -20px 0px;
+
+
+	}
+
+
+
+
+.login-page {
+  width: 200px;
+  padding: 5% 0 0;
+    width: 100%;
+  height: 5%;
+  margin: auto;
+          border-radius:10px; 
+-moz-border-radius:10px; /* Firefox */ 
+-webkit-border-radius:10px; /* Safari y Chrome */
+ border: 1px solid: #000000;
+}
+.form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 300px;
+  margin: 0 auto 100px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.5), 0 5px 5px 0 rgba(0, 0, 0, 0.35);
+
+}
+.form input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 1px solid white;
+  margin: 0 0 12px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 10px;
+
+}
+.form button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #319387;
+  width: 100%;
+  border: 1px solid white;
+  padding: 10px;
+  color: #FFFFFF;
+  font-size: 10px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+        border-radius:5px; 
+-moz-border-radius:5px; /* Firefox */ 
+-webkit-border-radius:5px; /* Safari y Chrome */
+}
+.form button:hover,.form button:active,.form button:focus,.form input:hover,.form input:active,.form input:focus {
+  border:1px solid #CCCCCC;
+}
+
+
+
+
+
+
+
+
+	section
+{
+	float:left;
+	padding:2px;
+	 padding:0px 10px;
+	width:100%;
+
+	
+	z-index:3;
+}
+
+section td{
+	width:50%;
+	height:100%;
+}
+.formIns {
+ 
+
+  z-index: 1;
+padding:0px 00px 0px 85px;
+  width:92%;
+  text-align: center;
+ 
+
+}
+.formIns input, select {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 47%;
+
+  margin: 0 0 10px;
+  height: 38px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 12px;
+    border:1px solid #ddd;
+    border-radius:3px;
+
+}
+.formIns div {
+	color: #238276;
+
+	width: 100%;
+	 font-family: "Roboto", sans-serif;
+font-size: 24px;
+
+	
+
+}
+.formIns button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #238276;
+  width: 87%;
+  border: 1px solid white;
+  padding: 12px;
+  color: #FFFFFF;
+  font-size: 10px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+        border-radius:5px; 
+-moz-border-radius:5px; /* Firefox */ 
+-webkit-border-radius:5px; /* Safari y Chrome */
+}
+
+
+.formIns button:hover,.formIns button:active,.formIns button:focus,.formIns input:hover,.formInsinput:active,.formInsinput:focus,.formIns select:hover,.formIns select:active,.formIns select:focus
+{
+  border:1px solid #bbb;
+}
+
+
+.buscar input{
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 73%;
+
+  margin: 	0px 0px 0px 0px;
+  height: 39px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-size: 12px;
+    border:1px solid #ddd;
+    border-radius:3px;
+      position: relative;
+
+}
+
+.buscar button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  position: relative;
+  background: #238276;
+  width: 20%;
+  height: 39px;
+  top: 10px;
+  border: 0px solid white;
+  padding: 0px;
+  color: #FFFFFF;
+  font-size: 10px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+        border-radius:5px; 
+-moz-border-radius:5px; /* Firefox */ 
+-webkit-border-radius:5px; /* Safari y Chrome */
+}
+
+
+
+	/*media Queries*/
+	@media screen and (max-width: 768px){
+		
+		
+
+
+
+
+.navMenu button
+{
+	left: 15%;
+	position: relative;
+	background: transparent;
+	border: 0px solid;
+	border-left: 1.3px #fff solid;
+	padding: 4px 4px 4px 7px;
+	font-size: 65%;
+	color: #eee;
+	width: 22%;
+
+}
+.navMenu button:hover
+{left: 15%;
+	position: relative;
+	background: #319387;
+
+	border: 0px solid;
+	border-left: 1.3px #fff solid;
+	padding: 4px 4px 4px 7px;
+	font-size: 85%;
+
+}
+
+
+	}
+	.nav-open{
+		height: auto;
+	}
+
+
+.tablains{
+
+	width:80%;
+	border-collapse: collapse; /* IE7 and lower */
+    border-spacing: 0; 
+font-size:90%; 
+}
+.tablains td{
+	width:2%;
+	font-size:90%;
+	border:#aaa 1px solid;
+}
+.tablains th{
+	background:#3794AD;
+
+
+}
+
+.tablains th:first-child {
+    border-radius: 8px 0 0 0;
+
+}
+
+.tablains th:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+.tablains th:only-child{
+    border-radius: 6px 6px 0 0;
+}
+.tablains tr:hover {
+  background: #eef;
+  transition: all 0.4s ease-in-out;     
+} 
+
+
+
+
+.tablains button
+{
+	background: none;
+	border: 0px #fff solid;
+}
+
+
+
+
+
+	@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+

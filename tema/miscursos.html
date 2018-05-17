@@ -5,7 +5,7 @@
 				<div class="heading-elements">
 
 
-					<a data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#asignarme" href="#"><span class="label bg-indigo-400 heading-text">+ Asignar</span></a>
+					<a data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#asignarme" href="#asignarme"><span class="label bg-indigo-400 heading-text">+ Asignar</span></a>
 					
 					<ul class="icons-list">
                 		<li><a data-action="reload"></a></li>
@@ -35,16 +35,9 @@
             	</div>
 			</div>
 			<div class="panel-body">
-				
+				<p id="curso"></p>
 				<div class="table">
-					
-
-							<div class="table-responsive" id="cronoNuevo">
-
-								
-
-							</div>
-
+					<div class="table-responsive" id="cronoNuevo"></div>
 				</div>
 			</div>
 
@@ -53,10 +46,28 @@
 					
 					<div class="heading-btn pull-right">
 						
-						<button type="button" data-show="miscursos" data-hide="cronograma" class="btn cancelar btn-default">Cancelar</button>
-						<button type="button" class="btn btn-info">Clonar Cronograma</button>
-						<button type="button" class="btn btn-info">Adjuntar Archivo</button>
-						<button type="button" class="btn btn-info">Guardar</button>
+						<button type="button" data-show="miscursos" data-hide="cronograma" class="btn cancelar btn-default">Cerrar</button>
+						<button type="button" class="btn btn-info">Adjuntar</button>
+						<div class="btn-group">
+							<button type="button" estado="2" class="btn btn-info guardar">Guardar</button>
+	                    	<button type="button" class="btn btn-info dropdown-toggle " data-toggle="dropdown"><span class="caret"></span></button>
+	                    	<ul class="dropdown-menu dropdown-menu-right">
+								<li><a class="guardar" estado="4" href="?Borrador"><i class="icon-menu7"></i> Borrador </a></li>
+								<li><a data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#Clonar" href="#Clonar"><i class="icon-screen-full"></i> Clonar o Enlazar </a></li>
+								<li class="divider"></li>
+								<li id="borrar" style="display: none;"><a idK="0" idD="0" class="borrar" href="#"><i class="icon-gear"></i> Borrar </a></li>
+								<li><a data-show="miscursos" data-hide="cronograma" class="cancelar" href="?cancelar"><i class="icon-cross2"></i> Cancelar </a></li>
+
+
+							</ul>
+						</div>
+
+			
+
+
+
+
+
 					</div>
 				</div>
 			</div>
@@ -71,50 +82,36 @@
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h5 class="modal-title">Buscar Cursos</h5>
 					</div>
-
 					<form id="bCursos" action="core.php?l=bCursos">
 						<div class="modal-body">
 							<div class="form-group">
 								<div class="row">
-
 									<div class="col-sm-2">
 										{Sgrado}
 									</div>
-
 									<div class="col-sm-2">
 										{Snivel}
 									</div>
-
 									<div class="col-sm-2">
 		                            	{Scarrera}
 									</div>
-
 									<div class="col-sm-2">
 		                            	{Sseccion}
 									</div>
 									<div class="col-sm-2">
 		                            	{Sjornada}
 									</div>
-
 									<input type="hidden" name="docente" value="{codigo}" />
-
 									<div class="col-sm-2">
 		                            	<button type="submit" class="btn btn-primary">Buscar</button>
 									</div>
-
-								</div>							
-
+								</div>
 							</div>
-
 							<div id="rbusqueda" style="display: none;">
 							</div>
-
-
 						</div>
-
 						<div class="modal-footer">
 							<button type="button" class="btn btn-link" data-dismiss="modal">Cerrar</button>
-							
 						</div>
 					</form>
 				</div>
@@ -122,22 +119,32 @@
 		</div>
 		<!-- /Buscar curso modal -->
 
-        <!-- Retornar Cronogramas edit -->
-		<div id="cronograma" class="modal fade">
-			<div class="modal-dialog modal-full">
-				<div class="modal-content">
+        <!-- Clonar Enlazar -->
+		<div id="Clonar" class="modal fade">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content ">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h5 class="modal-title">Cronograma de Tareas</h5>
+						<h5 class="modal-title">Clonar o Enlazar Cronogramas</h5>
 					</div>
 
 						<div class="modal-body">
 
+						<div id="Copciones">
+							<p>Clonar: Permite hacer una copia de este cronograma a otros cursos, que luego podrá editar individualmente.</p>
+							<p>Enlazar: Permite enlazar este cronograma a otros cursos, de tal manera que cualquier edición en este cronograma, afectara a todos los que sean enlazados.</p>
+							<div class="panel panel-body border-top-primary text-center">
 
+								<div class="btn-group">
+									<button type="button" class="clonar btn btn-primary">Clonar</button>
+									<button type="button" class="enlazar btn btn-primary">Enlazar</button>
+								</div>
+							</div>
+						</div>
+						<div id="cursosA" style="display: none;">
+							<div id="miscursose"></div>
+						</div>
 
-
-
-						
 
 
 						</div>
