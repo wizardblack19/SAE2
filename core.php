@@ -315,7 +315,6 @@ elseif($proceso == "cronoForm"){
 
       $data['html']   =   cronograma($datos);
 
-    
 
 
 
