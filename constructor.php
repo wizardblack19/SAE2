@@ -247,6 +247,7 @@ function menu(){
 				<li '; if($este_lugar == "miscursos"){$data .= "class='active'";}; $data .= '><a href="miscursos.php">Mis Cursos</a></li>
 				<li '; if($este_lugar == "archivos"){$data .= "class='active'";}; $data .= '><a href="archivos.php">Archivos</a></li>
 				<li '; if($este_lugar == "configuracion"){$data .= "class='active'";}; $data .= '><a href="configuracion.php">Hideable main navbar</a></li>
+				<li '; if($este_lugar == "docentes"){$data .= "class='active'";}; $data .= '><a href="docentes.php">Docentes</a></li>
 				<li class="cosa "><a href="layout_navbar_secondary_hideable.html">Hideable secondary navbar</a></li>
 				<li class="cosa "><a href="layout_sidebar_sticky_custom.html">Sticky sidebar (custom scroll)</a></li>
 				<li class="cosa "><a href="layout_sidebar_sticky_native.html">Sticky sidebar (native scroll)</a></li>
@@ -438,7 +439,19 @@ define('MENU',$menu_s);
 			';
 		}
 
-
+	elseif(lugar()=="docentes"){
+		$head .= '
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/datatables.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/jszip/jszip.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/editable/editable.min.js"></script>			
+			<script type="text/javascript" src="assets/js/core/app.js"></script>
+			<script type="text/javascript" src="assets/js/pages/docentes.js"></script>
+			</head>
+			';
+	}
+	
 
 
 	define('HEAD',$head);
