@@ -357,6 +357,54 @@ elseif($proceso == "clonar"){
 
 
 
+//Actualiza la tabla de docentes
+elseif($proceso == "verdocentes"){
+$nombre=$_POST['name'];
+$valor=$_POST['value'];
+$pk=$_POST['pk'];
+conectar();
+$sql ="UPDATE `maestros` SET {$nombre} = '{$valor}' where `id`='{$pk}'";
+if(mysqli_query($mysqli, $sql)){
+  echo "0";
+}else{
+  echo "1";
+}
+cerrar_conex();
+exit;
+}
+
+
+
+//desactivar docentes
+elseif($proceso == "desactiar_docente"){
+$pk=$_POST['usuario'];
+conectar();
+$sql ="UPDATE `maestros` SET {$nombre} = '{$valor}' where `id`='{$pk}'";
+if(mysqli_query($mysqli, $sql)){
+  echo "0";
+}else{
+  echo "1";
+}
+cerrar_conex();
+exit;
+}
+
+
+//eliminar docentes
+elseif($proceso == "eliminar_docente"){
+$nombre=$_POST['name'];
+$valor=$_POST['value'];
+$pk=$_POST['pk'];
+conectar();
+$sql ="UPDATE `maestros` SET {$nombre} = '{$valor}' where `id`='{$pk}'";
+if(mysqli_query($mysqli, $sql)){
+  echo "0";
+}else{
+  echo "1";
+}
+cerrar_conex();
+exit;
+}
 
 
 
