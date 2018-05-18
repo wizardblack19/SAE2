@@ -97,7 +97,21 @@ $(function() {
         });
     });
 
-
+    $( "#clon" ).submit(function( event ) {
+        event.preventDefault();
+      
+        $.post( "core.php?l=clon",$("#bCursos").serialize(), function( data ) {
+            $("#rbusqueda").hide();
+            $("#rbusqueda").html(data.html);
+            $(".asignar").attr('data-seccion',data.seccion);
+            $(".asignar").attr('data-maestro',data.docente);
+            $("#rbusqueda").show('slow');
+        }, "json")
+        .fail(function() {
+            $("#rbusqueda").hide('fast');
+            swal('Ocurrió un error en el scripts o servidor, no hay datos para este grado. ');
+        });
+    });
 
     $(document).on('click', '.asignar', function (e) {
         e.preventDefault();
