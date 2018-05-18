@@ -1,7 +1,5 @@
 $(function() {
 
-    // Tabla
-    // ------------------------------
     function tablaCursos(){
     $.extend( $.fn.dataTable.defaults, {
         autoWidth: false,
@@ -25,7 +23,6 @@ $(function() {
         }
     });
 
-    // Individual column searching with text inputs
     $('.datatable-column-search-selects tfoot td').not(':last-child').each(function () {
         var title = $('.datatable-column-search-selects thead th').eq($(this).index()).text();
         $(this).html('<input type="text" class="form-control input-sm" placeholder="'+title+'" />');
@@ -57,18 +54,15 @@ $(function() {
 
 
 
-    // Enable Select2 select for the length option
     $('.dataTables_length select').select2({
         minimumResultsForSearch: Infinity,
         width: 'auto'
     });
 
-    // Enable Select2 select for individual column searching
     $('.filter-select').select2();
 
     }
 
-    //llamado de DataTable
     tablaCursos();
 
     function post_data(codigo, action){
@@ -78,7 +72,6 @@ $(function() {
        }, "json");
     }
 
-    //Ejecutar al cerrar modal // refresh tabla mis cursos
      $("#asignarme").on('hidden.bs.modal', function () {
         var perfil = JSON.parse(Cookies.get('perfil'));
         var action = 'ver';
@@ -86,7 +79,6 @@ $(function() {
         post_data(perfil.codigo,action);
     });
 
-    //Buscar cursos event submit
 
     $( "#bCursos" ).submit(function( event ) {
     event.preventDefault();
@@ -105,7 +97,7 @@ $(function() {
         });
     });
 
-    //Asignarme el curso seleccionado /class="success"
+
 
     $(document).on('click', '.asignar', function (e) {
         e.preventDefault();
@@ -131,7 +123,7 @@ $(function() {
         });
     });
 
-    //desasignar
+
     $(document).on('click', '.desasignar', function (e) {
         e.preventDefault();
         e.stopPropagation();

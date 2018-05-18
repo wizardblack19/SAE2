@@ -5,7 +5,6 @@ include("index.php");
 $page = ob_get_contents();
 ob_end_clean();
 
-
 $llave = array();
 $enlace = array();
 $llave[] = '{codigo}';
