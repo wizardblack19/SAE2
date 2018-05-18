@@ -162,7 +162,7 @@
 							<th width="5%">#</th>
 							<th>Título de Archivo</th>
 							<th width="15%"># adjunto</th>
-							<th width="15%">Opciones</th>
+							<th width="15%">configuracion</th>
 						</tr>
 					</thead>
 					<tbody>';
@@ -409,7 +409,7 @@
 	function Sjornada(){
 		global $mysqli;
 		$i = 0;
-		$jornadas = db("select valor from opciones where opcion LIKE 'JORNADAS' limit 0,1",$mysqli);
+		$jornadas = db("select valor from configuracion where opcion LIKE 'JORNADAS' limit 0,1",$mysqli);
 		$select = '
         <select name="jornada" class="form-control" required>
             <option value="">Jornada</option>';
@@ -493,7 +493,7 @@
 		$list = '
         <select name="seccion" class="form-control" required>
             <option value="">Sección</option>';
-			if($limite = db('select valor from opciones where opcion like "SECCIONES" limit 0,1',$mysqli)){
+			if($limite = db('select valor from configuracion where opcion like "SECCIONES" limit 0,1',$mysqli)){
 				$g = $limite['0']['valor'] + 65;
 				for ($i = 65; $i < $g; $i++) {
 					$s = chr($i);
@@ -526,7 +526,7 @@
 	    	$guardar->execute();
 			$id	=	$mysqli->insert_id;
 		}
-		if($id){
+		if(isset($id)){
 			$id = $id;
 		}else{
 			$id = 0;
@@ -587,14 +587,9 @@
 
 			}
 
-
-
-
-
 		}else{
-			$responde = cronoForm($datos).'|0';
+			$responde = cronoForm($datos);
 		}
-
 
 
 
@@ -627,19 +622,16 @@
 	function cronoForm($datos=""){
 		global $mysqli;
 			
-				$dato = explode("|", $datos);
-				$c 	  = $dato['1'];
-				$s 	  = $dato['2'];
-				$b 	  = $dato['3'];
-				$d 	  = $dato['0'];
-	
-
-
-
+			$dato = explode("|", $datos);
+			$c 	  = $dato['1'];
+			$s 	  = $dato['2'];
+			$b 	  = $dato['3'];
+			$d 	  = $dato['0'];
 
 			$titulos = array();
 			$celda = 0;
-			$busca = db("select valor from opciones where opcion like 'CRONOGRAMAS' limit 0,1",$mysqli);
+			$busca = db("select valor from configuracion where opcion like 'CRONOGRAMAS' limit 0,1",$mysqli);
+		if($busca){
 			$crono = json_decode($busca['0']['valor'], TRUE);
 			$col   = count($crono['titulos']);
 
@@ -669,8 +661,15 @@
 				    				</tr>';
 				}
 				$tabla .= '</tbody></table></form>';
-			return $tabla;
+		}else{
+			$tabla 	=	'<div class="alert alert-danger no-border"><button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button><span class="text-semibold">Oh snap!</span>No se ha configurado los cronogramas, por favor realice esta configuración, para poder realizar este proceso. CODE: CRONOGRAMAS</div>';
+		}
+			
+		return $tabla;
+	
 	}
+
+
 
 
 

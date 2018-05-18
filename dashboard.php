@@ -50,7 +50,7 @@ ob_start();
 
 												<div class="media-left">
 													<h5 class="text-semibold no-margin">
-														<?php echo date('H.i:s');?> <small class="display-block no-margin">Hora de Sistema</small>
+														 <span id="reloj"></span><small class="display-block no-margin"> Server: <?php echo date('H.i:s');?> </small>
 													</h5>
 												</div>
 											</td>

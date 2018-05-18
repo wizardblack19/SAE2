@@ -53,7 +53,7 @@ session_start();
 							</div>
 						</div>
 						<div class="form-group">
-							<button type="submit" class="btn btn-primary btn-block">Ingresar<i class="icon-circle-right2 position-right"></i></button>
+							<button type="submit" id="blogin" class="btn btn-primary btn-block">Ingresar<i class="icon-circle-right2 position-right"></i></button>
 						</div>
 						<div class="text-center">
 							<a href="password.php">¿Olvido su contraseña?</a>

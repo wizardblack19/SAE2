@@ -160,8 +160,18 @@ $(function() {
                     }; 
                 });
     }
-
-
-
-
+    Reloj();
 });
+
+
+
+
+    function Reloj(){ 
+        momentoActual = new Date() 
+        hora = momentoActual.getHours() 
+        minuto = momentoActual.getMinutes() 
+        segundo = momentoActual.getSeconds() 
+        horaImprimible = hora + " : " + minuto + " : " + segundo 
+        $("#reloj").html(horaImprimible);
+        setTimeout("Reloj()",1000) 
+    }

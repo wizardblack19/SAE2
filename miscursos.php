@@ -29,6 +29,5 @@ $llave[] = '{Sseccion}';
 $enlace[] = Sseccion();
 
 
-
 $page = str_replace($llave, $enlace, $page);
 echo $page;

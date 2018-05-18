@@ -53,33 +53,33 @@ include("funciones.php");
     $fecha    =   date('Y-m-d H:i:s');
     conectar();
   if($id==0){
-    if ($guardar = $mysqli->prepare(" INSERT into crono_key (curso, seccion, unidad, estado, crono_data, guardado) VALUES (?,?,?,?,?,?) ")) {
-        $guardar->bind_param('ssiiss', $curso, $seccion, $unidad, $estado, $key, $fecha);
+    if ($guardar = $mysqli->prepare("INSERT into crono_key (curso, seccion, unidad, estado, llave) VALUES (?,?,?,?,?)")) {
+        $guardar->bind_param('ssiis', $curso, $seccion, $unidad, $estado, $key);
         $guardar->execute();
         $idK = $mysqli->insert_id;
         $data['idK'] = $idK;
     }
-    if($idK){
+    if(isset($idK)){
       if ($guardar = $mysqli->prepare(" INSERT into crono_data (llave, data) VALUES (?,?) ")) {
           $guardar->bind_param('ss', $key, $crono);
           $guardar->execute();
           $idD = $mysqli->insert_id;
           $data['idD'] = $idD;
       }
-      if($idD){
-        $data['code']  = "1";
-        $data['alert']  = "success";
-        $data['msg'] = "Cronograma Guardado.";
+      if(isset($idD)){
+        $data['code']   =   "1";
+        $data['alert']  =   "success";
+        $data['msg']    =   "Cronograma Guardado.";
       }else{
-        $data['code']  = "0";
-        $data['alert']  = "error";
-        $data['msg'] = "No fue posible crear la DATA para este cronograma. Por favor copie el siguiente numero y entregue al administrador de sistema.<br /> #error:".$idK." <br />code: ".mysqli_error($mysqli);
+        $data['code']   =   "0";
+        $data['alert']  =   "error";
+        $data['msg']    =   "No fue posible crear la DATA para este cronograma. Por favor copie el siguiente numero y entregue al administrador de sistema. \n ID error:".$idK." \n Code: ".mysqli_error($mysqli);
       }
 
     }else{
-      $data['code']  = "0";
-      $data['alert']  = "error";
-      $data['msg'] = "No fue posible crear el KEY para este cronograma. Error: ".mysqli_error($mysqli);
+      $data['code']     =   "0";
+      $data['alert']    =   "error";
+      $data['msg']      =   "No fue posible crear el KEY para este cronograma. \n Error: ".mysqli_error($mysqli);
     }
 
   }else{
@@ -252,7 +252,7 @@ elseif($proceso == "Asignarme"){
           $guardar = saveAsignacion($codigo,$docente,$seccion);
           if($guardar == 0){
             $data['error_code']   =     1;
-            $data['error']        =     "Algo raro pasó cuando se intentaba guardar está asignación, por favor repórtelo al departamento de desarrollo.";
+            $data['error']        =     "Algo raro pasó cuando se intentaba guardar está asignación, por favor repórtelo al departamento de desarrollo. \n Data: ".mysqli_error($mysqli);
           }else{
             $data['error_code']   =     0;
             $data['error']        =     "Asignación Correcta, numero de seguimiento ".$guardar;          

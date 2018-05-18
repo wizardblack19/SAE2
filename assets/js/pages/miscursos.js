@@ -71,36 +71,11 @@ $(function() {
     //llamado de DataTable
     tablaCursos();
 
-    function post_data(codigo, action, block){
-        $(block).block({ 
-            message: '<i class="icon-spinner2 spinner"></i>',
-            overlayCSS: {
-                backgroundColor: '#fff',
-                opacity: 0.8,
-                cursor: 'wait',
-                'box-shadow': '0 0 0 1px #ddd'
-            },
-            css: {
-                border: 0,
-                padding: 0,
-                backgroundColor: 'none'
-            }
-        });
-
-        if(action === undefined){
-            window.setTimeout(function () {
-               $(block).unblock();
-            }, 2000);
-        }else{
-            $.post( "core.php?l=refreshMisCursos", { codigo: codigo, action:action }, function( data ) {  
-                $("#resultado1").html(data.html);
-                tablaCursos();
-                window.setTimeout(function () {
-                   $(block).unblock();
-                }, 500);
-           }, "json");
-        }
-
+    function post_data(codigo, action){
+        $.post( "core.php?l=refreshMisCursos", { codigo: codigo, action:action }, function( data ) {  
+            $("#resultado1").html(data.html);
+            tablaCursos();
+       }, "json");
     }
 
     //Ejecutar al cerrar modal // refresh tabla mis cursos
@@ -108,7 +83,7 @@ $(function() {
         var perfil = JSON.parse(Cookies.get('perfil'));
         var action = 'ver';
         var block = '#miscursos';
-        post_data(perfil.codigo,action,block);
+        post_data(perfil.codigo,action);
     });
 
     //Buscar cursos event submit
@@ -185,9 +160,11 @@ $(function() {
 
     $(document).on("click", ".permiso_unidad", function (e) {
         e.preventDefault();
+        $(this).addClass('disabled');
         if(cargarcookie() == 0){
             swal("Error!", "Debe seleccionar unidad a trabajar!", "error");
         }else{
+            e.stopPropagation();
         var result = $(this).attr('data-crono').split('|');
         var docente = $("#codigo").attr('code');
             $.post( "core.php?l=cronoForm", { docente: docente,unidad: cargarcookie(),curso: result[3],seccion: result[2]  }, function( data ) {
@@ -236,8 +213,7 @@ $(function() {
         e.preventDefault();
         var perfil = JSON.parse(Cookies.get('perfil'));
         var action = 'ver';
-        var block = '#miscursos';
-        post_data(perfil.codigo,action,block);
+        post_data(perfil.codigo,action);
         var ver = $(this).attr('data-show');
         var ocultar = $(this).attr('data-hide');
         $('#'+ver).show('slow');
@@ -313,8 +289,7 @@ $(function() {
             if(data.msg=="1"){
                 var perfil = JSON.parse(Cookies.get('perfil'));
                 var action = 'ver';
-                var block = '#miscursos';
-                post_data(perfil.codigo,action,block);
+                post_data(perfil.codigo,action);
                 $('#cronograma').hide();
                 $('#miscursos').show();
                  swal("¡Hecho!", 
@@ -337,9 +312,6 @@ $(function() {
 
     
 });
-
-
-
 
 
 
