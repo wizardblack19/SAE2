@@ -86,15 +86,33 @@
 
 
 $(document).on("click", ".cambiar", function () {
-    alert(this.value);
+    
      $.ajax({
       type: 'post',
-      url: 'core.php',
-      data: {"usuario":this.value, "l":"desactiar_docente"}
-     }).done(function(data) {
-      // Optionally alert the user of success here...
-     }).fail(function(data) {
-      // Optionally alert the user of an error here...
+      url: 'core.php?l=desactivar_docente',
+      data: {"usuario":this.value},
+      dataType : 'json',
+      success : function(json) {
+        alert(json.estado);
+      },
+      error : function(xhr, status) {
+        alert('Disculpe, existió un problema');
+      }
      });
+
+     /*.done(function(data){
+
+      alert(data);
+          if(data.error==false){
+            swal("Actualizado","Registro actualizado correctamente.","success");
+            if (data.estado==0) {
+
+            }
+          }else{
+
+          }
+     }, "json").fail(function(data) {
+       Optionally alert the user of an error here...
+     });*/
 
 });

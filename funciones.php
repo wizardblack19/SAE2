@@ -701,30 +701,28 @@ function tabla_usuarios($b,$c){
 								<th>Apellido</th>
 								<th>Correo</th>
 								<th>Contraseña</th>
-								<th>Ciclo</th>
 								<th class="text-center">Actions</th>
 							</tr>
 						</thead>
 						<tbody>';
 
 						foreach ($usuarios as $usuario) {
-							if ($usuario['ciclo'] < date('Y') or $usuario['tipo']==0) {
+							if ($usuario['estado']==0) {
 								$estado = 'danger';
 							}else{
 								$estado = 'success';
 							}
 
-							$pass= base64_decode($usuario['pass']);
+							$pass= base64_decode($usuario['password']);
 					$tabla .="<tr>
 								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='codigo'>{$usuario['codigo']}</a></td>
 								<td>{$usuario['nombre']}</td>
 								<td>{$usuario['apellido']}</td>
 								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='nick'>{$usuario['correo']}</a></td>
-								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='pass'>{$password}</a></td>
-								<td>{$usuario['ciclo']}</td>
+								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='pass'>{$pass}</a></td>
 								<td class='text-center'>
 									<ul class='icons-list'>
-										<li class='text-{$estado}-600 cambiar' value='{$maestro['id']}'><a href='#''><i class='icon-eye'></i></a></li>
+										<li class='text-{$estado}-600 cambiar' value='{$usuario['id']}'><a href='#''><i class='icon-eye'></i></a></li>
 										<li class='text-danger-600'><a href='#'><i class='icon-x'></i></a></li>
 									</ul>
 								</td>
