@@ -1,5 +1,8 @@
 <?php
 	//Valores Forzados para php
+
+
+
 	date_default_timezone_set('America/Guatemala');
 	ini_set('memory_limit', '1G');
 
@@ -99,6 +102,10 @@
 		}
 
 	}
+
+
+
+
 
 	function salir(){
       session_start();
@@ -739,3 +746,249 @@ function tabla_usuarios($b,$c){
 					//cerrar_conex();
 		return $tabla;
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function Sactivo(){
+		global $mysqli;
+		$key[0] = 0;
+		if($db=db("select valor from configuracion where opcion like 'LICENSE' limit 0,1",$mysqli)){
+			$key[1] = $db[0]['valor'];
+			if($db=db("select valor from configuracion where opcion like 'SECRET_KEY' limit 0,1",$mysqli)){
+				$key[2] = $db[0]['valor'];
+				if($db=db("select valor,fecha from configuracion where opcion like 'LOCAL_KEY' limit 0,1",$mysqli)){
+					$key[3] = $db[0]['valor'];
+					$key[4] = $db[0]['fecha'];
+					$key[0] = 1;
+				}
+			}
+		}
+		return $key;
+	}
+
+
+
+
+
+
+
+
+function server_status($licensekey, $localkey='',$secret='') {
+    $whmcsurl = base64_decode('aHR0cHM6Ly93d3cuZ3RkZXNhcnJvbGxvLmNvbS8=');
+    $licensing_secret_key = $secret;
+    $localkeydays = 7;
+    $allowcheckfaildays = 5;
+    @$check_token = time() . md5(mt_rand(1000000000, 9999999999) . $licensekey);
+    $checkdate = date("Ymd");
+    $domain = $_SERVER['SERVER_NAME'];
+    $usersip = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
+    $dirpath = dirname(__FILE__);
+    $verifyfilepath = base64_decode('bW9kdWxlcy9zZXJ2ZXJzL2xpY2Vuc2luZy92ZXJpZnkucGhw');
+    $localkeyvalid = false;
+    if ($localkey) {
+        $localkey = str_replace("\n", '', $localkey); # Remove the line breaks
+        $localdata = substr($localkey, 0, strlen($localkey) - 32); # Extract License Data
+        $md5hash = substr($localkey, strlen($localkey) - 32); # Extract MD5 Hash
+        if ($md5hash == md5($localdata . $licensing_secret_key)) {
+            $localdata = strrev($localdata); # Reverse the string
+            $md5hash = substr($localdata, 0, 32); # Extract MD5 Hash
+            $localdata = substr($localdata, 32); # Extract License Data
+            $localdata = base64_decode($localdata);
+            $localkeyresults = unserialize($localdata);
+            $originalcheckdate = $localkeyresults['checkdate'];
+            if ($md5hash == md5($originalcheckdate . $licensing_secret_key)) {
+                $localexpiry = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - $localkeydays, date("Y")));
+                if ($originalcheckdate > $localexpiry) {
+                    $localkeyvalid = true;
+                    $results = $localkeyresults;
+                    $validdomains = explode(',', $results['validdomain']);
+                    if (!in_array($_SERVER['SERVER_NAME'], $validdomains)) {
+                        $localkeyvalid = false;
+                        $localkeyresults['status'] = "Invalid";
+                        $results = array();
+                    }
+                    $validips = explode(',', $results['validip']);
+                    if (!in_array($usersip, $validips)) {
+                        $localkeyvalid = false;
+                        $localkeyresults['status'] = "Invalid";
+                        $results = array();
+                    }
+                    $validdirs = explode(',', $results['validdirectory']);
+                    if (!in_array($dirpath, $validdirs)) {
+                        $localkeyvalid = false;
+                        $localkeyresults['status'] = "Invalid";
+                        $results = array();
+                    }
+                }
+            }
+        }
+    }
+    if (!$localkeyvalid) {
+        $responseCode = 0;
+        $postfields = array(
+            'licensekey' => $licensekey,
+            'domain' => $domain,
+            'ip' => $usersip,
+            'dir' => $dirpath,
+        );
+        if ($check_token) $postfields['check_token'] = $check_token;
+        $query_string = '';
+        foreach ($postfields AS $k=>$v) {
+            $query_string .= $k.'='.urlencode($v).'&';
+        }
+        if (function_exists('curl_exec')) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $whmcsurl . $verifyfilepath);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $query_string);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $data = curl_exec($ch);
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+        } else {
+            $responseCodePattern = '/^HTTP\/\d+\.\d+\s+(\d+)/';
+            $fp = @fsockopen($whmcsurl, 80, $errno, $errstr, 5);
+            if ($fp) {
+                $newlinefeed = "\r\n";
+                $header = "POST ".$whmcsurl . $verifyfilepath . " HTTP/1.0" . $newlinefeed;
+                $header .= "Host: ".$whmcsurl . $newlinefeed;
+                $header .= "Content-type: application/x-www-form-urlencoded" . $newlinefeed;
+                $header .= "Content-length: ".@strlen($query_string) . $newlinefeed;
+                $header .= "Connection: close" . $newlinefeed . $newlinefeed;
+                $header .= $query_string;
+                $data = $line = '';
+                @stream_set_timeout($fp, 20);
+                @fputs($fp, $header);
+                $status = @socket_get_status($fp);
+                while (!@feof($fp)&&$status) {
+                    $line = @fgets($fp, 1024);
+                    $patternMatches = array();
+                    if (!$responseCode
+                        && preg_match($responseCodePattern, trim($line), $patternMatches)
+                    ) {
+                        $responseCode = (empty($patternMatches[1])) ? 0 : $patternMatches[1];
+                    }
+                    $data .= $line;
+                    $status = @socket_get_status($fp);
+                }
+                @fclose ($fp);
+            }
+        }
+        if ($responseCode != 200) {
+            $localexpiry = date("Ymd", mktime(0, 0, 0, date("m"), date("d") - ($localkeydays + $allowcheckfaildays), date("Y")));
+            if ($originalcheckdate > $localexpiry) {
+                $results = $localkeyresults;
+            } else {
+                $results = array();
+                $results['status'] = "Invalid";
+                $results['description'] = "Remote Check Failed";
+                return $results;
+            }
+        } else {
+            preg_match_all('/<(.*?)>([^<]+)<\/\\1>/i', $data, $matches);
+            $results = array();
+            foreach ($matches[1] AS $k=>$v) {
+                $results[$v] = $matches[2][$k];
+            }
+        }
+        if (!is_array($results)) {
+            die("Invalid License Server Response");
+        }
+        if (@$results['md5hash']) {
+            if ($results['md5hash'] != md5($licensing_secret_key . $check_token)) {
+                $results['status'] = "Invalid";
+                $results['description'] = "MD5 Checksum Verification Failed";
+                return $results;
+            }
+        }
+        if ($results['status'] == "Active") {
+            $results['checkdate'] = $checkdate;
+            $data_encoded = serialize($results);
+            $data_encoded = base64_encode($data_encoded);
+            $data_encoded = md5($checkdate . $licensing_secret_key) . $data_encoded;
+            $data_encoded = strrev($data_encoded);
+            $data_encoded = $data_encoded . md5($data_encoded . $licensing_secret_key);
+            $data_encoded = wordwrap($data_encoded, 80, "\n", true);
+            $results['localkey'] = $data_encoded;
+        }
+        $results['remotecheck'] = true;
+    }
+    unset($postfields,$data,$matches,$whmcsurl,$licensing_secret_key,$checkdate,$usersip,$localkeydays,$allowcheckfaildays,$md5hash);
+    return $results;
+}
+
+	function saveOPkey($license,$secret,$localkey,$tipo=""){
+		global $mysqli;
+		$datos = Sactivo();
+		if($datos[0]==0){
+			if ($guardar = $mysqli->prepare("INSERT INTO configuracion (opcion, valor) VALUES (?,?)")) {
+				$guardar->bind_param('ss', $opcion, $valor);
+				$opcion = 	'LICENSE';
+				$valor 	=	$license;
+		    	$guardar->execute();
+				$opcion = 	'SECRET_KEY';
+				$valor 	=	$secret;
+		    	$guardar->execute();
+				$opcion = 	'LOCAL_KEY';
+				$valor 	=	$localkey;
+		    	$guardar->execute();
+			}
+		}else{
+			$vence 	= 	date ('Y-m-j H:i:s',strtotime('+7 day',strtotime($tipo)));
+			$hoy 	=	date('Y-m-j H:i:s');
+			if($hoy >= $vence){
+				if ($guardar = $mysqli->prepare(" UPDATE configuracion SET valor = ?, fecha = ? WHERE opcion = ?")) {
+					$guardar->bind_param('sss', $valor, $fecha,$opcion);
+					$opcion = 	'LOCAL_KEY';
+					$valor 	=	$localkey;
+					$fecha 	=	date('Y-m-d H:i:s');
+					$guardar->execute();
+				}
+			}
+
+
+		}
+	}
+
+
+

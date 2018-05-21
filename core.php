@@ -436,14 +436,55 @@ elseif($proceso == "conf"){
     $data['maximo']     =   $_POST['maximo'];
     $datos              =   $_POST['titulo'];
     
-
-
     for ($i = 0; $i < count($datos); $i++) {
       $data['titulos'][] = $datos[$i];
     }
-
-
-
+    
     print json_encode($data);
+  exit;
+}
+
+
+
+elseif($proceso == "activeKey"){
+  conectar();
+  $datos = Sactivo();
+  $licence  =   $_POST['licence'] ?? '0';
+  $secret   =   $_POST['secret'] ?? '0';
+  if($datos[0]==0){
+    $active = server_status($licence, '',$secret);
+    if($active['status']=="Invalid"){
+      $data['error']  =   1;
+      if(isset($active['description'])){
+        $error = "\nError: ".$active['description'];
+      }else{
+        if(isset($active['message'])){
+          $error = "\nError: ".$active['message']."\n Estos errores generalmente se corrigen activando la opción de reusar licencia desde su panel de control.";
+        }else{
+          $error = "\nVerifique su clave.";
+        }
+      }
+      $data['estatus'] = $active['status'];
+      $data['msg']    =   "NO se puede activar este producto. ".$error;
+    }elseif($active['status'] == "Active"){
+      $data['error']  =   0;
+      $data['estatus'] = $active['status'];
+      $data['msg']    =   "Producto activado correctamente.";
+      saveOPkey($licence,$secret,$active['localkey']);
+      cerrar_conex();
+    }elseif($active['status'] == 'Suspended'){
+      $data['error']  =   1;
+      $data['estatus'] = $active['status'];
+      $data['msg']    =   "Su producto ha sido suspendido, esto puede deberse a la falta de pago o usted incurrió en la violación de nuestra política de seguridad, para resolver este problema ingrese a su panel de control y cree un ticket o envié un correo a ventas@gtdesarrollo.com, indicando su problema.";
+    }
+  }else{
+    $active = server_status($datos[1], $datos[3],$datos[2]);
+      $data['error']  =   0;
+      $data['estatus'] = $active['status'];
+      $data['msg']    =   "Producto activado correctamente.";
+    saveOPkey($datos[1],$datos[2],$datos[3],$datos[4]);
+  }
+  $data['GTDESARROLLO'] = $active;
+  print json_encode($data);
   exit;
 }
