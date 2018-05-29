@@ -866,65 +866,59 @@ EOD;
 
 
 
-	function tabla_usuarios($b,$c){
-			global $mysqli;
-			conectar();	
-			$tabla = "";
-			$n = 0;
-			$campo= $b;
-			$criterio= $c;
-			//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
-			if($usuarios = db("select * from {$campo} where tipo = {$criterio}", $mysqli)){
-				$enlace = "";
-
-				$tabla = '<table class="table datatable-save-state" >
-							<thead>
-								<tr>
-									<th>Codigo</th>
-									<th>Nombre</th>
-									<th>Apellido</th>
-									<th>Correo</th>
-									<th>Contraseña</th>
-									<th>Ciclo</th>
-									<th class="text-center">Actions</th>
-								</tr>
-							</thead>
-							<tbody>';
-
-							foreach ($usuarios as $usuario) {
-								if ($usuario['ciclo'] < date('Y') or $usuario['tipo']==0) {
-									$estado = 'danger';
-								}else{
-									$estado = 'success';
-								}
-
-								$pass= base64_decode($usuario['pass']);
-						$tabla .="<tr>
-									<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='codigo'>{$usuario['codigo']}</a></td>
-									<td>{$usuario['nombre']}</td>
-									<td>{$usuario['apellido']}</td>
-									<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='nick'>{$usuario['correo']}</a></td>
-									<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='pass'>{$password}</a></td>
-									<td>{$usuario['ciclo']}</td>
-									<td class='text-center'>
-										<ul class='icons-list'>
-											<li class='text-{$estado}-600 cambiar' value='{$maestro['id']}'><a href='#''><i class='icon-eye'></i></a></li>
-											<li class='text-danger-600'><a href='#'><i class='icon-x'></i></a></li>
-										</ul>
-									</td>
-								</tr>";
-						}		
-						$tabla .='</tbody>
-						</table>';
+function tabla_usuarios($b,$c){
+		global $mysqli;
+		conectar();	
+		$tabla = "";
+		$n = 0;
+		$campo= $b;
+		$criterio= $c;
+		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
+		if($usuarios = db("select * from {$campo} where tipo = {$criterio}", $mysqli)){
+			$enlace = "";
+			$tabla = '<table class="table datatable-save-state" >
+						<thead>
+							<tr>
+								<th>Codigo</th>
+								<th>Nombre</th>
+								<th>Apellido</th>
+								<th>Correo</th>
+								<th>Contraseña</th>
+								<th class="text-center">Actions</th>
+							</tr>
+						</thead>
+						<tbody>';
+						foreach ($usuarios as $usuario) {
+							if ($usuario['estado']==0) {
+								$estado = 'icon-eye-blocked2';
+							}else{
+								$estado = 'icon-eye';
+							}
+							$pass= base64_decode($usuario['password']);
+					$tabla .="<tr>
+								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='codigo'>{$usuario['codigo']}</a></td>
+								<td>{$usuario['nombre']}</td>
+								<td>{$usuario['apellido']}</td>
+								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='nick'>{$usuario['correo']}</a></td>
+								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='pass'>{$pass}</a></td>
+								<td class='text-center'>
+									<ul class='icons-list'>
+										<li class='cambiar' value='{$usuario['id']}'><a href='#''><i class={$estado}></i></a></li>
+										<li class='text-danger-600 eliminar' value='{$usuario['id']}'><a href='#'><i class='icon-x'></i></a></li>
+									</ul>
+								</td>
+							</tr>";
+					}		
+					$tabla .='</tbody>
+					</table>';
+				
+		}else{
+			$tabla = "<h3>No se encontraron registros, verifique con el adimistrador.</h3>";
+		}
 					
-			}else{
-				$tabla = "<h3>No se encontraron registros, verifique con el adimistrador.</h3>";
-			}
-						//cerrar_conex();
-			return $tabla;
+		return $tabla;
+		cerrar_conex();
 	}
-
-
 
 
 
@@ -1267,58 +1261,4 @@ function modal_usuarios($a){
   
   
   
-  
-  
-  
-  
-function modal(){  
-  	conectar();	
-		$tabla = "";
-		$n = 0;
-		$campo= $b;
-		$criterio= $c;
-		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
-		if($usuarios = db("select * from {$campo} where tipo = {$criterio}", $mysqli)){
-			$enlace = "";
-			$tabla = '<table class="table datatable-save-state" >
-						<thead>
-							<tr>
-								<th>Codigo</th>
-								<th>Nombre</th>
-								<th>Apellido</th>
-								<th>Correo</th>
-								<th>Contraseña</th>
-								<th class="text-center">Actions</th>
-							</tr>
-						</thead>
-						<tbody>';
-						foreach ($usuarios as $usuario) {
-							if ($usuario['estado']==0) {
-								$estado = 'icon-eye-blocked2';
-							}else{
-								$estado = 'icon-eye';
-							}
-							$pass= base64_decode($usuario['password']);
-					$tabla .="<tr>
-								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='codigo'>{$usuario['codigo']}</a></td>
-								<td>{$usuario['nombre']}</td>
-								<td>{$usuario['apellido']}</td>
-								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='nick'>{$usuario['correo']}</a></td>
-								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='pass'>{$pass}</a></td>
-								<td class='text-center'>
-									<ul class='icons-list'>
-										<li class='cambiar' value='{$usuario['id']}'><a href='#''><i class={$estado}></i></a></li>
-										<li class='text-danger-600 eliminar' value='{$usuario['id']}'><a href='#'><i class='icon-x'></i></a></li>
-									</ul>
-								</td>
-							</tr>";
-					}		
-					$tabla .='</tbody>
-					</table>';
-				
-  		return $tabla;
-		cerrar_conex();
-	}
-
-
   
