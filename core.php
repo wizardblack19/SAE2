@@ -15,14 +15,15 @@ include("funciones.php");
 			if(!is_dir("files/"))
 		    mkdir("files/", 0777);	
 		  	$tempFile = $_FILES['file']['tmp_name']; 
-        $namefile = $_FILES['file']['name']; 
-		  	$targetFile = basename(urlencode(uniqid().$_FILES['file']['name']));
+        $namefile = $_FILES['file']['name'];
+
+		  	$targetFile = uniqid().'.'.ext($namefile);
 		  	$saveFile = 'files/'.$targetFile;
 		  	if(move_uploaded_file($tempFile, $saveFile)){
           conectar();
             //Guardamos registro en base
             $idfile = uniqid();
-            $sql = "INSERT into archivos (idfile, nombre, archivo, codocente) VALUES ('$idfile', '$namefile',  '$targetFile', '$codigo')";
+            $sql = "INSERT into archivos (idfile, nombre, archivo, docente) VALUES ('$idfile', '$namefile',  '$targetFile', '$codigo')";
             if(mysqli_query($mysqli, $sql)){
               echo "Se guardo bien";
             }else{
@@ -42,14 +43,15 @@ include("funciones.php");
 
 
   elseif ($proceso == "SaveIndividualCrono") {
-    $curso    =   $_POST['curso'];
-    $docente  =   $_POST['docente'];
-    $seccion  =   $_POST['seccion'];
-    $unidad   =   $_POST['unidad'];
-    $id       =   $_POST['id'];
-    $estado   =   $_POST['estado'];
+    $dataForm =   $_POST['datos'];
+    $curso    =   $dataForm['curso'];
+    $docente  =   $dataForm['docente'];
+    $seccion  =   $dataForm['seccion'];
+    $unidad   =   $dataForm['unidad'];
+    $id       =   $dataForm['id'];
+    $estado   =   $dataForm['estado'];
     $key      =   uniqid();
-	  $crono    =   json_encode($_POST);
+	  $crono    =   json_encode($dataForm);
     $fecha    =   date('Y-m-d H:i:s');
     conectar();
   if($id==0){
@@ -83,10 +85,15 @@ include("funciones.php");
     }
 
   }else{
-    $data['idD'] = $id;
-    //Si id esta definido, actualizamos registro
-      if ($guardar = $mysqli->prepare(" UPDATE crono_data SET data = ? WHERE id = ?")) {
-        $guardar->bind_param('si', $crono, $id);
+
+
+      if ($guardar = $mysqli->prepare("UPDATE crono_key SET estado = ? WHERE id = ?")) {
+        $guardar->bind_param('si', $estado, $dataForm['idK']);
+        $guardar->execute();
+      }
+      
+      if ($guardar = $mysqli->prepare("UPDATE crono_data SET data = ? WHERE llave = ?")) {
+        $guardar->bind_param('si', $crono, $dataForm['idD']);
         $guardar->execute();
         $data['code']  = "2";
         $data['alert']  = "success";
@@ -98,23 +105,9 @@ include("funciones.php");
     }
   }
 
-
-    cerrar_conex();
-
-print json_encode($data);
-    
-
+  cerrar_conex();
+  print json_encode($data);
   exit;
-
-
-
-
-
-
-
-
-
-
 
 
 	}elseif ($proceso == "login"){
@@ -147,8 +140,7 @@ print json_encode($data);
     salir();
   }
 
-elseif ($proceso == "verarchivos") {
-  //Cambios de tabla en funcion archivos
+elseif ($proceso == "verarchivos"){
     $codigo = $_POST['codigo'];
     $data['html'] = tabla_archivos($codigo);
     print json_encode($data);
@@ -158,12 +150,12 @@ exit;
 
 elseif ($proceso == "borrar_archivo") {
     conectar();
-    $archivo = db("select archivo FROM archivos where id = '{$_POST['id']}' LIMIT 0,1",$mysqli);
+    $archivo = db("select archivo FROM archivos where idfile = '{$_POST['id']}' LIMIT 0,1",$mysqli);
     $nombre_fichero = './files/'.$archivo[0]['archivo'];
 
   if(file_exists($nombre_fichero)){
     if (unlink($nombre_fichero)){
-       $sql = 'DELETE FROM archivos WHERE id = '.$_POST['id'];
+       $sql = "DELETE FROM archivos WHERE idfile LIKE '{$_POST['id']}' ";
        if (mysqli_query($mysqli, $sql)) {
           $data['msg'] = "Record deleted successfully";
        } else {
@@ -176,7 +168,7 @@ elseif ($proceso == "borrar_archivo") {
   }else {
      $data['msg'] = "algo no esta bien el archivo no existe, se borrara registro\n";
 
-       $sql = 'DELETE FROM archivos WHERE id = '.$_POST['id'];
+       $sql = 'DELETE FROM archivos WHERE idfile = '.$_POST['id'];
        if (mysqli_query($mysqli, $sql)) {
           $data['msg'] .= "Record deleted successfully";
        } else {
@@ -301,25 +293,20 @@ elseif($proceso == "Desasignarme"){
 }
 
 
-elseif($proceso == "cronoForm"){
-    $datos    =   $_POST['docente'].'|';
-    $datos    .=   $_POST['curso'].'|';
-    $datos    .=   $_POST['seccion'].'|';
-    $datos    .=   $_POST['unidad'];
-    $data     =   array(); 
+elseif($proceso == "cronograma"){
+    $datos              =   json_decode(base64_decode($_POST['datos']),TRUE);
+    $datos['unidad']    =   $_POST['unidad'];
+    $datos['tipo']      =   $_POST['clase'];
+    $datos['docente']   =   $_POST['docente'];
+
     conectar();
-
-      
-
-
-
-      $data['html']   =   cronograma($datos);
-
-
-
-
+      $crono            =   cronograma($datos);
     cerrar_conex();
-    print json_encode($data);
+    $datos['html']      =   $crono['html'];    
+    $datos['idK']       =   $crono['idK'] ?? 0;
+    $datos['idD']       =   $crono['idD'] ?? 0;
+    $datos['estado']    =   $crono['estado']; 
+    print json_encode($datos);
   exit;
 }
 
@@ -439,7 +426,7 @@ elseif($proceso == "conf"){
     for ($i = 0; $i < count($datos); $i++) {
       $data['titulos'][] = $datos[$i];
     }
-    
+
     print json_encode($data);
   exit;
 }
@@ -488,3 +475,73 @@ elseif($proceso == "activeKey"){
   print json_encode($data);
   exit;
 }
+
+
+
+
+
+elseif($proceso == "editFileForm"){
+  $datos['id']        =   $_POST['codigo'];
+  $datos['nombre']    =   $_POST['titulo'];
+  $datos['anterior']  =   $_POST['anterior'];
+  $data['html']       =   editFileForm($datos);
+  print json_encode($data);
+exit;
+  }
+
+
+
+elseif($proceso == "updatefile"){
+  $datos['id']        =   $_POST['id'];
+  $datos['nombre']    =   $_POST['nombre'];
+  $datos['anterior']  =   $_POST['anterior'];
+
+
+  if($datos['id']){
+      conectar();
+        if ($guardar = $mysqli->prepare("UPDATE archivos SET nombre = ? WHERE idfile = ?")) {
+          $guardar->bind_param('ss', $datos['nombre'], $datos['id']);
+          $guardar->execute();
+        }
+      cerrar_conex();
+  }
+
+
+
+  if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') 
+  {
+    $file = $_FILES['archivo']['name'];
+    $file = uniqid().'.'.ext($file);
+    if(!is_dir("files/")){
+      mkdir("files/", 0777);
+    }
+    if ($file && move_uploaded_file($_FILES['archivo']['tmp_name'],"files/".$file)){
+
+      conectar();
+        if ($guardar = $mysqli->prepare("UPDATE archivos SET archivo = ? WHERE idfile = ?")) {
+          $guardar->bind_param('ss', $file, $datos['id']);
+          $guardar->execute();
+        }
+      cerrar_conex();
+
+
+      unlink('files/'.$datos['anterior']);
+       echo $file;//devolvemos el nombre del archivo para pintar la imagen
+    }
+  }else{
+      throw new Exception("Error Processing Request", 1);   
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+exit;
+  }
