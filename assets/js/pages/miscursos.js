@@ -1,33 +1,32 @@
 $(function() {
 
     function tablaCursos(){
-    $.extend( $.fn.dataTable.defaults, {
-        autoWidth: false,
-        columnDefs: [{
-            orderable: false,
-            width: '100px',
-            targets: [ 5 ]
-        }],
-        dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
-        language: {
-            search: '<span>Buscar:</span> _INPUT_',
-            searchPlaceholder: 'Escribe para Buscar...',
-            lengthMenu: '<span>Ver:</span> _MENU_',
-            paginate: { 'first': 'primero', 'ultimo': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
-        },
-        drawCallback: function () {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
-        },
-        preDrawCallback: function() {
-            $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
-        }
-    });
-
-    $('.datatable-column-search-selects tfoot td').not(':last-child').each(function () {
-        var title = $('.datatable-column-search-selects thead th').eq($(this).index()).text();
-        $(this).html('<input type="text" class="form-control input-sm" placeholder="'+title+'" />');
-    });
-    var table = $('.datatable-column-search-selects').DataTable({
+        $.extend( $.fn.dataTable.defaults, {
+            autoWidth: false,
+            columnDefs: [{
+                orderable: false,
+                width: '100px',
+                targets: [ 5 ]
+            }],
+            dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+            language: {
+                search: '<span>Buscar:</span> _INPUT_',
+                searchPlaceholder: 'Escribe para Buscar...',
+                lengthMenu: '<span>Ver:</span> _MENU_',
+                paginate: { 'first': 'primero', 'ultimo': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+            },
+            drawCallback: function () {
+                $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
+            },
+            preDrawCallback: function() {
+                $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
+            }
+        });
+        $('.datatable-column-search-selects tfoot td').not(':last-child').each(function () {
+            var title = $('.datatable-column-search-selects thead th').eq($(this).index()).text();
+            $(this).html('<input type="text" class="form-control input-sm" placeholder="'+title+'" />');
+        });
+        var table = $('.datatable-column-search-selects').DataTable({
             stateSave: true,
             dom: '<"datatable-header dt-buttons-right"fB><"datatable-scroll"tS><"datatable-footer"pl>',
             ordering: false,
@@ -45,22 +44,17 @@ $(function() {
                 ]
             }
         });
-    table.columns().every( function () {
-        var that = this;
-        $('input', this.footer()).on('keyup change', function () {
-            that.search(this.value).draw();
+        table.columns().every( function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                that.search(this.value).draw();
+            });
         });
-    });
-
-
-
-    $('.dataTables_length select').select2({
-        minimumResultsForSearch: Infinity,
-        width: 'auto'
-    });
-
-    $('.filter-select').select2();
-
+        $('.dataTables_length select').select2({
+            minimumResultsForSearch: Infinity,
+            width: 'auto'
+        });
+        $('.filter-select').select2();
     }
 
     tablaCursos();
@@ -72,17 +66,15 @@ $(function() {
        }, "json");
     }
 
-     $("#asignarme").on('hidden.bs.modal', function () {
+    $("#asignarme").on('hidden.bs.modal', function () {
         var perfil = JSON.parse(Cookies.get('perfil'));
         var action = 'ver';
         var block = '#miscursos';
         post_data(perfil.codigo,action);
     });
 
-
-    $( "#bCursos" ).submit(function( event ) {
-    event.preventDefault();
-        $("#rbusqueda").html('<p class="alert">Cargado, espere...</p>');
+    $( "#bCursos" ).submit(function(e) {
+        e.preventDefault();
         $("#rbusqueda").show();
         $.post( "core.php?l=bCurso",$("#bCursos").serialize(), function( data ) {
             $("#rbusqueda").hide();
@@ -97,25 +89,8 @@ $(function() {
         });
     });
 
-    $( "#clon" ).submit(function( event ) {
-        event.preventDefault();
-      
-        $.post( "core.php?l=clon",$("#bCursos").serialize(), function( data ) {
-            $("#rbusqueda").hide();
-            $("#rbusqueda").html(data.html);
-            $(".asignar").attr('data-seccion',data.seccion);
-            $(".asignar").attr('data-maestro',data.docente);
-            $("#rbusqueda").show('slow');
-        }, "json")
-        .fail(function() {
-            $("#rbusqueda").hide('fast');
-            swal('Ocurrió un error en el scripts o servidor, no hay datos para este grado. ');
-        });
-    });
-
     $(document).on('click', '.asignar', function (e) {
         e.preventDefault();
-        e.stopPropagation();
         var docente     =       $("#codigo").attr('code');
         var seccion     =       $(this).attr('data-seccion');
         var codigo      =       $(this).attr('data-curso');
@@ -137,10 +112,8 @@ $(function() {
         });
     });
 
-
     $(document).on('click', '.desasignar', function (e) {
         e.preventDefault();
-        e.stopPropagation();
         var docente     =       $("#codigo").attr('code');
         var seccion     =       $(this).attr('data-seccion');
         var codigo      =       $(this).attr('data-curso');
@@ -162,116 +135,93 @@ $(function() {
         });
     });
 
-
-
-    $(document).on("click", ".permiso_unidad", function (e) {
+    $(document).on("click", ".edit, .crear", function (e) {
         e.preventDefault();
-        $(this).addClass('disabled');
         if(cargarcookie() == 0){
             swal("Error!", "Debe seleccionar unidad a trabajar!", "error");
         }else{
-            e.stopPropagation();
-        var result = $(this).attr('data-crono').split('|');
-        var docente = $("#codigo").attr('code');
-            $.post( "core.php?l=cronoForm", { docente: docente,unidad: cargarcookie(),curso: result[3],seccion: result[2]  }, function( data ) {
+            var datos = $(this).attr('data-crono');
+            var docente = $("#codigo").attr('code');
+            var clase = $(this).attr("class");
+            var unidad = cargarcookie();
+            var docente_t =   Cookies.get("perfil");
+            $.post( "core.php?l=cronograma", {datos:datos,docente:docente,unidad:unidad,clase:clase,docente_t:docente_t}, function(data) {
                 $('#cronoNuevo').html(data.html);
                 $('#miscursos').hide('slow');
                 $('#cronograma').show('slow');
-                $('#curso').html(
-                    '<span class="label border-left-info label-striped">'+result[0] + 
-                    ' | '+result[1]+
-                    ' | sección: '+result[2]+
-                    ' | Código: '+result[3]+'</span>');
+                $('.pie').show();
+                $('#borrar').hide();
+                if(data.estado == 2){
+                    $('.adjuntar').hide();
+                    $('.guardarG').hide();
+                }else if(data.estado == 0 || data.estado == 3 || data.estado == 4){
+                    if(data.estado == 3 || data.estado == 4){
+                        $('#borrar').show();
+                    }
+                    $('.adjuntar').show();
+                    $('.guardarG').show();
+                    
+                }else if(data.estado == 1){
+                    $('.pie').hide();
+                }
+
+                $('#curso').html('<span class="label border-left-info label-striped">'+data.curso_t + ' | '+data.grado+ ' | sección: '+data.seccion+
+                    ' | Código: '+data.codigo+'</span>');
             }, "json");
-    }
-
-
-
-
-
-
+        }
     });
 
-
+    $(document).on("click", ".print", function (e) {
+        e.preventDefault();
+        $("#printArea").printArea();
+    });
 
     $(document).on("click", ".guardar", function (e) {
         e.preventDefault();
         var estado = $(this).attr('estado');
         $('#estado').val(estado);
-
-        $.post( "core.php?l=SaveIndividualCrono",$("#cronoForm").serialize(), function( data ) {
-            
-            if(data.alert=="0"){
-                swal("Mensaje",data.msg,data.alert);
-            }else if(data.alert > "0"){
-                $("#id").val(data.idD);
-                swal("Mensaje",data.msg,data.alert);
+        var campos = {};
+        var vacio = 0;
+        $('input').each(function() {
+            campos[$(this).attr('id')] = $(this).val();
+        });
+        for (var i=1; i <= campos['fila']; i++) {
+            if(campos['C'+i] == ""){
+                vacio++;
             }
-
-
-        }, "json");
-
-
+        }
+        if(campos['f1'] == ""){
+            vacio++;
+        }        
+        if(vacio == 0){
+            $.post( "core.php?l=SaveIndividualCrono",{datos: campos}, function( data ) {
+                if(data.alert=="0"){
+                    swal("Mensaje",data.msg,data.alert);
+                }else if(data.alert > "0"){
+                    $("#id").val(data.idD);
+                    swal("Mensaje",data.msg,data.alert);
+                }
+            }, "json");
+        }else{
+            swal("Error","Es necesario que asigne al menos la primera fila del cronograma.","error");
+        }
     });
-
 
     $(document).on("click", ".cancelar", function (e) {
         e.preventDefault();
         var perfil = JSON.parse(Cookies.get('perfil'));
         var action = 'ver';
-        post_data(perfil.codigo,action);
+        //post_data(perfil.codigo,action);
         var ver = $(this).attr('data-show');
         var ocultar = $(this).attr('data-hide');
         $('#'+ver).show('slow');
         $('#'+ocultar).hide('slow');
     });
 
-
-    $(document).on("click", ".clonar", function (e) {
-        e.preventDefault();
-        var codigo = $('#codigo').attr('code');
-
-        $.post( "core.php?l=clonar",{codigo: codigo, tipo:'clonar'}, function( data ) {
-            if(data){
-
-                $('#miscursose').html(data.html);
-                $('#Copciones').hide('fast');
-                $('#cursosA').show('fast');
-            }
-
-        }, "json");
-
-
-
-
-
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-    $(document).on("click", ".enlazar", function (e) {
-        e.preventDefault();
-        $('#Copciones').hide('fast');
-        $('#cursosA').show('fast');
-
-    });    
-
-
-     $("#Clonar").on('hidden.bs.modal', function () {
-
+    $("#Clonar").on('hidden.bs.modal', function () {
         $('#Copciones').show();
         $('#cursosA').hide();
     });
-
 
     $(document).on("click", ".borrar", function (e) {
         e.preventDefault();
@@ -313,6 +263,60 @@ $(function() {
          });
     });
 
+    $(document).on("click", ".clonar", function (e) {
+        e.preventDefault();
+        var codigo = $('#codigo').attr('code');
+
+        $.post( "core.php?l=clonar",{codigo: codigo, tipo:'clonar'}, function( data ) {
+            if(data){
+
+                $('#miscursose').html(data.html);
+                $('#Copciones').hide('fast');
+                $('#cursosA').show('fast');
+            }
+
+        }, "json");
+
+
+
+
+
+    });
+
+
+    $( "#clon" ).submit(function(e) {
+        e.preventDefault();
+        $.post( "core.php?l=clon",$("#bCursos").serialize(), function( data ) {
+            $("#rbusqueda").hide();
+            $("#rbusqueda").html(data.html);
+            $(".asignar").attr('data-seccion',data.seccion);
+            $(".asignar").attr('data-maestro',data.docente);
+            $("#rbusqueda").show('slow');
+        }, "json")
+        .fail(function() {
+            $("#rbusqueda").hide('fast');
+            swal('Ocurrió un error en el scripts o servidor, no hay datos para este grado. ');
+        });
+    });
+
+
+
+
+
+
+
+
+
+    $(document).on("click", ".enlazar", function (e) {
+        e.preventDefault();
+        $('#Copciones').hide('fast');
+        $('#cursosA').show('fast');
+
+    });    
+
+
+
+
 
 
 
@@ -324,44 +328,32 @@ $(function() {
 
 
 
-$(document).keydown(
-    function(e){
-    var datos = $(".move:focus").focus().attr('data-id');
-    if (typeof datos !== 'undefined') {
-    datos = datos.split('|');
-        var id = parseInt(datos['0']);
-        var li = parseInt(datos['1']);
-
-        if (e.keyCode == 107 ) {
-            e.preventDefault();
-            var sig = (id+1);
-            $("#C"+sig).focus();
-        }else if (e.keyCode == 13 ) {      
-            var sig = (id+li);
-            $("#C"+sig).focus();
-        }else    
-        
-        if (e.keyCode == 109) {
-            e.preventDefault();
-            var sig = (id-1);
-            $("#C"+sig).focus();
-   
-        }else    
-        
-        if (e.keyCode == 40) {      
-            var sig = (id+li);
-            $("#C"+sig).focus();
-   
-        }else    
-        
-        if (e.keyCode == 38) {      
-            var sig = (id-li);
-            $("#C"+sig).focus();
-   
+    $(document).keydown(
+        function(e){
+            var datos = $(".move:focus").focus().attr('data-id');
+            if (typeof datos !== 'undefined') {
+                datos = datos.split('|');
+                var id = parseInt(datos['0']);
+                var li = parseInt(datos['1']);
+                if (e.keyCode == 107 ) {
+                    e.preventDefault();
+                    var sig = (id+1);
+                    $("#C"+sig).focus();
+                }else if (e.keyCode == 13 ) {      
+                    var sig = (id+li);
+                    $("#C"+sig).focus();
+                }else if (e.keyCode == 109) {
+                    e.preventDefault();
+                    var sig = (id-1);
+                    $("#C"+sig).focus();
+                }else if (e.keyCode == 40) {      
+                    var sig = (id+li);
+                    $("#C"+sig).focus();
+                }else if (e.keyCode == 38) {      
+                    var sig = (id-li);
+                    $("#C"+sig).focus();
+           
+                }
+            }
         }
-}
-
-
-
-    }
-);
+    );

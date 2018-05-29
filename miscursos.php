@@ -4,7 +4,7 @@ ob_start();
 include("index.php");
 $page = ob_get_contents();
 ob_end_clean();
-
+conectar();
 $llave = array();
 $enlace = array();
 $llave[] = '{codigo}';
@@ -27,6 +27,11 @@ $enlace[] = Snivel(2);
 $llave[] = '{Sseccion}';
 $enlace[] = Sseccion();
 
+$llave[] = '{tblarchivos}';
+$enlace[] = tabla_archivos($perfil['codigo'],$tipo="modal.adjunto");
+
+cerrar_conex();
 
 $page = str_replace($llave, $enlace, $page);
 echo $page;
+

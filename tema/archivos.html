@@ -3,37 +3,16 @@
 				<div class="panel panel-flat">
 					<div class="panel-heading">
 						<h5 class="panel-title">Manejar Archivos</h5>
-						<div class="heading-elements">
-							<ul class="icons-list">
-		                		<li><a data-action="collapse"></a></li>
-		                		<li><a data-action="reload"></a></li>
-		                	</ul>
-	                	</div>
 					</div>
 					<div class="panel-body">
 						<h6 class="content-group text-semibold">Sube archivos a sistema.
 							<small class="display-block">Todos los archivos subidos guardan el nombre que contiene el mismo, puede cambiar estos nombres despues de haberlos subidos.</small></h6>
 						<div class="panel-group accordion-sortable content-group-lg" id="accordion-controls">
 							<div class="panel panel-white">
-								<div class="panel-heading">
-									<h6 class="panel-title">
-										<a class="collapsed" data-toggle="collapse" data-parent="#accordion-controls" href="#accordion-controls-group3">Cargar Archivos</a>
-									</h6>
-									<div class="heading-elements">
-										<ul class="icons-list">
-					                		<li><a data-action="reload"></a></li>
-					                		<li><a data-action="close"></a></li>
-					                	</ul>
-				                	</div>
-								</div>
-								<div id="accordion-controls-group3" class="panel-collapse collapse">
-									<div class="panel-body">
-										<div class="hot-container">
-											<form action="core.php?l=upload_file" class="dropzone" id="files_multiple">
-												<input type="hidden" name="codigo" value="{codigo}" />
-											</form>
-										</div>
-									</div>
+								<div class="hot-container">
+									<form action="core.php?l=upload_file" class="dropzone" id="files_multiple">
+										<input type="hidden" name="codigo" value="{codigo}" />
+									</form>
 								</div>
 							</div>
 						</div>
@@ -44,7 +23,6 @@
 						<h5 class="panel-title">Archivos en Sistema</h5>
 						<div class="heading-elements">
 							<ul class="icons-list">
-		                		<li><a data-action="collapse"></a></li>
 		                		<li><a source="list_archivos" data-action="reload"></a></li>
 		                	</ul>
 	                	</div>
@@ -63,20 +41,44 @@
 								<button type="button" class="close" data-dismiss="modal">&times;</button>
 								<h5 class="modal-title">Recurso Externo - API REST Microsoft Viewer and PDF View</h5>
 							</div>
-
 							<div class="modal-body">
-								
 								<div class="embed-container">
 									<iframe scrolling="no" height="520px" width="100%" src="" frameborder="0" id="iframe"></iframe>
 								</div>
-
 							</div>
-
 							<div class="modal-footer">
 								<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar Vista Previa</button>
 							</div>
 						</div>
 					</div>
 				</div>
+
+				<div id="editar" class="modal">
+					<div class="modal-dialog modal-mini">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h5 class="modal-title">Editar Archivo</h5>
+							</div>
+							<div class="modal-body">
+								<div class="embed-container">
+									<div id="editFileForm"></div>
+									<small id="mensaje"></small>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<span id="boton"></span>
+								<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+
+
 			</div>
 			
