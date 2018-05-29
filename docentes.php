@@ -14,7 +14,8 @@ $llave[] = '{codigo}';
 $enlace[] = $perfil['codigo'];
 $llave[] = '{tabla}';
 $enlace[] =tabla_usuarios('usuarios','1');
-
+$llave[] = '{modaluser}';
+$enlace[] =modal_usuarios('1');
 
 $page = str_replace($llave, $enlace, $page);
 echo $page;

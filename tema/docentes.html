@@ -5,9 +5,9 @@
 						<h5 class="panel-title">Tabla de Docentes</h5>
 						<div class="heading-elements">
 							<ul class="icons-list">
-								
-								<li><a><i class="icon-user-plus"></i></a>	</li>
-								<li><a><i class="icon-user-block"></i></a>	</li>
+
+								<li><a data-toggle="modal" data-target="#Formdocentes"><i class="icon-user-plus" id="agregar"></i></a>	</li>
+								<li><a><i class="icon-user-block" id="bloquear"></i></a>	</li>
 		                		<li><a data-action="collapse"></a></li>
 		                		<li><a data-action="reload"></a></li>
 		                		<li><a data-action="close"></a></li>
@@ -18,11 +18,13 @@
 					<div class="panel-body">
 						Consulta, actualizacion y eliminación de docentes.
 					</div>
-					{tabla}
-					
-
-
-
-
+					<div id='docentes'>
+						{tabla}
+					</div>
+						{modaluser}
 			
 			</div>
+
+
+
+
