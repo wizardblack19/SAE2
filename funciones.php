@@ -148,7 +148,7 @@
 		return $enlace.$archivo;
 	}
 
-	function tabla_archivos($codigo){
+	function tabla_archivos($codigo,$tipo=""){
 		global $mysqli;
 		conectar();	
 		$tabla = "";
@@ -156,7 +156,7 @@
 		if($archivos = db("select * from archivos where docente like '{$codigo}' ", $mysqli)){
 			$enlace = "";
 			$tabla = '
-				<table class="table table-bordered table-xxs">
+				<table id="tblarchivos" class="table table-bordered table-xxs">
 					<thead>
 						<tr>
 							<th width="5%">#</th>
@@ -168,13 +168,20 @@
 					<tbody>';
 			foreach ($archivos as $archivo) {
 				$n++;
-				$enlace = microsoft_view($archivo['archivo']);
+				if($tipo <> "adjuntar"){
+					$enlace = microsoft_view($archivo['archivo']);
+				}
 				$tabla .= "
 				<tr>
 	                <td>{$n}</td>
 	                <td>{$archivo['nombre']}</td>
-	                <!--<td>{conteo}</td>-->
-	                <td>
+	                <!--<td>{conteo}</td>-->";
+
+
+
+
+	            if($tipo <> "adjuntar"){
+	            $tabla .= "    <td>
 						<div class='btn-group'>
 	                    	<a data-toggle='dropdown' aria-expanded='false' > <i class='icon-gear'></i> &nbsp;<span class='caret'></span> </a>
 	                    	<ul class='dropdown-menu dropdown-menu-right'>
@@ -184,8 +191,10 @@
 								<li><a source='del_file' idb='{$archivo['idfile']}' class='borrar' href='#borrar'><i class='icon-trash'></i> Borrar</a></li>
 							</ul>
 						</div>
-	                </td>
-	            </tr>";
+	                </td>";
+	            }
+
+	           $tabla .="</tr>";
 			}
 			$tabla .= '</tbody></table>';
 		}else{

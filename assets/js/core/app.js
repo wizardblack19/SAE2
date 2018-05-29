@@ -240,6 +240,7 @@ $(function() {
                 post_data(perfil.codigo,action,block); 
                 window.setTimeout(function () {
                    $(block).unblock();
+                   $('#tblarchivos').DataTable();
                 }, 500);
            }, "json");
         }

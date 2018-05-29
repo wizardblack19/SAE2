@@ -3,6 +3,8 @@
             fileButtonClass: 'action btn btn-default'
         });
 
+        $('#tblarchivos').DataTable();
+
         Dropzone.autoDiscover = false;
         $("#files_multiple").dropzone({
             paramName: "file",
@@ -70,6 +72,7 @@
             var action  = 'borrar';
             var block   = '#archivos';
             post_data(perfil.codigo,action,block);
+            $('#tblarchivos').DataTable();
         });
 
 });
@@ -97,6 +100,7 @@
             $.post( "core.php?l=verarchivos", { codigo: codigo, action:action }, function( data ) {  
                 $("#resultado1").html(data.html);
                 window.setTimeout(function () {
+                    $('#tblarchivos').DataTable();
                    $(block).unblock();
                 }, 500);
            }, "json");

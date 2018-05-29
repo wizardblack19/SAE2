@@ -412,6 +412,7 @@ define('MENU',$menu_s);
 			';
 	}elseif(lugar()=="archivos"){
 		$head .= '
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/datatables.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/uploaders/dropzone.min.js"></script>
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
 			<script type="text/javascript" src="assets/js/pages/archivos.js"></script>
