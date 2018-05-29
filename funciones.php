@@ -150,7 +150,6 @@
 
 	function tabla_archivos($codigo,$tipo=""){
 		global $mysqli;
-		conectar();	
 		$tabla = "";
 		$n = 0;
 		if($archivos = db("select * from archivos where docente like '{$codigo}' ", $mysqli)){
@@ -200,7 +199,6 @@
 		}else{
 			$tabla = "<h3>No se encontro archivos con su codigo.</h3>";
 		}
-					//cerrar_conex();
 		return $tabla;
 	}
 
@@ -220,8 +218,7 @@
 	}
 
 	function vermiscursos($codigo,$datos=""){
-		global $mysqli, $unidad;
-		conectar();	
+		global $mysqli, $unidad;	
 		$tabla = "";
 		$n = 0;		
 		if($asignaciones = db("SELECT cursos.codigo,cursos.nombre,cursos.grado,cursos.nivel,cursos.carrera,asignaciones.seccion,cursos.jornada 
@@ -301,7 +298,6 @@
 			$tabla = "<h3>No tiene cursos asignados, puede asignarse en cualquier momento.</h3>";
 		}
 		return $tabla;
-		cerrar_conex();
 	}
 
 	function grado_t($g){

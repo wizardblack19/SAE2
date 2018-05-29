@@ -141,10 +141,11 @@ include("funciones.php");
   }
 
 elseif ($proceso == "verarchivos"){
-    $codigo = $_POST['codigo'];
+  $codigo = $_POST['codigo'];
+  conectar();
     $data['html'] = tabla_archivos($codigo);
+  cerrar_conex();  
     print json_encode($data);
-    cerrar_conex();
 exit;
 }
 
