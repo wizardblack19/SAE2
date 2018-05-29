@@ -1,8 +1,9 @@
     $(function() {
-
    
     // Editable
     // ------------------------------
+
+
     $.extend( $.fn.dataTable.defaults, {
         autoWidth: false,
         columnDefs: [{ 
@@ -64,9 +65,8 @@
         });
     }
 
-
-
-        // Datatable with saving state
+function tabla(){
+   // Datatable with saving state
     $('.datatable-save-state').DataTable({
         stateSave: true
     });
@@ -81,20 +81,120 @@
     $( ".dataTables_wrapper" ).click(function() {
          editar();  
     });
+}
 
-     });
+     
 
 
-$(document).on("click", ".cambiar", function () {
-    alert(this.value);
-     $.ajax({
-      type: 'post',
-      url: 'core.php',
-      data: {"usuario":this.value, "l":"desactiar_docente"}
-     }).done(function(data) {
-      // Optionally alert the user of success here...
-     }).fail(function(data) {
-      // Optionally alert the user of an error here...
-     });
+tabla();
 
+
+
+
+
+//guardar nuevo usuario
+$( "#formuser" ).submit(function( event ) {
+  event.preventDefault();
+  $.post( "core.php?l=guardar_user",$( "#formuser" ).serialize(), function( data ) {
+    if (data.error == false) {
+       $.post( "core.php?l=RefreshUser",{tipo:'1',tabla:'usuarios'}, function( data ) {
+        $('#docentes').html(data.html);
+        tabla();
+      }, "json" );
+      swal("Actualizado","Registro guardado correctamente.","success");
+      $( "#formuser" )[0].reset();
+    }else{
+      swal("ERROR","Registro no se a podido Guardar.","error");
+    }
+    
+    }, "json" );
+
+
+    
 });
+
+
+
+
+
+//desactivar usuario
+$(document).on("click", ".cambiar", function (e) {
+  e.preventDefault();
+  $elemento= this;
+    $.post( "core.php?l=desactivar_docente", {"usuario":this.value}, function( data ) {
+      if(data.error==false){
+        $.post( "core.php?l=RefreshUser",{tipo:'1',tabla:'usuarios'}, function( data ) {
+        $('#docentes').html(data.html);
+        tabla();
+      }, "json" );
+      }else{
+        alert('Ocurrio un error');
+      }
+       
+    }, "json");
+      
+});
+
+
+
+//eliminar usuario
+$(document).on("click", ".eliminar", function (e) {
+  e.preventDefault();
+    $.post( "core.php?l=eliminar_docente", {"usuario":this.value}, function( data ) {
+      if(data.error == false){
+        swal("Actualizado","Registro eliminado correctamente.","success");
+        $.post( "core.php?l=RefreshUser",{tipo:'1',tabla:'usuarios'}, function( data ) {
+        $('#docentes').html(data.html);
+        tabla();
+      }, "json" );
+        
+      }else{
+        swal("ERROR","El registro no se ha eliminado.","error");
+      }
+    }, "json");
+});
+
+//desabilitar todos los usuarios
+$(document).on("click", "#bloquear", function (e) {
+  e.preventDefault();
+  swal({
+  title: "Desea actualizar?",
+  text: "Esta a punto de modificar la contraseña de todos los usuarios en esta tabla!",
+  type: "warning",
+  showCancelButton: true,
+  confirmButtonClass: "btn-danger",
+  confirmButtonText: "Si, modificar!",
+  closeOnConfirm: false
+  },
+   
+  function(){
+    $.post( "core.php?l=bloquear_docentes", {"tipo": 1}, function( data ) {
+      if(data.error == false){
+        $.post( "core.php?l=RefreshUser",{tipo:'1',tabla:'usuarios'}, function( data ) {
+        $('#docentes').html(data.html);
+        tabla();
+      }, "json" );
+        swal("Actualizado","Registros actualizados correctamente.","success");
+      }else{
+        swal("ERROR","Los registros no se han actualizado","error");
+      }
+    }, "json");
+  });
+
+}); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+     });
+
+

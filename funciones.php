@@ -300,6 +300,7 @@
 		return $tabla;
 	}
 
+
 	function grado_t($g){
 		if($g==1){
 			$g = "Primero";
@@ -966,6 +967,7 @@ EOD;
 
 	function Sactivo(){
 		global $mysqli;
+
 		$key[0] = 0;
 		if($db=db("select valor from configuracion where opcion like 'LICENSE' limit 0,1",$mysqli)){
 			$key[1] = $db[0]['valor'];
@@ -980,13 +982,6 @@ EOD;
 		}
 		return $key;
 	}
-
-
-
-
-
-
-
 
 	function server_status($licensekey, $localkey='',$secret='') {
 	    $whmcsurl = base64_decode('aHR0cHM6Ly93d3cuZ3RkZXNhcnJvbGxvLmNvbS8=');
@@ -1188,3 +1183,142 @@ EOT;
 
 
 
+  
+  
+  
+  
+//Modal de ingresp de usuarios
+function modal_usuarios($a){
+		$divmodal = "";
+		$n = 0;
+		$tipo= $a;
+		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
+		$divmodal="
+		<div id='Formdocentes' class='modal fade'>
+					<div class='modal-dialog'>
+						<div class='modal-content'>
+							<div class='modal-header'>
+								<button type='button' class='close' data-dismiss='modal'>&times;</button>
+								<h5 class='modal-title'>Vertical form</h5>
+							</div>
+							<form action='#' id='formuser' method='post'>
+								<div class='modal-body'>
+									<div class='form-group'>
+										<div class='row'>
+											<div class='col-sm-6'>
+												<label>Nombres</label>
+												<input type='text' placeholder='Nombres del usuario' name='nombre' class='form-control' required>
+											</div>
+											<div class='col-sm-6'>
+												<label>Apellidos</label>
+												<input type='text' placeholder='Apellidos del usuario' name='apellido' class='form-control' required>
+											</div>
+										</div>
+									</div>
+									<div class='form-group'>
+										<div class='row'>
+											<div class='col-sm-8'>
+												<label>Email</label>
+												<input type='email' placeholder='eugene@kopyov.com' class='form-control' name='correo' required>
+											</div>
+											<div class='col-sm-4'>
+												<label>Basic single date picker: </label>
+												<input type='date' class='form-control' name='fecha' required>
+											</div>
+										</div>
+									</div>
+									<div class='form-group'>
+										<div class='row'>
+											<div class='col-sm-6'>
+												<label class='display-block text-semibold'>Genero</label>
+												<label class='radio-inline'>
+												<input type='radio' name='genero' checked='checked' value='M' required>Masculino
+												</label>
+												<label class='radio-inline'>
+												<input type='radio' name='genero' value='F' required>Femenino
+												</label>
+											</div>
+											<div class='col-sm-6'>
+												<label class='display-block text-semibold'>Tipo</label>
+												<select class='bootstrap-select' data-width='100%' name='tipo' required>
+													<option value='1'>Maestro</option>
+													<option value='3'>Secretaría</option>
+													<option value='4'>Contabilidad</option>
+													<option value='9'>Administrador</option>
+												</select>
+											</div>
+										</div>
+									</div>	
+								</div>
+								<div class='modal-footer'>
+									<button type='button' class='btn btn-link' data-dismiss='modal'>Cerrar</button>
+									<button type='submit' class='btn btn-primary'>Guardar</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>";
+					
+		return $divmodal;
+	}
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+function modal(){  
+  	conectar();	
+		$tabla = "";
+		$n = 0;
+		$campo= $b;
+		$criterio= $c;
+		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
+		if($usuarios = db("select * from {$campo} where tipo = {$criterio}", $mysqli)){
+			$enlace = "";
+			$tabla = '<table class="table datatable-save-state" >
+						<thead>
+							<tr>
+								<th>Codigo</th>
+								<th>Nombre</th>
+								<th>Apellido</th>
+								<th>Correo</th>
+								<th>Contraseña</th>
+								<th class="text-center">Actions</th>
+							</tr>
+						</thead>
+						<tbody>';
+						foreach ($usuarios as $usuario) {
+							if ($usuario['estado']==0) {
+								$estado = 'icon-eye-blocked2';
+							}else{
+								$estado = 'icon-eye';
+							}
+							$pass= base64_decode($usuario['password']);
+					$tabla .="<tr>
+								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='codigo'>{$usuario['codigo']}</a></td>
+								<td>{$usuario['nombre']}</td>
+								<td>{$usuario['apellido']}</td>
+								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='nick'>{$usuario['correo']}</a></td>
+								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='pass'>{$pass}</a></td>
+								<td class='text-center'>
+									<ul class='icons-list'>
+										<li class='cambiar' value='{$usuario['id']}'><a href='#''><i class={$estado}></i></a></li>
+										<li class='text-danger-600 eliminar' value='{$usuario['id']}'><a href='#'><i class='icon-x'></i></a></li>
+									</ul>
+								</td>
+							</tr>";
+					}		
+					$tabla .='</tbody>
+					</table>';
+				
+  		return $tabla;
+		cerrar_conex();
+	}
+
+
+  
