@@ -384,7 +384,6 @@ if ($usuarios = db("select estado from usuarios where id = {$pk}", $mysqli)) {
       $sql ="UPDATE `usuarios` SET estado = 0 where `id`='{$pk}'";
         if(mysqli_query($mysqli, $sql)){
           $info['error']=false;
-          $info['estado']= 0;
         }else{
           $info['error']=true;
         }
@@ -392,7 +391,6 @@ if ($usuarios = db("select estado from usuarios where id = {$pk}", $mysqli)) {
       $sql ="UPDATE `usuarios` SET estado = 1 where `id`='{$pk}'";
         if(mysqli_query($mysqli, $sql)){
           $info['error']=false;
-          $info['estado']= 1;
       }else{
           $info['error']=true;
       }
@@ -408,27 +406,87 @@ exit;
 
 //eliminar docentes
 elseif($proceso == "eliminar_docente"){
-$nombre=$_POST['name'];
-$valor=$_POST['value'];
-$pk=$_POST['pk'];
+$pk=$_POST['usuario'];
 conectar();
-$sql ="UPDATE `maestros` SET {$nombre} = '{$valor}' where `id`='{$pk}'";
-if(mysqli_query($mysqli, $sql)){
-  echo "0";
+if($users= db("delete from `usuarios` where id ={$pk}",$mysqli)){
+  $info['error']= false;
 }else{
-  echo "1";
+  $info['error']= true;
 }
 cerrar_conex();
+echo json_encode($info);
+exit;
+}
+
+
+//bloquear docentes
+elseif($proceso == "bloquear_docentes"){
+conectar();
+$peticion="UPDATE usuarios set password=? where tipo= ?";
+$cambios=$mysqli-> prepare($peticion);
+$clave= base64_encode(date('Ymd'));
+$tipo=1;
+$cambios-> bind_param("si",$clave,$tipo);
+
+if ($cambios-> execute()) {
+  $info['error']=false;
+}else{
+  $info['error']=true;
+}
+cerrar_conex();
+
+echo json_encode($info);
 exit;
 }
 
 
 
+//Guardar usuario
+elseif($proceso == "guardar_user"){
+$nom=$_POST['nombre'];
+$ap=$_POST['apellido'];
+$correo=$_POST['correo'];
+$fecha=$_POST['fecha'];
+$genero=$_POST['genero'];
+$tipo= $_POST['tipo'];
+$estado=1;
+$pass= base64_encode(substr( md5(microtime()), 1, 8));
+if($tipo==1){
+  $codigo='M'.date('His');
+}elseif($tipo==3){
+  $codigo='S'.date('His');
+}elseif($tipo==4){
+  $codigo='C'.date('His');
+}elseif($tipo==9){
+  $codigo='A'.date('His');
+}else{
+  $codigo=date('His');
+}
+conectar();
+    if ($guardar = $mysqli->prepare("INSERT INTO `usuarios` (`codigo`, `nombre`, `apellido`, `genero`, `correo`, `password`, `tipo`, `estado`, `nacimiento`) VALUES (?,?,?,?,?,?,?,?,?)")){
+        $guardar->bind_param('ssssssiis', $codigo,$nom,$ap,$genero,$correo,$pass,$tipo,$estado,$fecha);
+        $guardar->execute();
+        $info['error']=false;  
+        }else{
+        $info['error']=true;
+        }
+cerrar_conex();
+echo json_encode($info);
+exit;
+}
 
 
 
+elseif($proceso == "RefreshUser"){
 
+    $tipo   = $_POST['tipo'];
+    $tabla  = $_POST['tabla'];
 
+    $data['html'] = tabla_usuarios($tabla,$tipo);
+
+    print json_encode($data);
+  exit;
+}
 
 
 
@@ -463,3 +521,8 @@ elseif($proceso == "conf"){
     print json_encode($data);
   exit;
 }
+
+
+
+
+
