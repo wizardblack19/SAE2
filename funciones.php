@@ -1,5 +1,4 @@
 <?php
-	//Valores Forzados para php
 	date_default_timezone_set('America/Guatemala');
 	ini_set('memory_limit', '1G');
 
@@ -53,7 +52,7 @@
 	}
 
 	function conectar(){
-	global $mysqli;	
+		global $mysqli;	
 		define("HOST", "saerds.cjotq8aa2kgw.us-east-2.rds.amazonaws.com");
 		define("USER", "sae_system"); 
 		define("PASSWORD", "Sae5621*");
@@ -133,41 +132,28 @@
 		    }
 	}
 
-	function ext($ext){
-		$info = new SplFileInfo($ext);
-		$ext = $info->getExtension();
-		return $ext;
-	}
-
-	function microsoft_view($archivo){
-		if( ext($archivo) == "pdf"){
-			$enlace = "files/";
-		}else{
-			$enlace = "https://view.officeapps.live.com/op/view.aspx?src=";
-		}
-		return $enlace.$archivo;
-	}
-
 	function tabla_archivos($codigo,$tipo=""){
 		global $mysqli;
 		$tabla = "";
 		$n = 0;
 		if($archivos = db("select * from archivos where docente like '{$codigo}' ", $mysqli)){
 			$enlace = "";
-			$tabla = '
+				$tabla = '
 				<table id="tblarchivos" class="table table-bordered table-xxs">
 					<thead>
 						<tr>
 							<th width="5%">#</th>
-							<th>Título de Archivo</th>
-							<!--<th width="15%"># adjunto</th>-->
-							<th width="15%">Configuración</th>
+							<th>Título de Archivo</th>';
+			if($tipo == ""){
+				$tabla .= '<th width="15%">Configuración</th>';
+			}				
+				$tabla .= '							
 						</tr>
 					</thead>
 					<tbody>';
 			foreach ($archivos as $archivo) {
 				$n++;
-				if($tipo <> "adjuntar"){
+				if($tipo == ""){
 					$enlace = microsoft_view($archivo['archivo']);
 				}
 				$tabla .= "
@@ -179,7 +165,7 @@
 
 
 
-	            if($tipo <> "adjuntar"){
+	            if($tipo == ""){
 	            $tabla .= "    <td>
 						<div class='btn-group'>
 	                    	<a data-toggle='dropdown' aria-expanded='false' > <i class='icon-gear'></i> &nbsp;<span class='caret'></span> </a>
@@ -200,6 +186,21 @@
 			$tabla = "<h3>No se encontro archivos con su codigo.</h3>";
 		}
 		return $tabla;
+	}
+
+	function ext($ext){
+		$info = new SplFileInfo($ext);
+		$ext = $info->getExtension();
+		return $ext;
+	}
+
+	function microsoft_view($archivo){
+		if( ext($archivo) == "pdf"){
+			$enlace = "files/";
+		}else{
+			$enlace = "https://view.officeapps.live.com/op/view.aspx?src=";
+		}
+		return $enlace.$archivo;
 	}
 
 	function color_mis_cursos($c){
@@ -299,7 +300,6 @@
 		}
 		return $tabla;
 	}
-
 
 	function grado_t($g){
 		if($g==1){
@@ -564,8 +564,6 @@
 		return $r;
 	}
 
-
-
 	function cronograma($datos){
 		global $mysqli;
 		$datos['perfil']    =   json_decode($_COOKIE["perfil"],TRUE); 
@@ -594,173 +592,107 @@
 				$responde['idK']	=	$estado['id'];
 				$responde['idD']	=	$estado['llave'];
 			}
-
-
-
-	
-		
-	}
-
-
+		}
 		return $responde;
-
 	}
 
 	function cronoview($idK,$idD,$datos){
-	global $mysqli,$version;
-	$generado = date('Y-m-d H:i:s');
-	$key 			=		db("SELECT * from crono_key where id = {$idK} LIMIT 0,1",$mysqli);
-
-			$busca = db("select valor from configuracion where opcion like 'CRONOGRAMAS' limit 0,1",$mysqli);
-
-			$data  	= db("select * from crono_data where llave like '{$idD}' limit 0,1",$mysqli);	
-	$enviado 		=		$key[0]['save'];
-	$actualizado	=		$data[0]['save'];
-	$autorizado 	=		$key[0]['update'];
-
-	$cronodatos 	= 		json_decode($data[0]['data'], TRUE);
-
-
-
-
-
-
-
-			$titulos = array();
-			$celda = 0;
-
-
-
-
+		global $mysqli,$version;
+		$generado 		= 		date('Y-m-d H:i:s');
+		$key 			=		db("SELECT * from crono_key where id = {$idK} LIMIT 0,1",$mysqli);
+		$busca 			= 		db("select valor from configuracion where opcion like 'CRONOGRAMAS' limit 0,1",$mysqli);
+		$data  			= 		db("select * from crono_data where llave like '{$idD}' limit 0,1",$mysqli);
+		$enviado 		=		$key[0]['save'];
+		$actualizado	=		$data[0]['save'];
+		$autorizado 	=		$key[0]['update'];
+		$cronodatos 	= 		json_decode($data[0]['data'], TRUE);
+		$titulos = array();
+		$celda = 0;
 			$C 		= json_decode($data[0]['data'], true);
-
 			$crono = json_decode($busca['0']['valor'], TRUE);
 			$col   = count($crono['titulos']);
-
 			$tabla = '
 			<table class="table table-xxs table-bordered"><thead><tr><th width="30">#</th>';
-				    for ($i = 0; $i < $col; $i++) {
-				    	$tabla .= "<th>{$crono['titulos'][$i]}</th>";
-		    		}
+			    for ($i = 0; $i < $col; $i++) {
+			    	$tabla .= "<th>{$crono['titulos'][$i]}</th>";
+	    		}
 			$tabla .= '<th width="110">Fecha</th></tr></thead><tbody>';
-							for ($i = 1; $i <= $crono['maximo']; $i++) {
-				    		$tabla .= '<tr><td>'.($i).'</td>';
-								for ($ii = 0; $ii < $col; $ii++) {
-									$celda++;
-									$t = $crono['titulos'][$ii]; 
-							    	$tabla .= "<td><p style='font-size:10px;' class='small'>{$C['C'.$celda]} </p></td>";
-					    		}
-				    		$tabla .= "<td><p style='font-size:10px;' class='small'>{$C['f'.$i]}</p></td></tr>";
+				for ($i = 1; $i <= $crono['maximo']; $i++) {
+	    			$tabla .= '<tr><td>'.($i).'</td>';
+					for ($ii = 0; $ii < $col; $ii++) {
+						$celda++;
+						$t = $crono['titulos'][$ii]; 
+				    	$tabla .= "<td><p style='font-size:10px;' class='small'>{$C['C'.$celda]} </p></td>";
+		    		}
+	    			$tabla .= "<td><p style='font-size:10px;' class='small'>{$C['f'.$i]}</p></td></tr>";
 				}
 				$tabla .= '</tbody></table>';
-
-			
-//echo $tabla;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	$responde = <<<EOD
-					<div id="imprimir" class="panel panel-white">
-						<div class="panel-heading">
-							<h6 class="panel-title">Cronograma de Tareas</h6>
-							<div class="heading-elements">
-								<button type="button"  data-show="miscursos" data-hide="cronograma" class="btn btn-default btn-xs heading-btn cancelar"><i class="icon-file-check position-left"></i> Regresar </button>
-								<button type="button" class="print btn btn-default btn-xs heading-btn"><i class="icon-printer position-left"></i> imprimir</button>
-		                	</div>
-						</div>
-
-						<div id="printArea">
-						<div class="panel-body no-padding-bottom">
-							<div class="row">
-								<div class="col-sm-6 content-group">
-									<b>{$datos['curso_t']}</b>
-		 							<ul class="list-condensed list-unstyled">
-										<li> Código: {$datos['codigo']} </li>
-										<li> Unidad: {$datos['unidad']} </li>
-										<li> Grado: {$datos['grado']} </li>
-										<li> Sección: {$datos['seccion']} </li>
-									</ul>
-								</div>
-							</div>
-						</div>
-
-						<div class="table-responsive">
-						
-
-
-
-
-						            {$tabla}
-	
-
-
-
-						</div>
-
-						<div class="panel-body">
-							<div class="row invoice-payment">
-								<div class="col-sm-7">
-									<div class="content-group">
-										<h6 class="small">Curso impartido por: {$datos['perfil']['nombres']} {$datos['perfil']['apellidos']}</h6>
-									</div>
-								</div>
-							</div>
-						</div>
-
-</div>
-						<!-- Attachments -->
-						<div class="mail-attachments-container">
-							<h6 class="mail-attachments-heading">1 Archivo(s) Adjunto(s)</h6>
-
-							<ul class="mail-attachments">
-								
-								<li>
-									<span class="mail-attachments-preview">
-										<i class="icon-file-pdf icon-2x"></i>
-									</span>
-
-									<div class="mail-attachments-content">
-										<span class="text-semibold">new_december_offers.pdf</span>
-
-										<ul class="list-inline list-inline-condensed no-margin">
-											<li class="text-muted">174 KB</li>
-											<li><a href="#">Ver</a></li>
-											<li><a href="#">Descargar</a></li>
-										</ul>
-									</div>
-								</li>
-
+		$responde = <<<EOD
+			<div id="imprimir" class="panel panel-white">
+				<div class="panel-heading">
+					<h6 class="panel-title">Cronograma de Tareas</h6>
+					<div class="heading-elements">
+						<button type="button"  data-show="miscursos" data-hide="cronograma" class="btn btn-default btn-xs heading-btn cancelar"><i class="icon-file-check position-left"></i> Regresar </button>
+						<button type="button" class="print btn btn-default btn-xs heading-btn"><i class="icon-printer position-left"></i> imprimir</button>
+                	</div>
+				</div>
+				<div id="printArea">
+				<div class="panel-body no-padding-bottom">
+					<div class="row">
+						<div class="col-sm-6 content-group">
+							<b>{$datos['curso_t']}</b>
+ 							<ul class="list-condensed list-unstyled">
+								<li> Código: {$datos['codigo']} </li>
+								<li> Unidad: {$datos['unidad']} </li>
+								<li> Grado: {$datos['grado']} </li>
+								<li> Sección: {$datos['seccion']} </li>
 							</ul>
 						</div>
-						<!-- /attachments -->
-
-
-
-
-
-
-
 					</div>
+				</div>
+
+				<div class="table-responsive">
+				    {$tabla}
+				</div>
+
+				<div class="panel-body">
+					<div class="row invoice-payment">
+						<div class="col-sm-7">
+							<div class="content-group">
+								<h6 class="small">Curso impartido por: {$datos['perfil']['nombres']} {$datos['perfil']['apellidos']}</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				<!-- Adjunto -->
+				<div class="mail-attachments-container">
+					<h6 class="mail-attachments-heading">1 Archivo(s) Adjunto(s)</h6>
+
+					<ul class="mail-attachments">
+						
+						<li>
+							<span class="mail-attachments-preview">
+								<i class="icon-file-pdf icon-2x"></i>
+							</span>
+
+							<div class="mail-attachments-content">
+								<span class="text-semibold">new_december_offers.pdf</span>
+
+								<ul class="list-inline list-inline-condensed no-margin">
+									<li class="text-muted">174 KB</li>
+									<li><a href="#">Ver</a></li>
+									<li><a href="#">Descargar</a></li>
+								</ul>
+							</div>
+						</li>
+
+					</ul>
+				</div>
+				<!-- /attachments -->
+			</div>
 EOD;
-
-
-
-
-
-		return $responde;
+	return $responde;
 	}
 
 	function cronoedit($idK,$idD="",$datos=""){
@@ -803,11 +735,8 @@ EOD;
 		}else{
 			$tabla 	=	'<div class="alert alert-danger no-border"><button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button><span class="text-semibold">Oh snap!</span>No se ha configurado los cronogramas, por favor realice esta configuración, para poder realizar este proceso. CODE: CRONOGRAMAS</div>';
 		}
-			
 		return $tabla;
-
 	}
-
 
 	function cronoForm($datos){
 		global $mysqli;
@@ -826,68 +755,46 @@ EOD;
 			<input class='datos' id='estado' type='hidden' name='estado' value='0'>
 			<input class='datos' id='fila' type='hidden' name='fila' value='{$col}'>
 			<table class='table table-bordered table-framed crono'><thead><tr><th width='50px'>#</th>";
-
-
-
-				    for ($i = 0; $i < $col; $i++) {
-				    	$tabla .= "<th>{$crono['titulos'][$i]}</th>";
-		    		}
+			    for ($i = 0; $i < $col; $i++) {
+			    	$tabla .= "<th>{$crono['titulos'][$i]}</th>";
+	    		}
 			$tabla .= '<th>Fecha</th></tr></thead><tbody>';
-							for ($i = 1; $i <= $crono['maximo']; $i++) {
-				    		$tabla .= '<tr class="numero"><td style="margin: 0px; padding: 3px;">'.($i).'</td>';
-								for ($ii = 0; $ii < $col; $ii++) {
-									$celda++;
-									$t = eliminar_tildes(strtolower($crono['titulos'][$ii])); 
-							    	$tabla .= '<td style="margin: 0px; padding: 3px;">';
-									$tabla .= "<input name=\"{$t}[]\" id=\"C{$celda}\" data-id=\"{$celda}|{$col}|\" type=\"text\" class=\"move datos\" /> </td>";
-					    		}
-				    		$tabla .= '<td style="margin: 0px; padding: 3px;"><input id="f'.$i.'" class="datos" style="border:none;" type="date" name="fecha[]"/></td>
-				    				</tr>';
+				for ($i = 1; $i <= $crono['maximo']; $i++) {
+	    		$tabla .= '<tr class="numero"><td style="margin: 0px; padding: 3px;">'.($i).'</td>';
+					for ($ii = 0; $ii < $col; $ii++) {
+						$celda++;
+						$t = eliminar_tildes(strtolower($crono['titulos'][$ii])); 
+				    	$tabla .= '<td style="margin: 0px; padding: 3px;">';
+						$tabla .= "<input name=\"{$t}[]\" id=\"C{$celda}\" data-id=\"{$celda}|{$col}|\" type=\"text\" class=\"move datos\" /> </td>";
+		    		}
+	    		$tabla .= '<td style="margin: 0px; padding: 3px;"><input id="f'.$i.'" class="datos" style="border:none;" type="date" name="fecha[]"/></td>
+	    				</tr>';
 				}
 				$tabla .= '</tbody></table></form>';
 		}else{
 			$tabla 	=	'<div class="alert alert-danger no-border"><button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button><span class="text-semibold">Oh snap!</span>No se ha configurado los cronogramas, por favor realice esta configuración, para poder realizar este proceso. CODE: CRONOGRAMAS</div>';
 		}
-			
 		return $tabla;
-	
 	}
 
-
-
-
-
-
-	class alumno {
-		public $nombre;
-		public $grado;
-		public $seccion;
-	}
-
-
-
-function tabla_usuarios($b,$c){
+	function tabla_usuarios($tipo,$datos=""){
 		global $mysqli;
-		conectar();	
 		$tabla = "";
-		$n = 0;
-		$campo= $b;
-		$criterio= $c;
-		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
-		if($usuarios = db("select * from {$campo} where tipo = {$criterio}", $mysqli)){
-			$enlace = "";
-			$tabla = '<table class="table datatable-save-state" >
-						<thead>
-							<tr>
-								<th>Codigo</th>
-								<th>Nombre</th>
-								<th>Apellido</th>
-								<th>Correo</th>
-								<th>Contraseña</th>
-								<th class="text-center">Actions</th>
-							</tr>
-						</thead>
-						<tbody>';
+		if($datos){$filtro = "and estado = 1";}else {$filtro = "";}
+		if($usuarios = db("select * from usuarios where tipo = {$tipo} {$filtro}", $mysqli)){
+			$tabla = '
+				<table class="table datatable-save-state" >
+					<thead>
+						<tr>
+							<th>Codigo</th>
+							<th>Nombres</th>
+							<th>Apellidos</th>
+							<th>Correo</th>
+							<th>Contraseña</th>
+							<th class="text-center">Opciones</th>
+						</tr>
+					</thead>
+					<tbody>';
 						foreach ($usuarios as $usuario) {
 							if ($usuario['estado']==0) {
 								$estado = 'icon-eye-blocked2';
@@ -895,12 +802,13 @@ function tabla_usuarios($b,$c){
 								$estado = 'icon-eye';
 							}
 							$pass= base64_decode($usuario['password']);
-					$tabla .="<tr>
-								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='codigo'>{$usuario['codigo']}</a></td>
+							$tabla .="<tr>
+								<td>
+									<a href='/codigo' class='edit' data-title='Codigo' data-pk='{$usuario['id']}' data-name='codigo'>{$usuario['codigo']}</a></td>
 								<td>{$usuario['nombre']}</td>
 								<td>{$usuario['apellido']}</td>
-								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='nick'>{$usuario['correo']}</a></td>
-								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$usuario['id']}' data-name='pass'>{$pass}</a></td>
+								<td><a href='/correo' class='edit' data-title='Correo' data-pk='{$usuario['id']}' data-name='nick'>{$usuario['correo']}</a></td>
+								<td><a href='/pass' class='edit' data-title='Contraseña' data-pk='{$usuario['id']}' data-name='pass'>{$pass}</a></td>
 								<td class='text-center'>
 									<ul class='icons-list'>
 										<li class='cambiar' value='{$usuario['id']}'><a href='#''><i class={$estado}></i></a></li>
@@ -919,45 +827,6 @@ function tabla_usuarios($b,$c){
 		return $tabla;
 		cerrar_conex();
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	function Sactivo(){
 		global $mysqli;
@@ -1175,16 +1044,8 @@ EOT;
 		return $formulario;
 	}
 
-
-
-  
-  
-  
-  
-//Modal de ingresp de usuarios
-function modal_usuarios($a){
+	function modal_usuarios($a){
 		$divmodal = "";
-		$n = 0;
 		$tipo= $a;
 		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
 		$divmodal="
@@ -1193,19 +1054,19 @@ function modal_usuarios($a){
 						<div class='modal-content'>
 							<div class='modal-header'>
 								<button type='button' class='close' data-dismiss='modal'>&times;</button>
-								<h5 class='modal-title'>Vertical form</h5>
+								<h5 class='modal-title'>Nuevo Usuario</h5>
 							</div>
-							<form action='#' id='formuser' method='post'>
+							<form action='/nuevoUsuario' id='formuser' method='post' autocomplete='off'>
 								<div class='modal-body'>
 									<div class='form-group'>
 										<div class='row'>
 											<div class='col-sm-6'>
 												<label>Nombres</label>
-												<input type='text' placeholder='Nombres del usuario' name='nombre' class='form-control' required>
+												<input type='text' placeholder='Nombres' name='nombre' class='form-control' required>
 											</div>
 											<div class='col-sm-6'>
 												<label>Apellidos</label>
-												<input type='text' placeholder='Apellidos del usuario' name='apellido' class='form-control' required>
+												<input type='text' placeholder='Apellidos' name='apellido' class='form-control' required>
 											</div>
 										</div>
 									</div>
@@ -1213,28 +1074,29 @@ function modal_usuarios($a){
 										<div class='row'>
 											<div class='col-sm-8'>
 												<label>Email</label>
-												<input type='email' placeholder='eugene@kopyov.com' class='form-control' name='correo' required>
+												<input type='email' placeholder='info@sae.com' class='form-control' name='correo' required>
 											</div>
 											<div class='col-sm-4'>
-												<label>Basic single date picker: </label>
+												<label>Fecha de Nacimiento:</label>
 												<input type='date' class='form-control' name='fecha' required>
 											</div>
 										</div>
 									</div>
 									<div class='form-group'>
+
 										<div class='row'>
 											<div class='col-sm-6'>
 												<label class='display-block text-semibold'>Genero</label>
 												<label class='radio-inline'>
-												<input type='radio' name='genero' checked='checked' value='M' required>Masculino
+												<input type='radio' name='genero' class='styled' checked='checked' value='M' required> Masculino
 												</label>
 												<label class='radio-inline'>
-												<input type='radio' name='genero' value='F' required>Femenino
+												<input type='radio' name='genero' value='F' class='styled' required> Femenino
 												</label>
 											</div>
 											<div class='col-sm-6'>
 												<label class='display-block text-semibold'>Tipo</label>
-												<select class='bootstrap-select' data-width='100%' name='tipo' required>
+												<select class='form-control' data-width='100%' name='tipo' required>
 													<option value='1'>Maestro</option>
 													<option value='3'>Secretaría</option>
 													<option value='4'>Contabilidad</option>
@@ -1258,7 +1120,33 @@ function modal_usuarios($a){
   
   
   
+  function cuadro_zona($codigo="",$datos=""){
+  	global $mysqli;
+  	if($codigo == ""){
+  		$datos = "<h3>Seleccione docente a verificar.</h3>";
+  	}
+
+
+
+
+
+
+
+
+
+  	return $datos;
+  }
   
   
   
-  
+  function list_jornadas(){
+  	global $mysqli;
+  	$sid = 1;
+  	$jornada = db("SELECT valor FROM configuracion WHERE opcion LIKE 'JORNADAS' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli);
+  	if($jornada){
+
+  	}else{
+  		$res = '<h6>No hay jornadas almacenadas, agregue uno ahora.</h6>';
+  	}
+  	return $res;
+  }

@@ -194,8 +194,6 @@ exit;
 
 elseif($proceso == "refreshMisCursos"){
 
-
-  //Cambios de tabla en funcion archivos
     $codigo = $_POST['codigo'];
     $data['html'] = vermiscursos($codigo);
     print json_encode($data);
@@ -223,6 +221,7 @@ elseif($proceso == "bCurso"){
       }else{
         $data['error']  = "Algo raro pasa aquí, se esta intentando saltar las politicas de seguridad.";
       }
+      echo mysqli_error($mysqli);
     cerrar_conex();
     print json_encode($data);
 
@@ -466,12 +465,11 @@ exit;
 
 
 elseif($proceso == "RefreshUser"){
-
+  conectar();
     $tipo   = $_POST['tipo'];
     $tabla  = $_POST['tabla'];
-
-    $data['html'] = tabla_usuarios($tabla,$tipo);
-
+    $data['html'] = tabla_usuarios(1,'docentes');
+  cerrar_conex();
     print json_encode($data);
   exit;
 }
