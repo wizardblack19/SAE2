@@ -13,9 +13,11 @@ $enlace[] = $codigo;
 $llave[] = '{list_jornadas}';
 $enlace[] = list_jornadas();
 
+$llave[] = '{list_niveles}';
+$enlace[] = list_niveles();
 
-
-
+$llave[] = '{list_secciones}';
+$enlace[] = list_secciones();
 
 
 cerrar_conex();

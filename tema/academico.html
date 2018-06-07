@@ -3,7 +3,6 @@
 
 
 	<div class="content-wrapper">
-
 		<div class="content-group border-top-lg border-top-primary">
 			<div class="page-header page-header-default page-header-lg" style="border-left: 1px solid #ddd; border-right: 1px solid #ddd;">
 				<div class="page-header-content">
@@ -20,17 +19,36 @@
 		</div>
 
 		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-flat">
+					<div class="panel-heading">
+						<h5 class="panel-title">Carreras</h5>
+					</div>
+					<div class="panel-body">
+						{list_carreras}
+					</div>
+					<div class="panel-footer">
+						<div class="heading-elements">
+							<button type="button" class="btn btn-primary heading-btn pull-right">Guardar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="row">
 			<div class="col-md-4">
 				<div class="panel panel-flat">
 					<div class="panel-heading">
 						<h5 class="panel-title">Jornadas</h5>
-						<div class="heading-elements">
-							<a class="modal_op" tipo="jornada" href="#configurar"><span class="label bg-indigo-400 heading-text">	+ Jornada </span></a>
-			        	</div>
 					</div>
 					<div class="panel-body">
-						<div class="table">
-							<div id="resultado1">{list_jornadas}</div>
+						<form id="jornadas">{list_jornadas}</form>
+					</div>
+					<div class="panel-footer">
+						<div class="heading-elements">
+							<button type="button" class="btn_jornada btn btn-primary heading-btn pull-right">Guardar</button>
 						</div>
 					</div>
 				</div>
@@ -39,13 +57,13 @@
 				<div class="panel panel-flat">
 					<div class="panel-heading">
 						<h5 class="panel-title">Niveles</h5>
-						<div class="heading-elements">
-							<a class="modal_op" tipo="nivel" href="#configurar"><span class="label bg-indigo-400 heading-text">	+ Nivel </span></a>
-			        	</div>
 					</div>
 					<div class="panel-body">
-						<div class="table">
-							<div id="resultado1">{list_niveles}</div>
+						<form id="niveles">{list_niveles}</form>
+					</div>
+					<div class="panel-footer">
+						<div class="heading-elements">
+							<button type="button" class="btn_nivel btn btn-primary heading-btn pull-right">Guardar</button>
 						</div>
 					</div>
 				</div>
@@ -54,19 +72,17 @@
 				<div class="panel panel-flat">
 					<div class="panel-heading">
 						<h5 class="panel-title">Secciones</h5>
-						<div class="heading-elements">
-							<a class="modal_op" tipo="sección" href="#configurar"><span class="label bg-indigo-400 heading-text">	+ Sección </span></a>
-			        	</div>
 					</div>
 					<div class="panel-body">
-						<div class="table">
-							<div id="resultado1">{list_secciones}</div>
+						<form id="secciones">{list_secciones}</form>
+					</div>
+					<div class="panel-footer">
+						<div class="heading-elements">
+							<button type="button" class="btn_seccion btn btn-primary heading-btn pull-right">Guardar</button>
 						</div>
 					</div>
 				</div>
 			</div>
-
-
 		</div>
 
 

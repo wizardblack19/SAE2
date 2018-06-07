@@ -1,6 +1,7 @@
 <?php
 	date_default_timezone_set('America/Guatemala');
 	ini_set('memory_limit', '1G');
+  	$sid = 1;
 
 	if(isset($_COOKIE["UNIDAD"])){
 		$unidad = $_COOKIE["UNIDAD"];
@@ -1120,33 +1121,82 @@ EOT;
   
   
   
-  function cuadro_zona($codigo="",$datos=""){
-  	global $mysqli;
-  	if($codigo == ""){
-  		$datos = "<h3>Seleccione docente a verificar.</h3>";
+	function cuadro_zona($codigo="",$datos=""){
+	  	global $mysqli, $sid;
+	  	if($codigo == ""){
+	  		$datos = "<h3>Seleccione docente a verificar.</h3>";
+		}
+  		return $datos;
+  	}
+  
+  	function list_jornadas(){
+	  	global $mysqli, $sid;
+	  	$res = "";
+	  	if($jornada = db("SELECT valor FROM configuracion WHERE opcion LIKE 'JORNADAS' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli)){
+	  		$data = json_decode($jornada[0]['valor'], TRUE);
+		    foreach ($data as $valor) {
+		    	$res .= input_textConf ("jornada[]",$valor);
+		    }
+	  	}else{
+	  		$res = input_textConf ("jornada[]",$value = "");
+	  	}
+  		return $res;
   	}
 
+	function list_niveles(){
+		global $mysqli;
+		$res="";
+		$sid = 1;
+		$jornada = db("SELECT valor FROM configuracion WHERE opcion LIKE 'NIVELES' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli);
+		if($jornada){
+			$data = json_decode($jornada[0]['valor'], TRUE);
+	    foreach ($data as $valor) {
+	    	$res .= input_textConf ("nivel[]",$valor);
+	    }
+		}else{
+			$res = input_textConf ("nivel[]",$value = "");
+		}
+		return $res;
+	}
+
+	function list_secciones (){
+		global $mysqli, $sid;
+		if($jornada = db("SELECT valor FROM configuracion WHERE opcion LIKE 'SECCIONES' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli)){
+			$value = $jornada[0]['valor'];
+		}else{
+			$value = "";
+		}
+		$html = "<div class='input-group'>
+					<input name='seccion' type='text' class='form-control' value='{$value}' />
+					<span style='cursor: pointer;' class='btn_seccion input-group-addon bg-success'>
+						<i class='icon-add'></i>
+					</span>
+				</div>";
+		return $html;
+	}
+
+	function input_textConf ($tipo,$value = ""){
+	  	$html = "
+  			<div class='field_wrapper'>
+				<div class='input-group'>
+					<input name='{$tipo}' type='text' class='form-control' value='{$value}' />
+					<span inp='{$tipo}' style='cursor: pointer;' class='input-group-addon bg-success add_button'>
+						<i class='icon-add'></i>
+					</span>
+					<span style='cursor: pointer;' class='input-group-addon bg-pink remove_button'>
+						<i class='icon-subtract'></i>
+					</span>
+				</div>
+			</div>";
+		return $html;
+	}
+
+
+	function list_carreras(){
 
 
 
 
+		
+	}
 
-
-
-
-  	return $datos;
-  }
-  
-  
-  
-  function list_jornadas(){
-  	global $mysqli;
-  	$sid = 1;
-  	$jornada = db("SELECT valor FROM configuracion WHERE opcion LIKE 'JORNADAS' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli);
-  	if($jornada){
-
-  	}else{
-  		$res = '<h6>No hay jornadas almacenadas, agregue uno ahora.</h6>';
-  	}
-  	return $res;
-  }

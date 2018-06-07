@@ -599,18 +599,90 @@ elseif($proceso == "updatefile"){
   }else{
       throw new Exception("Error Processing Request", 1);   
   }
-
-
-
-
-
-
-
-
-
-
-
-
-exit;
+  exit;
   }
+
+  elseif($proceso == "save_jornada"){
+    $i = 0;
+    foreach ($_POST['jornada'] as $valor) {
+      $i++;
+      $data[$i] = $valor;
+    }
+    $data   =   json_encode($data);
+    $nom = "JORNADAS";
+    conectar();
+
+    if($busca = db("SELECT id FROM configuracion WHERE opcion LIKE '{$nom}' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli)){
+      if ($guardar = $mysqli->prepare("UPDATE configuracion SET valor = ? WHERE id = ?")) {
+        $guardar->bind_param('si', $data, $busca[0]['id']);
+        $guardar->execute();
+        $info['error']=false;  
+      }
+    }else{
+       if ($guardar = $mysqli->prepare("INSERT INTO `configuracion` (`sid`, `opcion`, `valor`) VALUES (?,?,?)")){
+          $guardar->bind_param('sss', $sid,$nom,$data);
+          $guardar->execute();
+          $info['error']=false;  
+      }else{
+          $info['error']=true;
+      }     
+    }
+    cerrar_conex();
+  print json_encode($info);
+  exit;
+  }
+
+  elseif($proceso == "save_nivel"){
+    $i = 0;
+    foreach ($_POST['nivel'] as $valor) {
+      $i++;
+      $data[$i] = $valor;
+    }
+    $data   =   json_encode($data);
+    $nom = "NIVELES";
+    conectar();
+    if($busca = db("SELECT id FROM configuracion WHERE opcion LIKE '{$nom}' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli)){
+      if ($guardar = $mysqli->prepare("UPDATE configuracion SET valor = ? WHERE id = ?")) {
+        $guardar->bind_param('si', $data, $busca[0]['id']);
+        $guardar->execute();
+        $info['error']=false;  
+      }
+    }else{
+       if ($guardar = $mysqli->prepare("INSERT INTO `configuracion` (`sid`, `opcion`, `valor`) VALUES (?,?,?)")){
+          $guardar->bind_param('sss', $sid,$nom,$data);
+          $guardar->execute();
+          $info['error']=false;  
+      }else{
+          $info['error']=true;
+      }     
+    }
+    cerrar_conex();
+  print json_encode($info);
+  exit;
+  }
+
+  elseif($proceso == "save_seccion"){
+    $data = $_POST['seccion'];
+    $nom = "SECCIONES";
+    conectar();
+    if($busca = db("SELECT id FROM configuracion WHERE opcion LIKE '{$nom}' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli)){
+      if ($guardar = $mysqli->prepare("UPDATE configuracion SET valor = ? WHERE id = ?")) {
+        $guardar->bind_param('si', $data, $busca[0]['id']);
+        $guardar->execute();
+        $info['error']=false;  
+      }
+    }else{
+       if ($guardar = $mysqli->prepare("INSERT INTO `configuracion` (`sid`, `opcion`, `valor`) VALUES (?,?,?)")){
+          $guardar->bind_param('sss', $sid,$nom,$data);
+          $guardar->execute();
+          $info['error']=false;  
+      }else{
+          $info['error']=true;
+      }     
+    }
+    cerrar_conex();
+  print json_encode($info);
+  exit;
+  }
+
 

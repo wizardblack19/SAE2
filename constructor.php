@@ -131,8 +131,8 @@ $user = <<<EOT
 					</a>
 
 					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="#"><i class="icon-user-plus"></i> Mi perfil</a></li>
-						<li><a href="#"><i class="icon-coins"></i> Mis cursos</a></li>
+						<li><a href=""><i class="icon-user-plus"></i> Mi perfil</a></li>
+						<li><a href="./miscursos.php"><i class="icon-coins"></i> Mis cursos</a></li>
 						<li><a href="#"><span class="badge bg-teal-400 pull-right">58</span> <i class="icon-comment-discussion"></i> Alertas</a></li>
 						<li class="divider"></li>
 						<li><a href="#"><i class="icon-cog5"></i> Editar cuenta</a></li>
@@ -186,11 +186,6 @@ EOT;
 
 $menu2 = <<<EOT
 		<div class="breadcrumb-line">
-			<!--<ul class="breadcrumb">
-				<li><a href="index.html"><i class="icon-home2 position-left"></i> Home</a></li>
-				<li class="active">Dashboard</li>
-			</ul>-->
-
 			<ul class="breadcrumb-elements">
 				<li><a href="#"><i class="icon-comment-discussion position-left"></i> Soporte</a></li>
 				<li class="dropdown">
@@ -239,7 +234,7 @@ function menu(){
 	<div class="category-content no-padding">
 	<ul class="navigation navigation-main navigation-accordion">
 		<!-- Main -->
-		<li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li>
+		<li class="navigation-header"><span>Sistema Administrativo Educativo</span> <i class="icon-menu" title="Main pages"></i></li>
 		<li '; if( $este_lugar == "index" || $este_lugar == ""){$data .= "class='active'";}; $data .= '><a href="index.php"><i class="icon-home4"></i> <span>Inicio</span></a></li>
 		<li>
 			<a href="#"><i class="icon-stack2"></i> <span>Mis opciones</span></a>
@@ -264,7 +259,7 @@ function menu(){
 			</ul>
 		</li>
 		<li>
-			<a href="#"><i class="icon-copy"></i> <span>configuracion</span></a>
+			<a href="#"><i class="icon-copy"></i> <span>Configuración</span></a>
 			<ul>
 				<li '; if($este_lugar == "configuracion"){$data .= "class='active'";}; $data .= '><a href="configuracion.php">Institucional</a></li>
 				<li '; if($este_lugar == "academico"){$data .= "class='active'";}; $data .= '><a href="academico.php">Académico</a></li>
