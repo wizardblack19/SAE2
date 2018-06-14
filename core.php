@@ -465,8 +465,6 @@ echo json_encode($info);
 exit;
 }
 
-
-
 elseif($proceso == "RefreshUser"){
   conectar();
     $tipo   = $_POST['tipo'];
@@ -476,19 +474,6 @@ elseif($proceso == "RefreshUser"){
     print json_encode($data);
   exit;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 elseif($proceso == "conf"){
@@ -602,7 +587,7 @@ elseif($proceso == "updatefile"){
   }else{
       throw new Exception("Error Processing Request", 1);   
   }
-  exit;
+exit;
   }
 
   elseif($proceso == "save_jornada"){
@@ -635,6 +620,65 @@ elseif($proceso == "updatefile"){
   exit;
   }
 
+//Actualizar Curso
+elseif($proceso == "actualizar_curso"){
+$nombre=$_POST['name'];
+$valor=$_POST['value'];
+$pk=$_POST['pk'];
+conectar();
+  $sql ="UPDATE `cursos` SET {$nombre} = '{$valor}' where `id`='{$pk}'";
+  if(mysqli_query($mysqli, $sql)){
+    echo "0";
+  }else{
+    echo "1";
+  }
+cerrar_conex();
+  exit;
+}
+
+
+
+//Agregar Curso
+elseif($proceso == "agregar_curso"){
+$nom=$_POST['nomcurso'];
+conectar();
+
+    if ($guardar = $mysqli->prepare("INSERT INTO `cursos` (`nombre`) VALUES (?)")){
+        $guardar->bind_param('s',$nom);
+        $guardar->execute();
+        $info['error']=false;  
+        }else{
+        $info['error']=true;
+        }
+
+echo json_encode($info);
+cerrar_conex();        
+  exit;
+}
+
+//eliminar docentes
+elseif($proceso == "eliminar_curso"){
+$pk=$_POST['curso'];
+conectar();
+if($users= db("delete from `cursos` where codigo ={$pk}",$mysqli)){
+  $info['error']= false;
+}else{
+  $info['error']= true;
+}
+cerrar_conex();
+echo json_encode($info);
+exit;
+}
+
+
+// recargar cursos
+elseif($proceso == "RefreshCursos"){
+    $tipo   = $_POST['tipo'];
+    $data['html'] = listadecursos($tipo);
+
+    print json_encode($data);
+  exit;
+}
   elseif($proceso == "save_nivel"){
     $i = 0;
     foreach ($_POST['nivel'] as $valor) {
