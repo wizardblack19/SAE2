@@ -19,6 +19,8 @@ $enlace[] = list_niveles();
 $llave[] = '{list_secciones}';
 $enlace[] = list_secciones();
 
+$llave[] = '{list_carreras}';
+$enlace[] = list_carreras();
 
 cerrar_conex();
 

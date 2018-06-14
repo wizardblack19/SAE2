@@ -2,6 +2,52 @@
 	date_default_timezone_set('America/Guatemala');
 	ini_set('memory_limit', '1G');
   	$sid = 1;
+  	$datos['y'] = date('Y');
+
+  	function sesion(){
+		if(!isset($_COOKIE['perfil']) && (isset($_SESSION['codigo']) && isset($_SESSION['tipo'])) ){
+			datosG($_SESSION['codigo'], $_SESSION['tipo']);
+		}	
+		if((isset($_SESSION['codigo']) && isset($_SESSION['tipo'])) and lugar()=="login" ){
+			header('Location: index.php');
+			exit();
+		}
+		if(!(isset($_SESSION['codigo']) && isset($_SESSION['tipo'])) and lugar()!="login" ){
+			header('Location: login.php');
+		exit();
+		}
+
+	}
+
+
+  	function crearObj($user,$ciclo=""){
+  		global $mysqli;
+  		if($ciclo == "") $ciclo = date('Y');
+  		$usuario 		= 	db("SELECT * FROM usuarios WHERE codigo LIKE '{$user}' limit 0,1",$mysqli);
+  		$archivos 		= 	db("SELECT * FROM archivos WHERE docente LIKE '{$user}' ",$mysqli);
+		$asignaciones 	= 	db("SELECT * FROM asignaciones WHERE maestro LIKE '{$user}' ",$mysqli);
+		$config 		= 	db("SELECT * FROM configuracion",$mysqli);		
+		foreach ($usuario[0] as $key => $value) {
+			$datos['user'][$key]	=		$value;
+		}		
+		foreach ($archivos[0] as $key => $value) {
+			$datos['file'][$key]	=		$value;
+		}
+		foreach ($asignaciones as $key => $value) {
+			$datos['assi'][$key]	=		$value;
+		}
+		foreach ($config as $key => $value) {
+			$datos['conf'][$key]	=		$value;
+		}		
+		if(isset($_SESSION['data'])) unset($_SESSION['data']);
+		$_SESSION['data'] = $datos;
+		
+  	}
+
+
+
+
+
 
 	if(isset($_COOKIE["UNIDAD"])){
 		$unidad = $_COOKIE["UNIDAD"];
@@ -84,21 +130,6 @@
 	function cerrar_conex(){
 		global $mysqli;
 		mysqli_close ($mysqli);
-	}
-
-	function sesion(){
-		if(!isset($_COOKIE['perfil']) && (isset($_SESSION['codigo']) && isset($_SESSION['tipo'])) ){
-			datosG($_SESSION['codigo'], $_SESSION['tipo']);
-		}	
-		if((isset($_SESSION['codigo']) && isset($_SESSION['tipo'])) and lugar()=="login" ){
-			header('Location: index.php');
-			exit();
-		}
-		if(!(isset($_SESSION['codigo']) && isset($_SESSION['tipo'])) and lugar()!="login" ){
-			header('Location: login.php');
-		exit();
-		}
-
 	}
 
 	function salir(){
@@ -223,9 +254,7 @@
 		global $mysqli, $unidad;	
 		$tabla = "";
 		$n = 0;		
-		if($asignaciones = db("SELECT cursos.codigo,cursos.nombre,cursos.grado,cursos.nivel,cursos.carrera,asignaciones.seccion,cursos.jornada 
-			FROM asignaciones INNER JOIN cursos ON asignaciones.curso = cursos.codigo
-			WHERE asignaciones.maestro LIKE '{$codigo}' ",$mysqli)){
+		if($asignaciones = db("SELECT asignaciones.maestro, asignaciones.seccion, cursos_grado.codigo, cursos_grado.perfil, cursos_grado.grado, cursos_grado.nivel, cursos_grado.carrera, cursos_grado.jornada, cursos.nombre, cursos_grado.id FROM 			asignaciones  INNER JOIN cursos_grado ON asignaciones.curso = cursos_grado.id INNER JOIN cursos ON cursos_grado.codigo = cursos.codigo WHERE asignaciones.maestro LIKE '{$codigo}'",$mysqli)){
 		$tabla = '
 		<table class="table datatable-column-search-selects table-bordered">
 			<thead>
@@ -243,7 +272,7 @@
 			$clase 		=		'fila';
 			$n++;			
 			if($unidad > 0){
-				$crono 		=		buscaCrono($curso['codigo'],$curso['seccion'],$unidad);
+				$crono 		=		buscaCrono($curso['id'],$curso['seccion'],$unidad);
 				$clase 		=		color_mis_cursos($crono['estado']);
 			}else{
 				$crono 		= 		0;
@@ -260,21 +289,28 @@
                 <td>{$n}</td>
                 <td>{$curso['codigo']}</td>
                 <td>{$curso['nombre']}</td>
-                <td>{$grado}</td>
+                <td><span style='font-size:12px;'>{$grado}</span> </td>
                 <td>{$curso['seccion']}</td>";
             if($datos==""){
-            $data['codigo'] = $curso['codigo'];
+            $data['codigo'] = $curso['id'];
             $data['curso_t'] = $curso["nombre"];
             $data['grado'] = $grado;
             $data['seccion'] = $curso["seccion"];
             $dato 	= base64_encode(json_encode($data));
-            $tabla .= '<td>
-					<ul class="icons-list">
-						<li><a class="'.$clase_action.'" href="?crear" data-crono="'.$dato.'" title="Cronograma"><i class="icon-pencil7"></i></a></li>
-						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Zona"><i class="icon-trash"></i></a></li>
-						<li><a class="permiso_unidad" href="#" data-popup="tooltip" title="Cuadros Finales"><i class="icon-cog7"></i></a></li>
+            $tabla .= "<td>
+					<ul class='icons-list'>
+						<li>
+							<a class='{$clase_action}' href='?crear' data-crono='{$dato}' title='Cronograma'>
+								<i class='icon-pencil7'></i>
+							</a>
+						</li>
+						<li>
+							<a data-toggle='modal' data-target='#fullzona' class='btn bg-info btn-icon btn-xs permiso_unidad' href='notas.php?data={$dato}' >
+								<i class='icon-table2'></i>
+							</a>
+						</li>
 					</ul>
-				</td>';
+				</td>";
 			}elseif($datos == "clonar"){
 				$tabla .= '<td> <input type="checkbox" class="styled" > </td>';
 			}
@@ -322,15 +358,16 @@
 	}
 
 	function grado($g,$n,$c){
+		@session_start();
 		global $mysqli;
-		$nivel = "";
-		if($n=="DIVER" || $n=="DIVERF"){
-			$n = $c;
+		if($c==""){
+			$ret 	=	json_decode($_SESSION['data']['conf'][6]['valor'],TRUE);
+			$dat 	= 	$ret[$n];
+		}else{
+			$ret 	=	json_decode($_SESSION['data']['conf'][4]['valor'],TRUE);
+			$dat 	= 	$ret[$c];
 		}
-		if($niv = db("select * from carreras where codigo like '{$n}' limit 0,1 ",$mysqli)){
-			$nivel = $niv[0]['nombre'];
-		}
-		$g = grado_t($g).' '.$nivel;
+		$g = grado_t($g).' <br> <small style="font-weight: bold;">'.$dat.'</small>';
 		return $g;
 	}
 
@@ -350,95 +387,56 @@
 		return $select;
 	}
 
-	function Snivel($n=0,$t=0){
-		global $mysqli;
-		//por defecto
-		if($n==0){
-			$name 		= 	'nivel';
-			$required	=	'required';
-			$grup1 		=	'';
-			$grup2 		=	'';
-			$texto		=	'Nivel';
-			$t 			=	' = 1';
-		}elseif($n<>0){
-			$name 		= 	'carrera';
-			$required	=	'';
-			$grup1 		=	'Carreras en Jornada Diaria';
-			$grup2 		=	'Carreras en Jornada Fin de Semana';
-			$grup1		=	'<optgroup class="text-success" label="Carreras en Jornada Diaria">';
-			$grup2		=	'<optgroup class="text-info" label="Carreras en Jornada Fin de Semana">';
-			$texto		=	'Carreras';
-			if($t==0){
-				$t 		= 	' > 1';
-			}else{
-				$t 		=	" = {$t}";
-			}
-		}
-
-		$select = '
-        <select name="'.$name.'" class="form-control" '.$required.' >
-            <option value="">'.$texto.'</option>';
-		if($niveles = db("select codigo, nombre, tipo from carreras where tipo {$t}",$mysqli)){
-	    	foreach ($niveles as $nivel) {
-	        	if($nivel['tipo']==2){
-	        		$grup1 	.= 	"<option value=\"{$nivel['codigo']}\">{$nivel['nombre']}</option>";
-	        	}elseif ($nivel['tipo'] == 3) {
-	        		$grup2	.=	"<option value=\"{$nivel['codigo']}\">{$nivel['nombre']}</option>";
-	        	}else{
-	        		$select .=		"<option value=\"{$nivel['codigo']}\">{$nivel['nombre']}</option>";
-	        	}
-	        }
-
-		    if($n<>0){
-				$grup1		.=		"/<optgroup>";
-				$grup2		.=		"</optgroup>";
-			}
-		}
-	
-		$select 	.=		$grup1;
-		$select 	.=		$grup2;
-
-        $select .= '</select>';
-        return $select;
-	}
-
-	function jornada($n){
-		if($n==1){
-			$n = "Diaria";
-		}elseif($n==2){
-			$n = "Sabado";
-		}elseif($n==3){
-			$n = "Domingo";
+	function Snivel($name,$r=FALSE){
+		global $mysqli, $sid;
+		$select = '';
+		if($name == 'nivel'){
+			$n = db("SELECT valor FROM configuracion WHERE opcion LIKE 'NIVELES' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli);
+			$c = "";
 		}else{
-			$n = "";
+			$n = db("SELECT valor FROM configuracion WHERE opcion LIKE 'CARRERAS' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli);
+			$c = 'Sinput';
 		}
-		return $n;
+			$datos = json_decode($n[0]['valor']);
+			$rq = '';
+			if($r){$rq = 'required'; }
+			$op = ucwords($name);
+			$select .= "<select class='form-control {$c}' name='{$name}' {$rq} >
+						<option value=''>{$op}</option>";
+			foreach ($datos as $key => $value) {
+				$select .= "<option value='{$key}'>{$value}</option>";
+			}
+			$select .= '</select>';
+        return $select;
 	}
 
 	function Sjornada(){
 		global $mysqli;
 		$i = 0;
-		$jornadas = db("select valor from configuracion where opcion LIKE 'JORNADAS' limit 0,1",$mysqli);
+		$jornadas 	=		db("select valor from configuracion where opcion LIKE 'JORNADAS' limit 0,1",$mysqli);
+		$data 		=		$jornadas[0]['valor'];
+		$data 		=		json_decode($data,TRUE);
+
 		$select = '
         <select name="jornada" class="form-control" required>
             <option value="">Jornada</option>';
-	        for ($i = 1; $i <= $jornadas[0]['valor']; $i++) {
-	        	$select .= "<option value=\"{$i}\">".jornada($i).'</option>';
-			}
+	        foreach ($data as $key => $value) {
+	        	$select .= "<option value='{$key}'>{$value}</option>";
+	        }
+
         $select .= '</select>';
         return $select;
 	}
 
-	function cursos($g,$n,$c,$j,$t,$d,$s){
+	function cursos($datos){
 		global $mysqli;
 		$tabla = "";
-		if($c == "" ){
+		if($datos['p'] == "" ){
           $carreras = "";
         }else{
-          $carreras = " and carrera like '{$c}' ";
+          $carreras = " and carrera = ${datos['p']} ";
         }
-		if($cursos = db("select * FROM cursos where grado = {$g} AND nivel LIKE '{$n}' AND jornada = {$j} {$carreras} ",$mysqli)){
-		
+		if($cursos = db("SELECT cursos_grado.id, cursos.codigo, nombre FROM cursos_grado INNER JOIN cursos ON cursos_grado.codigo = cursos.codigo WHERE cursos_grado.grado = ${datos['g']} AND cursos_grado.nivel = ${datos['n']} AND cursos_grado.jornada = ${datos['j']}  ",$mysqli)){
 		$n=0;
 		$tabla = '
 			<table class="table table-xxs table-bordered">
@@ -453,20 +451,21 @@
 			</thead>
 			<tbody>';
 		foreach ($cursos as $curso) {
+			$datos['c'] = $curso['codigo'];
 			$clase = 'fila';
 			$bclase	=	'asignar label-info';
 			$label = 'Asignarme';
-			if($d != ""){
-				$asignado = buscar_asignacion($curso['codigo'],$d,$s);
+			if($datos['d'] != ""){
+				$asignado = buscar_asignacion($datos); 
 				if($asignado){
 					$clase 	= 	'success';
 					$bclase	=	'desasignar label-danger';
 					$label = 'Desasignar';
 				}
 			}
-
-
+			$datos['i'] = $curso['id'];
 			$n++;
+			$dato = base64_encode(json_encode($datos));
 			$tabla .="
 			<tr class='{$clase}'>
                 <td>{$n}</td>
@@ -476,10 +475,9 @@
                 <span class='badge badge-success pull-right'> <i class='icon-checkmark2'></i>  </span>
                 </td>
                 <td>
-					<a data-curso='{$curso['codigo']}' data-seccion='{$s}' data-maestro='{codigo}' class='{$bclase} label  pull-right'> {$label} </a>
+					<a data-datos='{$dato}' class='{$bclase} label  pull-right'> {$label} </a>
                 </td>
             </tr>";
-
 		}
 
 		$tabla .= '
@@ -495,7 +493,7 @@
 		return $tabla;
 	}
 
-	function Sseccion($l=0){
+	function Sseccion(){
 		global $mysqli;
 		$list = '
         <select name="seccion" class="form-control" required>
@@ -514,9 +512,9 @@
         return $list;
 	}
 
-	function buscar_asignacion($codigo,$docente,$seccion){
+	function buscar_asignacion($datos){
 		global $mysqli;
-		if($busca = db("select id from asignaciones where maestro like '{$docente}' and curso like '{$codigo}' and seccion like '{$seccion}' limit 0,1",$mysqli)){
+		if($busca = db("SELECT asignaciones.id FROM asignaciones INNER JOIN cursos_grado ON asignaciones.curso = cursos_grado.id WHERE asignaciones.maestro LIKE '${datos['d']}' AND asignaciones.seccion LIKE '${datos['s']}' AND cursos_grado.codigo = ${datos['c']} AND cursos_grado.grado = ${datos['g']} AND cursos_grado.nivel = ${datos['n']} AND cursos_grado.jornada = ${datos['j']} limit 0,1",$mysqli)){
 			$a = TRUE;
 		}else{
 			$a = FALSE;
@@ -524,11 +522,11 @@
 		return $a;
 	}
 
-	function saveAsignacion($codigo,$docente,$seccion){
+	function saveAsignacion($datos){
 		global $mysqli;
 		$ciclo = date('Y');
 		if ($guardar = $mysqli->prepare("INSERT INTO asignaciones (maestro, curso, seccion, ciclo) VALUES (?,?,?,?)")) {
-			$guardar->bind_param('sssi', $docente, $codigo, $seccion, $ciclo);
+			$guardar->bind_param('sssi', $datos['d'], $datos['i'], $datos['s'], $ciclo);
 	    	$guardar->execute();
 			$id	=	$mysqli->insert_id;
 		}
@@ -540,10 +538,10 @@
 		return $id;
 	}
 
-	function borrarAsignacion($m,$c,$s){
+	function borrarAsignacion($datos){
 		global $mysqli;
 		$ciclo = date('Y');
-		$borrar = "DELETE FROM asignaciones WHERE maestro like '{$m}' and curso like '{$c}' and seccion like '{$s}' and ciclo = ".$ciclo;
+		$borrar = "DELETE FROM asignaciones WHERE maestro like '${datos['d']}' and curso like '${datos['i']}' and seccion like '${datos['s']}' and ciclo = ".$ciclo;
         if($mysqli->query($borrar)){
         	return TRUE;
         }else{
@@ -740,12 +738,13 @@ EOD;
 	}
 
 	function cronoForm($datos){
+		session_start();
 		global $mysqli;
 			$titulos = array();
 			$celda = 0;
-			$busca = db("select valor from configuracion where opcion like 'CRONOGRAMAS' limit 0,1",$mysqli);
+			$busca = $_SESSION['data']['conf'][0];
 		if($busca){
-			$crono = json_decode($busca['0']['valor'], TRUE);
+			$crono = json_decode($busca['valor'], TRUE);
 			$col   = count($crono['titulos']);
 			$tabla = "<form id='cronoForm' autocomplete='off'>
 			<input class='datos' id='seccion' type='hidden' name='seccion' value='{$datos['seccion']}'>
@@ -1143,11 +1142,13 @@ EOT;
   		return $res;
   	}
 
-	function list_niveles(){
+	function list_niveles($tipo=""){
 		global $mysqli;
 		$res="";
 		$sid = 1;
 		$jornada = db("SELECT valor FROM configuracion WHERE opcion LIKE 'NIVELES' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli);
+
+
 		if($jornada){
 			$data = json_decode($jornada[0]['valor'], TRUE);
 	    foreach ($data as $valor) {
@@ -1191,12 +1192,19 @@ EOT;
 		return $html;
 	}
 
-
 	function list_carreras(){
-
-
-
-
-		
+		global $mysqli;
+		$res="";
+		$sid = 1;
+		$jornada = db("SELECT valor FROM configuracion WHERE opcion LIKE 'CARRERAS' and sid LIKE '{$sid}' LIMIT 0,1",$mysqli);
+		if($jornada){
+			$data = json_decode($jornada[0]['valor'], TRUE);
+	    foreach ($data as $valor) {
+	    	$res .= input_textConf ("carrera[]",$valor);
+	    }
+		}else{
+			$res = input_textConf ("carrera[]",$value = "");
+		}
+		return $res;
 	}
 
