@@ -922,6 +922,56 @@ function tabla_usuarios($b,$c){
 
 
 
+ // Mis cursos
+function listadecursos($a){
+		global $mysqli;
+		conectar();	
+		$tabla = "";
+		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
+		if($cursos = db("select * from cursos", $mysqli)){
+			$enlace = "";
+			$tabla = '<table class="table table-bordered datatable-save-state" >
+						<thead>
+							<tr>
+								<th>Codigo</th>
+								<th>Nombre</th>
+								<th class="text-center">Actions</th>
+							</tr>
+						</thead>
+						<tbody>';
+						foreach ($cursos as $curso) {
+					$tabla .="<tr>
+								<td>{$curso['codigo']}</td>
+								<td><a href='#' class='edit' data-title='Edit username' data-pk='{$curso['codigo']}' data-name='nombre'>{$curso['nombre']}</a></td>
+								<td class='text-center'>
+									<ul class='icons-list'>
+											<li class='dropdown'>
+												<a href='#'' class='dropdown-toggle' data-toggle='dropdown'>
+													<i class='icon-menu9'></i>
+												</a>
+
+												<ul class='dropdown-menu dropdown-menu-right'>
+													<li><a href='#'><i class='icon-flip-vertical3'></i> Grados asignados</a></li>
+													<li value='{$curso['codigo']}' class='eliminar'><a href='#'><i class='icon-x'></i> Eliminar</a></li>
+												</ul>
+											</li>
+										</ul>
+									<ul class='icons-list'>
+										<li class='text-danger-600 eliminar' <a href='#'></a></li>
+									</ul>
+								</td>
+							</tr>";
+					}		
+					$tabla .='</tbody>
+					</table>';
+				
+		}else{
+			$tabla = "<h3>No se encontraron registros, verifique con el adimistrador.</h3>";
+		}
+					
+		return $tabla;
+		cerrar_conex();
+	}
 
 
 
@@ -1256,9 +1306,26 @@ function modal_usuarios($a){
 		return $divmodal;
 	}
   
+
+//
+function tabla_pensum($b){
+		global $mysqli;
+		conectar();	
+		$tabla = "";
+		$campo= $b;
+
+			$tabla = "nada";
+					
+				
+				
+		return $tabla;
+		cerrar_conex();
+	}
+
+ 
   
   
   
   
-  
+
   

@@ -1,0 +1,49 @@
+<!-- Plantilla HTML -->
+		
+<div class="panel panel-flat">
+	<div class="panel-heading">
+		<h5 class="panel-title">Lista de cursos</h5>
+		<div class="heading-elements">
+			<ul class="icons-list">
+				<li><button data-toggle="modal" data-target="#modal_agregar_curso" class="btn border-slate text-slate-800 btn-flat"><i class="icon-database-add" id="agregar"></i></button>	</li>
+		    </ul>
+	    </div>
+	</div>
+
+	<div class="panel-body">
+		Edita los cursos y consulta a que grados esta asignado.
+	</div>
+	<div id='cursos'>
+		{tabla}
+	</div>
+				
+</div>
+
+
+<!-- Inline form modal -->
+					<div id="modal_agregar_curso" class="modal fade">
+						<div class="modal-dialog">
+							<div class="modal-content text-center">
+								<div class="modal-header">
+									<h5 class="modal-title">Inline form</h5>
+								</div>
+
+								<form id="formcursos" action="#" class="form-inline">
+									<div class="modal-body">
+										<div class="form-group has-feedback">
+											<label>Nombre del Curso: </label>
+											<input type="text" name="nomcurso" placeholder="Curso" class="form-control">
+											<div class="form-control-feedback">
+												<i class="icon-pencil7 text-muted"></i>
+											</div>
+										</div>
+									</div>
+
+									<div class="modal-footer text-center">
+										<button type="submit" class="btn btn-primary">Agregar <i class="icon-plus22"></i></button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- /inline form modal -->

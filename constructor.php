@@ -248,6 +248,8 @@ function menu(){
 				<li '; if($este_lugar == "archivos"){$data .= "class='active'";}; $data .= '><a href="archivos.php">Archivos</a></li>
 				<li '; if($este_lugar == "configuracion"){$data .= "class='active'";}; $data .= '><a href="configuracion.php">Hideable main navbar</a></li>
 				<li '; if($este_lugar == "docentes"){$data .= "class='active'";}; $data .= '><a href="docentes.php">Docentes</a></li>
+				<li '; if($este_lugar == "cursos"){$data .= "class='active'";}; $data .= '><a href="cursos.php">Cursos</a></li>
+				<li '; if($este_lugar == "pensum"){$data .= "class='active'";}; $data .= '><a href="pensum.php">Crear pensum</a></li>
 				<li class="cosa "><a href="layout_navbar_secondary_hideable.html">Hideable secondary navbar</a></li>
 				<li class="cosa "><a href="layout_sidebar_sticky_custom.html">Sticky sidebar (custom scroll)</a></li>
 				<li class="cosa "><a href="layout_sidebar_sticky_native.html">Sticky sidebar (native scroll)</a></li>
@@ -455,7 +457,29 @@ define('MENU',$menu_s);
 			</head>
 			';
 	}
-	
+	elseif(lugar()=="cursos"){
+		$head .= '<script type="text/javascript" src="assets/js/plugins/tables/datatables/datatables.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/jszip/jszip.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/editable/editable.min.js"></script>			
+			<script type="text/javascript" src="assets/js/core/app.js"></script>
+			<script type="text/javascript" src="assets/js/pages/cursos.js"></script>
+			</head>
+			';
+	}
 
+elseif(lugar()=="pensum"){
+		$head .= '<script type="text/javascript" src="assets/js/plugins/tables/datatables/datatables.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/jszip/jszip.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/editable/editable.min.js"></script>			
+			<script type="text/javascript" src="assets/js/core/app.js"></script>
+			<script type="text/javascript" src="assets/js/pages/pensum.js"></script>
+			</head>
+			';
+	}
 
 	define('HEAD',$head);
+
