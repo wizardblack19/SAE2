@@ -10,7 +10,7 @@ $enlace = array();
 $llave[] = '{codigo}';
 $enlace[] = $perfil['codigo'];
 $llave[] = '{tabla}';
-$enlace[] =tabla_usuarios(1,"docente");
+$enlace[] =tabla_usuarios(2,"docente");
 $llave[] = '{modaluser}';
 $enlace[] =modal_usuarios('1');
 cerrar_conex();

@@ -1183,9 +1183,13 @@ EOT;
 											<div class='col-sm-6'>
 												<label class='display-block text-semibold'>Tipo</label>
 												<select class='form-control' data-width='100%' name='tipo' required>
-													<option value='1'>Maestro</option>
-													<option value='3'>Secretaría</option>
-													<option value='4'>Contabilidad</option>
+													<option value='2'>Maestro</option>
+													<option value='3'>Auxiliar</option>
+													<option value='4'>Cordinador</option>
+													<option value='5'>Administrativo</option>
+													<option value='6'>Secretaria</option>
+													<option value='7'>Libreria</option>
+													<option value='8'>Personal</option>
 													<option value='9'>Administrador</option>
 												</select>
 											</div>
