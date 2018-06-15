@@ -1,11 +1,6 @@
 <?php 
 session_start();
-	$datos	=	array_merge(json_decode(base64_decode($_GET['data']),TRUE),$_SESSION['data']); 
-
-	print_r($datos['conf'][0]['valor']);
-
-
-
+	$datos	=	array_merge(json_decode(base64_decode(urldecode($_GET['data'])),TRUE),$_SESSION['data']); 
 
 
 
@@ -25,7 +20,9 @@ session_start();
 						</div>
 
 						<div class="panel-body">
-							The <code>DataTables</code> is a highly flexible tool, based upon the foundations of progressive enhancement, and will add advanced interaction controls to any HTML table. DataTables has most features enabled by default, so all you need to do to use it with your own tables is to call the construction function. Searching, ordering, paging etc goodness will be immediately added to the table, as shown in this example. <strong>Datatables support all available table styling.</strong>
+
+							<?php 	print_r($datos);?>
+
 						</div>
 
 						<table class="table datatable-basic">

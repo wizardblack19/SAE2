@@ -250,6 +250,18 @@
 		return $r;
 	}
 
+	function notas($datos){
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+
+
 	function vermiscursos($codigo,$datos=""){
 		global $mysqli, $unidad;	
 		$tabla = "";
@@ -269,6 +281,16 @@
 			</thead>
 			<tbody>';
 		foreach ($asignaciones as $curso) {
+			$da = array();
+			$da['DO'] = $curso['maestro'];
+			$da['SE'] = $curso['seccion'];
+			$da['GR'] = $curso['grado'];
+			$da['NI'] = $curso['nivel'];
+			$da['CA'] = $curso['carrera'];
+			$da['JO'] = $curso['jornada'];
+			$da['NO'] = $curso['nombre'];
+			$da['ID'] = $curso['id'];
+
 			$clase 		=		'fila';
 			$n++;			
 			if($unidad > 0){
@@ -281,6 +303,12 @@
 				$clase_action 	= "crear";
 			}else {
 				$clase_action 	= "edit";
+			}
+
+			if($crono['estado']!=1){
+				$a = 'disabled';
+			}else{
+				$a = '';
 			}
 
 			$grado = grado($curso['grado'],$curso['nivel'],$curso['carrera']);
@@ -296,16 +324,18 @@
             $data['curso_t'] = $curso["nombre"];
             $data['grado'] = $grado;
             $data['seccion'] = $curso["seccion"];
-            $dato 	= base64_encode(json_encode($data));
+            $dat 	= base64_encode(json_encode($data));
+
+            $da 	= urlencode(base64_encode(json_encode($da)));
             $tabla .= "<td>
 					<ul class='icons-list'>
 						<li>
-							<a class='{$clase_action}' href='?crear' data-crono='{$dato}' title='Cronograma'>
+							<a tipo='{$clase_action}' class='btn btn-success btn-icon btn-xs {$clase_action}' href='#' crono='{$dat}' title='Cronograma'>
 								<i class='icon-pencil7'></i>
 							</a>
 						</li>
 						<li>
-							<a data-toggle='modal' data-target='#fullzona' class='btn bg-info btn-icon btn-xs permiso_unidad' href='notas.php?data={$dato}' >
+							<a data-toggle='modal' data-target='#fullzona' class='{$a} btn-success btn btn-icon btn-xs permiso_unidad' href='notas.php?data={$da}' >
 								<i class='icon-table2'></i>
 							</a>
 						</li>

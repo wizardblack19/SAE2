@@ -138,9 +138,9 @@ $(function() {
         if(cargarcookie() == 0){
             swal("Error!", "Debe seleccionar unidad a trabajar!", "error");
         }else{
-            var datos = $(this).attr('data-crono');
+            var datos = $(this).attr('crono');
             var docente = $("#codigo").attr('code');
-            var clase = $(this).attr("class");
+            var clase = $(this).attr("tipo");
             var unidad = cargarcookie();
             var docente_t =   Cookies.get("perfil");
             $.post( "core.php?l=cronograma", {datos:datos,docente:docente,unidad:unidad,clase:clase,docente_t:docente_t}, function(data) {
@@ -270,7 +270,6 @@ $(function() {
     $(document).on("click", ".clonar", function (e) {
         e.preventDefault();
         var codigo = $('#codigo').attr('code');
-
         $.post( "core.php?l=clonar",{codigo: codigo, tipo:'clonar'}, function( data ) {
             if(data){
 
@@ -278,7 +277,6 @@ $(function() {
                 $('#Copciones').hide('fast');
                 $('#cursosA').show('fast');
             }
-
         }, "json");
 
 
