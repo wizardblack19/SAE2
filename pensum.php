@@ -15,6 +15,15 @@ $enlace[] = $perfil['codigo'];
 $llave[] = '{tabla}';
 $enlace[] =tabla_pensum('1');
 
+$llave[] = '{grado}';
+$enlace[] = Sgrado(0);
+$llave[] = '{nivel}';
+$enlace[] = Snivel('nivel',true);
+$llave[] = '{carrera}';
+$enlace[] = Snivel('carrera',true);
+
+
 
 $page = str_replace($llave, $enlace, $page);
 echo $page;
+
