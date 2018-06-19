@@ -246,7 +246,7 @@ function menu(){
 				<li '; if($este_lugar == "cursos"){$data .= "class='active'";}; $data .= '><a href="cursos.php">Cursos</a></li>
 				<li '; if($este_lugar == "pensum"){$data .= "class='active'";}; $data .= '><a href="pensum.php">Crear pensum</a></li>
 				<li '; if($este_lugar == "zona"){$data .= "class='active'";}; $data .= '><a href="zona.php">Notas</a></li>
-
+				<li '; if($este_lugar == "preinscripcion"){$data .= "class='active'";}; $data .= '><a href="preinscripcion.php">Preinscribir</a></li>
 
 				<li class="cosa "><a href="layout_navbar_secondary_hideable.html">Hideable secondary navbar</a></li>
 				<li class="cosa "><a href="layout_sidebar_sticky_custom.html">Sticky sidebar (custom scroll)</a></li>
@@ -489,6 +489,23 @@ elseif(lugar()=="pensum"){
 			</head>
 			';
 	}
+
+
+elseif(lugar()=="preinscripcion"){
+		$head .= '<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>	
+			<script type="text/javascript" src="assets/js/core/app.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/validation/validate.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/wizards/steps.min.js"></script>
+			<script type="text/javascript" src="assets/js/pages/preinscripcion.js"></script>
+			</head>
+			';
+	}
+
+
+
+
+
 
 	define('HEAD',$head);
 

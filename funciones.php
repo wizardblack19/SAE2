@@ -891,7 +891,9 @@ function cursosasignar($a){
 		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
 		if($cursos = db("select * from cursos", $mysqli)){
 			$enlace = "";
-			$tabla = '<table class="table table-bordered datatable-save-state" >
+			$tabla = '<table class="table table-bordered datatable-save-state
+
+			" >
 						<thead>
 							<tr>
 								<th></th>
@@ -1347,3 +1349,42 @@ function tabla_pensum($b){
 		return $res;
 	}
 
+
+    function fecha($b){
+    	$opcion=$b;
+    	if ($opcion=='d') {
+
+    		$list = '
+        <select name="dia" class="form-control" required>
+            <option value="">Dia</option>';
+				for ($i = 1; $i <= 31; $i++) {
+				    $list .= "<option value=\"{$i}\">{$i}</option>";
+				}
+			$list .= '</select>';  	
+		}elseif ($opcion=='y') {
+
+    		$list = '
+        <select name="year" class="form-control" required>
+            <option value="">Año</option>';
+				for ($i = date('Y'); $i >= 1960; $i--) {
+				    $list .= "<option value=\"{$i}\">{$i}</option>";
+				}
+			$list .= '</select>';  	
+		}elseif ($opcion=='m') {
+			$meses = array('enero','febrero','marzo','abril','mayo','junio','julio',
+               'agosto','septiembre','octubre','noviembre','diciembre');
+
+    		$list = '
+        <select name="mes" class="form-control" required>
+            <option value="">Mes</option>';
+				for ($i = 0; $i < sizeof($meses); $i++) {
+				    $list .= "<option value=\"{$meses[$i]}\">{$meses[$i]}</option>";
+				}
+			$list .= '</select>';  	
+		}
+
+        
+	return $list;
+    	}
+
+		
