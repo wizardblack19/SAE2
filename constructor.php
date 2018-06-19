@@ -483,7 +483,7 @@ elseif(lugar()=="pensum"){
 			<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/jszip/jszip.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
-			<script type="text/javascript" src="assets/js/plugins/forms/editable/editable.min.js"></script>			
+			<script type="text/javascript" src="assets/js/plugins/forms/editable/editable.min.js"></script>	
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
 			<script type="text/javascript" src="assets/js/pages/pensum.js"></script>
 			</head>

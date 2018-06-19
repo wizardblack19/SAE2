@@ -10,17 +10,19 @@ $enlace = array();
 
 
 
-$llave[] = '{codigo}';
-$enlace[] = $perfil['codigo'];
-$llave[] = '{tabla}';
-$enlace[] =tabla_pensum('1');
+$llave[] 	= '{codigo}';
+$enlace[]  	= $perfil['codigo'];
+$llave[] 	= '{tabla}';
+$enlace[] 	= tabla_pensum('1');
+$llave[] 	= '{cursos}';
+$enlace[] 	= cursosasignar('1');
 
-$llave[] = '{grado}';
-$enlace[] = Sgrado(0);
-$llave[] = '{nivel}';
-$enlace[] = Snivel('nivel',true);
-$llave[] = '{carrera}';
-$enlace[] = Snivel('carrera',true);
+$llave[] 	= '{grado}';
+$enlace[] 	= Sgrado(0);
+$llave[] 	= '{nivel}';
+$enlace[] 	= Snivel('nivel',true);
+$llave[] 	= '{carrera}';
+$enlace[] 	= Snivel('carrera',true);
 
 
 

@@ -883,7 +883,38 @@ function listadecursos($a){
 
 
 
-
+// Asignar cursos
+function cursosasignar($a){
+		global $mysqli;
+			
+		$tabla = "";
+		//Cualquier cambio aqui debe hacerce en CORE id VerArchivos
+		if($cursos = db("select * from cursos", $mysqli)){
+			$enlace = "";
+			$tabla = '<table class="table table-bordered datatable-save-state" >
+						<thead>
+							<tr>
+								<th></th>
+								<th>Nombre</th>
+							</tr>
+						</thead>
+						<tbody>';
+						foreach ($cursos as $curso) {
+					$tabla .="<tr>
+								<td><input type='checkbox' class='opcion control-info'></td>
+								<td>{$curso['nombre']}</td>
+							</tr>";
+					}		
+					$tabla .='</tbody>
+					</table>';
+				
+		}else{
+			$tabla = "<h3>No se encontraron registros, verifique con el adimistrador.</h3>";
+		}
+					
+		return $tabla;
+	
+	}
 
 
 
