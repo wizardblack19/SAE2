@@ -18,12 +18,7 @@ $llave[] 	= '{carrera}';
 $enlace[] 	= Snivel('carrera',true);
 $llave[] 	= '{jornada}';
 $enlace[] 	= sjornada();
-$llave[] 	= '{dia}';
-$enlace[] 	= fecha('d');
-$llave[] 	= '{year}';
-$enlace[] 	= fecha('y');
-$llave[] 	= '{mes}';
-$enlace[] 	= fecha('m');
+
 
 
 

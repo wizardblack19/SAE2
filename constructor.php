@@ -496,6 +496,9 @@ elseif(lugar()=="preinscripcion"){
 			<script type="text/javascript" src="assets/js/core/app.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/forms/validation/validate.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/styling/uniform.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/validation/validate.min.js"></script>
+			<script type="text/javascript" src="assets/js/core/libraries/jasny_bootstrap.min.js"></script>
 			<script type="text/javascript" src="assets/js/plugins/forms/wizards/steps.min.js"></script>
 			<script type="text/javascript" src="assets/js/pages/preinscripcion.js"></script>
 			</head>

@@ -762,3 +762,58 @@ elseif($proceso == "RefreshCursos"){
   print json_encode($info);
   exit;
   }
+
+
+
+  //Agregar preinscrito
+elseif($proceso == "agregar_preinscrito"){ 
+$cod_es =$_POST['cod_alumno'];
+$nom_es =$_POST['nombre'];
+$ap_es=$_POST['apellido'];
+$edad=$_POST['edad'];
+$genero=$_POST['Genero'];
+$jornada=$_POST['jornada'];
+$grado=$_POST['grado'];
+$carrera=$_POST['carrera'];
+$fecha_nac  =$_POST['fechanacimiento'];
+$cod_personal =$_POST['codp'];
+$nom_en =$_POST['Nomen'];
+$ap_en  =$_POST['Apen'];
+$dpi=$_POST['dpi'];
+$parentesco =$_POST['parentesco'];
+$correo=$_POST['email'];
+$direccion=$_POST['direccion'];
+$lugar_trabajo  =$_POST['trabajo'];
+$telefono =$_POST['tel'];
+$movil  =$_POST['cel'];
+$c_aut  =$_POST['aut'];
+$c_p_ins =$_POST['pins'];
+$tipo  =$_POST['tipo'];
+$boleta  =$_POST['boleta'];
+$monto  =$_POST['monto'];
+$fecha_pago  =$_POST['fechapago'];
+$recibo  =$_POST['recibo'];
+$fecha_recibo   =$_POST['fecharecibido'];
+$fecha_preins  =$_POST['fechapreins'];
+@$fe_original  =$_POST['fedad1'];
+@$fe_copia  =$_POST['fedad2'];
+@$fot_dpi =$_POST['fdpi'];
+@$solvencia =$_POST['solvencia'];
+@$conducta =$_POST['certificadp'];
+@$b_calificaciones  =$_POST['calificaciones'];
+$informacion =$_POST['info'];
+
+conectar();
+
+    if ($guardar = $mysqli->prepare("INSERT INTO `preins` (`cod_es`, `nom_es`, `ap_es`, `edad`, `genero`, `jornada`, `grado`, `carrera`, `fecha_nac`, `cod_personal`, `nom_en`, `ap_en`, `dpi`, `parentesco`, `correo`, `direccion`, `lugar_trabajo`, `telefono`, `movil`, `c_aut`, `c_p_ins`, `tipo`, `boleta`, `monto`, `fecha_pago`, `recibo`, `fecha_recibo`, `fecha_preins`, `fe_original`, `fe_copia`, `fot_dpi`, `solvencia`, `conducta`, `b_calificaciones`, `informacion`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")){
+        $guardar->bind_param('sssisiiissssiisssiissiiisissiiiiiis',$cod_es, $nom_es, $ap_es, $edad, $genero, $jornada, $grado, $carrera, $fecha_nac, $cod_personal, $nom_en, $ap_en, $dpi, $parentesco, $correo, $direccion, $lugar_trabajo, $telefono, $movil, $c_aut, $c_p_ins, $tipo, $boleta, $monto, $fecha_pago, $recibo, $fecha_recibo, $fecha_preins, $fe_original, $fe_copia, $fot_dpi, $solvencia, $conducta, $b_calificaciones, $informacion);
+        $guardar->execute();
+        $info['error']=false;  
+        }else{
+        $info['error']=true;
+        }
+echo mysqli_error($mysqli);
+echo json_encode($info);
+cerrar_conex();        
+  exit;
+}
