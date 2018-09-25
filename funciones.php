@@ -4,6 +4,21 @@
   	$sid = 1;
   	$datos['y'] = date('Y');
 
+
+    if(date('m') > 6){
+      $ciclo2 = date('y')+1; 
+      $ciclo  = date('Y')+1;
+    }else{
+      $ciclo2 = date('y');
+      $ciclo  = date('Y');
+    }
+
+	if(isset($_COOKIE["UNIDAD"])){
+		$unidad = $_COOKIE["UNIDAD"];
+	}else{
+		$unidad = 0;
+	}    
+
   	function sesion(){
 		if(!isset($_COOKIE['perfil']) && (isset($_SESSION['codigo']) && isset($_SESSION['tipo'])) ){
 			datosG($_SESSION['codigo'], $_SESSION['tipo']);
@@ -19,6 +34,16 @@
 
 	}
 
+	function edad($fecha_nac){
+		$fecha_nac = strtotime($fecha_nac);
+		$edad = date('Y', $fecha_nac);
+		if (($mes = (date('m') - date('m', $fecha_nac))) < 0) {
+			$edad++;
+		}elseif ($mes == 0 && date('d') - date('d', $fecha_nac) < 0) {
+			$edad++;
+		}
+	return date('Y') - $edad;
+	}
 
   	function crearObj($user,$ciclo=""){
   		global $mysqli;
@@ -27,33 +52,30 @@
   		$archivos 		= 	db("SELECT * FROM archivos WHERE docente LIKE '{$user}' ",$mysqli);
 		$asignaciones 	= 	db("SELECT * FROM asignaciones WHERE maestro LIKE '{$user}' ",$mysqli);
 		$config 		= 	db("SELECT * FROM configuracion",$mysqli);		
-		foreach ($usuario[0] as $key => $value) {
-			$datos['user'][$key]	=		$value;
-		}		
-		foreach ($archivos[0] as $key => $value) {
-			$datos['file'][$key]	=		$value;
-		}
-		foreach ($asignaciones as $key => $value) {
-			$datos['assi'][$key]	=		$value;
-		}
-		foreach ($config as $key => $value) {
-			$datos['conf'][$key]	=		$value;
-		}		
+		if($usuario)
+			foreach ($usuario[0] as $key => $value) {
+				$datos['user'][$key]	=		$value;
+			}
+
+		if($archivos)
+			foreach ($archivos[0] as $key => $value) {
+				$datos['file'][$key]	=		$value;
+			}
+		
+		if($asignaciones)
+			foreach ($asignaciones as $key => $value) {
+				$datos['assi'][$key]	=		$value;
+			}
+
+		if($config)
+			foreach ($config as $key => $value) {
+				$datos['conf'][$key]	=		$value;
+			}
+
 		if(isset($_SESSION['data'])) unset($_SESSION['data']);
-		$_SESSION['data'] = $datos;
+			$_SESSION['data'] = $datos;
 		
   	}
-
-
-
-
-
-
-	if(isset($_COOKIE["UNIDAD"])){
-		$unidad = $_COOKIE["UNIDAD"];
-	}else{
-		$unidad = 0;
-	}
 
 	function eliminar_tildes($cadena){
 	    $cadena = str_replace(
@@ -91,19 +113,24 @@
 
 	function lugar(){
 		$nombre_archivo = parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
-			if ( strpos($nombre_archivo, '/') !== FALSE ){
-			    //de ser asi, lo eliminamos, y solamente nos quedamos con el nombre sin su extension
+			if ( strpos($nombre_archivo, '/') !== FALSE )
 			    @$nombre_archivo = preg_replace('/\.php$/', '' ,array_pop(explode('/', $nombre_archivo)));
-			}
-		return $nombre_archivo;
+			return $nombre_archivo;
 	}
 
 	function conectar(){
 		global $mysqli;	
-		define("HOST", "saerds.cjotq8aa2kgw.us-east-2.rds.amazonaws.com");
-		define("USER", "sae_system"); 
-		define("PASSWORD", "Sae5621*");
-		define("DATABASE", "sae");
+		if($_SERVER['HTTP_HOST']=="sae3.cecfuentedevida.net"){
+			define("HOST", "saerds.cjotq8aa2kgw.us-east-2.rds.amazonaws.com");
+			define("USER", "sae_system"); 
+			define("PASSWORD", "Sae5621*");
+			define("DATABASE", "sae");
+		}else{
+			define("HOST", "rds-sae3.cy26alpbkpys.us-east-2.rds.amazonaws.com");
+			define("USER", "sae"); 
+			define("PASSWORD", "Ceci5652*");
+			define("DATABASE", "sae3");
+		}
 		@$mysqli = mysqli_connect(HOST, USER, PASSWORD) or die ("No se ha podido conectar al servidor. <br />Error: ".mysqli_connect_error());
 		@$db = mysqli_select_db( $mysqli, DATABASE ) or die ( "Upps! No es posible conectar con la base de datos." );
 		$acentos = $mysqli->query("SET NAMES 'utf8'");
@@ -112,7 +139,6 @@
 	function db ($sql, $c) {
 		$res = false;
 		$q = ($c === null)?@mysqli_query($sql):@mysqli_query($c,$sql);
-
 		if($q) {
 			if(strpos(strtolower($sql),'select') === 0) {
 				$res = array();
@@ -249,18 +275,6 @@
 		}
 		return $r;
 	}
-
-	function notas($datos){
-		
-		
-		
-		
-		
-		
-		
-		
-	}
-
 
 	function vermiscursos($codigo,$datos=""){
 		global $mysqli, $unidad;	
@@ -1148,16 +1162,6 @@ EOT;
 		return $divmodal;
 	}
   
-  
-  
-	function cuadro_zona($codigo="",$datos=""){
-	  	global $mysqli, $sid;
-	  	if($codigo == ""){
-	  		$datos = "<h3>Seleccione docente a verificar.</h3>";
-		}
-  		return $datos;
-  	}
-  
   	function list_jornadas(){
 	  	global $mysqli, $sid;
 	  	$res = "";
@@ -1238,3 +1242,251 @@ EOT;
 		return $res;
 	}
 
+	function logico ($n){
+		if($n==0){
+			$r = "No";
+		}else{
+			$r = "Si";
+		}
+		return $r;
+	}
+
+	function generoUser($n){
+		if($n == "1"){
+			$r = "Masculino";
+		}else{
+			$r = "Femenino";
+		}
+		return $r;
+
+	}
+
+	function parentesco($n){
+		if($n == "1"){
+			$r = "Padre";
+		}elseif($n == "2"){
+			$r = "Madre";
+		}else{
+			$r = "Encargado";
+		}
+		return $r;
+	}
+
+	function carreras($n){
+		if($n > 0){
+			@session_start();
+			$key = array_search('CARRERAS', array_column($_SESSION['data']['conf'], 'opcion'));
+			$data = json_decode($_SESSION['data']['conf'][$key]['valor'],TRUE);//Carreras Data
+			return $data[$n];
+		}
+	}
+
+	function jornada($n){
+		if($n>0){
+			@session_start();
+			$key = array_search('JORNADAS', array_column($_SESSION['data']['conf'], 'opcion'));
+			$data = json_decode($_SESSION['data']['conf'][$key]['valor'],TRUE);//Jornada Data
+			return $data[$n];
+		}
+	}
+
+	function nivel($n){
+		if($n>0){
+			@session_start();
+			$key = array_search('NIVELES', array_column($_SESSION['data']['conf'], 'opcion'));
+			$data = json_decode($_SESSION['data']['conf'][$key]['valor'],TRUE);//Nivel Data
+			return $data[$n];
+		}
+	}
+
+	function tipoS($n){
+		if($n == 0){
+			$r = 'Pre Inscripción';
+		}else{
+			$r = 'Inscripción';
+		}
+		return $r;
+	}
+
+	function construye($idA,$n){
+		global $mysqli,$ciclo;
+		//consultas
+		$alumno		= 	db("SELECT * FROM usuarios WHERE usuarios.id = '{$idA}' limit 0,1",$mysqli);		
+		$encargado 	=	db("SELECT * FROM usuarios WHERE usuarios.id = '{$alumno['0']['relacion']}' limit 0,1",$mysqli);
+		$data 		=	db("SELECT * FROM data WHERE data.codigo = '{$encargado['0']['codigo']}' limit 0,1",$mysqli);
+		foreach ($n as $value) {
+			if($value == "{{N.encargado}}"){
+				$r[] = $encargado[0]['nombre'].' '.$encargado[0]['apellido'];
+			}else if($value == "{{T.dia}}"){
+				$r[] = dia_t (date('N')).' '.date('d');
+			}else if($value == "{{T.mes}}"){
+				$r[] = mes_t (date('n'));
+			}else if($value == "{{T.year}}"){
+				$r[] = strtolower(NumeroALetras::convertir(date('Y')));
+			}else if($value == "{{ciclo.4}}"){
+				$r[] = $ciclo;
+			}else if($value == "{{ciclo.2}}"){
+				$r[] = $ciclo2;
+			}else if($value == "{{year}}"){
+				$r[] = date('Y');
+			}else if($value == "{{day}}"){
+				$r[] = date('d');
+			}else if($value == "{{dpi}}"){
+				$r[] = $data[0]['dpi'];
+			}else if($value == "{{parentesco}}"){ 
+				$r[] =parentesco($alumno[0]['parentesco']);
+			}else if($value == "{{N.alumno}}"){
+				$r[] = $alumno[0]['nombre'].' '.$alumno[0]['apellido'];
+			}else if($value == "{{E.alumno}}"){
+				$r[] = edad($alumno[0]['nacimiento']);
+			}else if($value == "{{T.ciclo}}"){
+				$r[] = strtolower(NumeroALetras::convertir($ciclo));
+			}
+			else{
+				$r[] = "";
+			}
+
+
+		}
+
+
+
+
+
+
+
+
+
+		return $r;
+	}
+
+
+
+
+	function dia_t ($dia){
+		if($dia == 1){
+			$r = "Lunes";
+		}elseif($dia == 2){
+			$r = "Martes";
+		}elseif($dia == 3){
+			$r = "Miercoles";
+		}elseif($dia == 4){
+			$r = "Jueves";
+		}elseif($dia == 5){
+			$r = "Viernes";
+		}elseif($dia == 6){
+			$r = "Sabado";
+		}elseif($dia == 7){
+			$r = "Domingo";
+		}
+		return $r;
+	}
+
+	function mes_t ($r){
+		if($r == 1){
+			$r = "Enero";
+		}elseif($r == 2){
+			$r = "Febrero";
+		}elseif($r == 3){
+			$r = "Marzo";
+		}elseif($r == 4){
+			$r = "Abril";
+		}elseif($r == 5){
+			$r = "Mayo";
+		}elseif($r == 6){
+			$r = "Junio";
+		}elseif($r == 7){
+			$r = "Julio";
+		}elseif($r == 8){
+			$r = "Agosto";
+		}elseif($r == 9){
+			$r = "Septiembre";
+		}elseif($r == 10){
+			$r = "Octubre";
+		}elseif($r == 11){
+			$r = "Noviembre";
+		}elseif($r == 12){
+			$r = "Diciembre";
+		}
+		return $r;
+	}
+
+
+	class NumeroALetras	{
+    private static $UNIDADES = ['','UN ','DOS ','TRES ','CUATRO ','CINCO ','SEIS ','SIETE ','OCHO ','NUEVE ','DIEZ ','ONCE ','DOCE ','TRECE ','CATORCE ','QUINCE ','DIECISEIS ','DIECISIETE ','DIECIOCHO ','DIECINUEVE ','VEINTE '];
+    private static $DECENAS = ['VENTI','TREINTA ','CUARENTA ','CINCUENTA ','SESENTA ','SETENTA ','OCHENTA ','NOVENTA ','CIEN '];
+    private static $CENTENAS = ['CIENTO ','DOSCIENTOS ','TRESCIENTOS ','CUATROCIENTOS ','QUINIENTOS ','SEISCIENTOS ','SETECIENTOS ','OCHOCIENTOS ','NOVECIENTOS '];
+    public static function convertir($number, $moneda = '', $centimos = '', $forzarCentimos = false)
+    {
+        $converted = '';
+        $decimales = '';
+        if (($number < 0) || ($number > 999999999)) {
+            return 'No es posible convertir el numero a letras';
+        }
+        $div_decimales = explode('.',$number);
+        if(count($div_decimales) > 1){
+            $number = $div_decimales[0];
+            $decNumberStr = (string) $div_decimales[1];
+            if(strlen($decNumberStr) == 2){
+                $decNumberStrFill = str_pad($decNumberStr, 9, '0', STR_PAD_LEFT);
+                $decCientos = substr($decNumberStrFill, 6);
+                $decimales = self::convertGroup($decCientos);
+            }
+        }
+        else if (count($div_decimales) == 1 && $forzarCentimos){
+            $decimales = 'CERO ';
+        }
+        $numberStr = (string) $number;
+        $numberStrFill = str_pad($numberStr, 9, '0', STR_PAD_LEFT);
+        $millones = substr($numberStrFill, 0, 3);
+        $miles = substr($numberStrFill, 3, 3);
+        $cientos = substr($numberStrFill, 6);
+        if (intval($millones) > 0) {
+            if ($millones == '001') {
+                $converted .= 'UN MILLON ';
+            } else if (intval($millones) > 0) {
+                $converted .= sprintf('%sMILLONES ', self::convertGroup($millones));
+            }
+        }
+        if (intval($miles) > 0) {
+            if ($miles == '001') {
+                $converted .= 'MIL ';
+            } else if (intval($miles) > 0) {
+                $converted .= sprintf('%sMIL ', self::convertGroup($miles));
+            }
+        }
+        if (intval($cientos) > 0) {
+            if ($cientos == '001') {
+                $converted .= 'UN ';
+            } else if (intval($cientos) > 0) {
+                $converted .= sprintf('%s ', self::convertGroup($cientos));
+            }
+        }
+        if(empty($decimales)){
+            $valor_convertido = $converted . strtoupper($moneda);
+        } else {
+            $valor_convertido = $converted . strtoupper($moneda) . ' CON ' . $decimales . ' ' . strtoupper($centimos);
+        }
+        return $valor_convertido;
+    }
+    private static function convertGroup($n)
+    {
+        $output = '';
+        if ($n == '100') {
+            $output = "CIEN ";
+        } else if ($n[0] !== '0') {
+            $output = self::$CENTENAS[$n[0] - 1];
+        }
+        $k = intval(substr($n,1));
+        if ($k <= 20) {
+            $output .= self::$UNIDADES[$k];
+        } else {
+            if(($k > 30) && ($n[2] !== '0')) {
+                $output .= sprintf('%sY %s', self::$DECENAS[intval($n[1]) - 2], self::$UNIDADES[intval($n[2])]);
+            } else {
+                $output .= sprintf('%s%s', self::$DECENAS[intval($n[1]) - 2], self::$UNIDADES[intval($n[2])]);
+            }
+        }
+        return $output;
+    }
+}

@@ -241,21 +241,11 @@ function menu(){
 			<ul>
 				<li '; if($este_lugar == "miscursos"){$data .= "class='active'";}; $data .= '><a href="miscursos.php">Mis Cursos</a></li>
 				<li '; if($este_lugar == "archivos"){$data .= "class='active'";}; $data .= '><a href="archivos.php">Archivos</a></li>
-
-				<li '; if($este_lugar == "docentes"){$data .= "class='active'";}; $data .= '><a href="docentes.php">Docentes</a></li>
 				<li '; if($este_lugar == "zona"){$data .= "class='active'";}; $data .= '><a href="zona.php">Notas</a></li>
 
-
-
-
-				<li class="cosa "><a href="layout_navbar_secondary_hideable.html">Hideable secondary navbar</a></li>
-				<li class="cosa "><a href="layout_sidebar_sticky_custom.html">Sticky sidebar (custom scroll)</a></li>
-				<li class="cosa "><a href="layout_sidebar_sticky_native.html">Sticky sidebar (native scroll)</a></li>
-				<li class="cosa "><a href="layout_footer_fixed.html">Fixed footer</a></li>
-				<li class="navigation-divider"></li>
-				<li class="cosa "><a href="boxed_default.html">Boxed with default sidebar</a></li>
-				<li class="cosa "><a href="boxed_mini.html">Boxed with mini sidebar</a></li>
+				<!--
 				<li class="cosa "><a href="boxed_full.html">Boxed full width</a></li>
+				-->
 			</ul>
 		</li>
 		<li>
@@ -263,58 +253,19 @@ function menu(){
 			<ul>
 				<li '; if($este_lugar == "configuracion"){$data .= "class='active'";}; $data .= '><a href="configuracion.php">Institucional</a></li>
 				<li '; if($este_lugar == "academico"){$data .= "class='active'";}; $data .= '><a href="academico.php">Académico</a></li>
-				<li><a href="index.html" id="layout3">Layout 3 <span class="label bg-warning-400">Current</span></a></li>
-				<li><a href="../../../layout_4/LTR/default/index.html" id="layout4">Layout 4</a></li>
-				<li><a href="../../../layout_5/LTR/default/index.html" id="layout5">Layout 5</a></li>
-				<li class="disabled"><a href="../../../layout_6/LTR/default/index.html" id="layout6">Layout 6 <span class="label label-transparent">Coming soon</span></a></li>
+				<li '; if($este_lugar == "docentes"){$data .= "class='active'";}; $data .= '><a href="docentes.php">Usuarios</a></li>
 			</ul>
 		</li>
 		<li>
-			<a href="#"><i class="icon-droplet2"></i> <span>Color system</span></a>
+			<a href="#"><i class="icon-droplet2"></i> <span>Administrativo</span></a>
 			<ul>
-				<li><a href="colors_primary.html">Primary palette</a></li>
-				<li><a href="colors_danger.html">Danger palette</a></li>
+				<li '; if($este_lugar == "inscripcion" || $este_lugar == "data"){$data .= "class='active'";}; $data .= '><a href="inscripcion.php">Inscripción</a></li>
 				<li><a href="colors_success.html">Success palette</a></li>
 				<li><a href="colors_warning.html">Warning palette</a></li>
-				<li><a href="colors_info.html">Info palette</a></li>
-				<li class="navigation-divider"></li>
-				<li><a href="colors_pink.html">Pink palette</a></li>
-				<li><a href="colors_violet.html">Violet palette</a></li>
-				<li><a href="colors_purple.html">Purple palette</a></li>
-				<li><a href="colors_indigo.html">Indigo palette</a></li>
-				<li><a href="colors_blue.html">Blue palette</a></li>
-				<li><a href="colors_teal.html">Teal palette</a></li>
-				<li><a href="colors_green.html">Green palette</a></li>
-				<li><a href="colors_orange.html">Orange palette</a></li>
-				<li><a href="colors_brown.html">Brown palette</a></li>
-				<li><a href="colors_grey.html">Grey palette</a></li>
-				<li><a href="colors_slate.html">Slate palette</a></li>
+
 			</ul>
 		</li>
-		<li>
-			<a href="#"><i class="icon-stack"></i> <span>Starter kit</span></a>
-			<ul>
-				<li><a href="starters/horizontal_nav.html">Horizontal navigation</a></li>
-				<li><a href="starters/1_col.html">1 column</a></li>
-				<li><a href="starters/2_col.html">2 columns</a></li>
-				<li>
-					<a href="#">3 columns</a>
-					<ul>
-						<li><a href="starters/3_col_dual.html">Dual sidebars</a></li>
-						<li><a href="starters/3_col_double.html">Double sidebars</a></li>
-					</ul>
-				</li>
-				<li><a href="starters/4_col.html">4 columns</a></li>
-				<li><a href="starters/layout_boxed.html">Boxed layout</a></li>
-				<li class="navigation-divider"></li>
-				<li><a href="starters/layout_navbar_fixed_main.html">Fixed main navbar</a></li>
-				<li><a href="starters/layout_navbar_fixed_secondary.html">Fixed secondary navbar</a></li>
-				<li><a href="starters/layout_navbar_fixed_both.html">Both navbars fixed</a></li>
-				<li><a href="starters/layout_sidebar_sticky.html">Sticky sidebar</a></li>
-			</ul>
-		</li>
-		<li><a href="changelog.html"><i class="icon-list-unordered"></i> <span>Changelog <span class="label bg-blue-400">1.6</span></span></a></li>
-		<li><a href="../../RTL/default/index.html"><i class="icon-width"></i> <span>RTL version</span></a></li>
+
 		<!-- /main -->
 	</ul>
 	</div>';
@@ -331,12 +282,12 @@ $sidebar = <<<EOT
 				<div class="sidebar-fixed">
 					<div class="sidebar-content">
 						<div class="sidebar-category sidebar-category-visible">
-							<div class="category-title h6">
+							<!--<div class="category-title h6">
 								<span>Opciones</span>
 								<ul class="icons-list">
 									<li><a href="#" data-action="collapse"></a></li>
 								</ul>
-							</div>
+							</div>-->
 								$user2 $menu
 						</div>
 					</div>
@@ -356,19 +307,24 @@ $head = '
 		<meta id="codigo" source="SAE2" code="" />
 		<meta id="verUNIDAD1" source="SAE2" code="0" />
 		<title>SAE - Sistema Administrativo Educativo</title>
+		<link rel="manifest" href="manifest.json" />
+		<link rel="icon" type="image/png" href="assets/images/icon/launcher-icon-1x.png" />
 		<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
 		<link href="assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
 		<link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css">
-		<link href="assets/css/core.css" rel="stylesheet" type="text/css">
-		<link href="assets/css/components.css" rel="stylesheet" type="text/css">
-		<link href="assets/css/colors.css" rel="stylesheet" type="text/css">
+		<link href="assets/css/core.min.css" rel="stylesheet" type="text/css">
+		<link href="assets/css/components.min.css" rel="stylesheet" type="text/css">
+		<link href="assets/css/colors.min.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="assets/js/plugins/loaders/pace.min.js"></script>
 		<script type="text/javascript" src="assets/js/core/libraries/jquery.min.js"></script>
 		<script type="text/javascript" src="assets/js/core/libraries/bootstrap.min.js"></script>
 		<script type="text/javascript" src="assets/js/plugins/loaders/blockui.min.js"></script>
 		<script type="text/javascript" src="assets/js/pages/print.js"></script>
-		<script type="text/javascript" src="assets/js/plugins/forms/styling/uniform.min.js"></script>
-		
+		<script type="text/javascript" src="assets/js/sisyphus.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+		<link rel="stylesheet" href="assets/js/plugins/sceditor/minified/themes/default.min.css" />
+		<script src="assets/js/plugins/sceditor/minified/sceditor.min.js"></script>
+
 		';
 
 
@@ -466,7 +422,34 @@ define('MENU',$menu_s);
 			</head>
 			';
 	}
-	
 
+
+	elseif(lugar()=="inscripcion"){
+		$head .= '
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/datatables.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/selects/select2.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/jszip/jszip.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/editable/editable.min.js"></script>			
+			<script type="text/javascript" src="assets/js/core/app.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/wizards/steps.min.js"></script>
+
+			<script type="text/javascript" src="assets/js/plugins/forms/styling/switchery.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/styling/switch.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/inputs/inputmask.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/styling/uniform.min.js"></script>
+			<script type="text/javascript" src="assets/js/plugins/forms/validation/validate.min.js"></script>
+			<script type="text/javascript" src="assets/js/pages/inscripcion.js"></script>
+			</head>
+			';
+	}
+
+	elseif(lugar()=="data"){
+		$head .= '		
+			<script type="text/javascript" src="assets/js/core/app.js"></script>
+			<script type="text/javascript" src="assets/js/pages/data.js"></script>
+			</head>
+			';
+	}	
 
 	define('HEAD',$head);

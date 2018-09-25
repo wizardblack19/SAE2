@@ -1,0 +1,477 @@
+			<!-- Plantilla HTML -->
+			<div class="content-wrapper">
+				<div class="panel panel-flat">
+					<div class="panel-heading">
+						<h5 class="panel-title">Inscripciones <small id="saved" style="display: none;"></small> </h5>
+
+						<div class="heading-elements">
+							<a id="buscar" style="display: none;" href="#cancel"><span class="label bg-indigo-400 heading-text"> Buscar </span></a>
+							<a id="cancel" href="#cancel"><span class="label bg-indigo-400 heading-text">+ Borrar Todo</span></a>
+
+		            	</div>
+
+					</div>
+					<div class="panel-body">
+						<div class="panel-group">
+				            <!-- Saving state -->
+				            <div class="card">
+			                	<form class="wizard-form steps-state-saving" method="post" action="core.php?l=inscripcion" autocomplete="off">
+									<h6>Alumno</h6>
+									<fieldset>
+										<input id="idp" type="hidden" name="idp" valor="{{idp}}" value="{{idp}}">
+										<div class="row">
+											<div class="col-md-4">
+												<div class="form-group">
+													<label>Tipo</label>
+													<select name="tipo" class="form-control">
+														<option value="1">Inscripción</option>
+														<option value="0">Pre - Inscripción</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-md-2">
+												<div class="form-group">
+													<label>Codigó</label>
+													<input type="text" maxlength="7" name="codigoA" class="form-control" />
+												</div>
+											</div>
+
+											<div class="col-md-2">
+												<div class="form-group">
+													<label>MINEDUC:</label>
+													<input type="text" name="mineduc" maxlength="7" class="form-control" />
+												</div>
+											</div>
+
+											<div class="col-md-4">
+												<div class="form-group">
+												<label>Genero:</label>
+													<div class="form-check form-check-inline">
+														<label class="radio" for="ge1">
+															<div class="col-xs-6"> 
+																<input id="ge1" name="genero" class="form-control" style="width: 0.5px;" value="1" type="radio" checked />
+																	<div class="bcheck">Masculino</div>
+															</div>
+														</label>
+														<label class="radio" for="ge2">
+															<div class="col-xs-6"> 
+																<input id="ge2" name="genero" class="form-control" style="width: 0.5px;" value="0" type="radio" />
+																	<div class="bcheck">Femenino</div>
+															</div>
+														</label>
+													</div>
+												</div>
+											</div>
+        					
+										</div>
+
+										<div class="row">
+
+											<div class="col-md-4">
+												<div class="form-group">
+													<label>Nombres:</label>
+													<input name="nombre" type="text" class="form-control" />
+												</div>
+											</div>
+
+											<div class="col-md-4">
+												<div class="form-group">
+													<label>Apellidos:</label>
+													<input name="apellido" type="text" class="form-control" />
+												</div>
+											</div>
+
+											<div class="col-md-4">
+												<label>Fecha de Nacimiento:</label>
+												<input type="text" maxlength="10" name="nacimiento" value="{{hoy}}" class="form-control datepicker-menus" />
+											</div>
+
+										</div>
+
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label># Celular:</label>
+													<input type="text" name="celular" class="form-control" placeholder="9999 9999" data-mask="9999 9999" />
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Correo Electronico:</label>
+													<input type="email" name="correo" class="form-control" />
+												</div>
+											</div>
+										</div>
+									</fieldset>
+
+									<h6>Grado</h6>
+									<fieldset>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Jornada:</label>
+					                                {{jornada}}
+				                                </div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Nivel:</label>
+				                                    {{nivel}}
+			                                    </div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Grado:</label>
+					                                {{grado}}
+				                                </div>
+											</div>
+
+											<div class="col-md-6">
+												<div class="form-group">
+													<label>Sección:</label>
+				                                    {{seccion}}
+			                                    </div>
+											</div>
+										</div>
+
+
+										<div class="row">
+											<div class="col-md-10">
+												<div class="form-group">
+													<label>Carrera:</label>
+					                                {{carrera}}
+				                                </div>
+											</div>
+
+
+											<div class="col-md-2">
+												<div class="form-group">
+												<label>Graduando:</label>
+													<div class="form-check form-check-inline">
+														<label class="radio" for="gr1">
+															<div class="col-xs-6"> 
+																<input id="gr1" name="graduando" class="form-control" style="width: 1px;" value="1" type="radio" />
+																	<div class="bcheck">Si</div>
+															</div>
+														</label>
+														<label class="radio" for="gr2">
+															<div class="col-xs-6"> 
+																<input id="gr2" name="graduando" class="form-control" style="width: 1px;" value="0" type="radio" checked />
+																	<div class="bcheck">No</div>
+															</div>
+														</label>
+													</div>
+												</div>
+											</div>
+
+
+										</div>										
+									</fieldset>
+
+									<h6 class="papa">Encargado</h6>
+									<fieldset class="papa">
+										<div class="row">
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Nombres:</label>
+					                                <input type="text" name="n_encargado" class="form-control" />
+				                                </div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Apellidos:</label>
+					                                <input type="text" name="a_encargado" class="form-control" />
+				                                </div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Fecha de Nacimiento:</label>
+					                                <input type="text" maxlength="10" value="{{hoy}}" name="fn_encargado" class="form-control datepicker-menus" />
+				                                </div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Nacionalidad:</label>
+					                                <input type="text" name="nacionalidad" class="form-control">
+				                                </div>
+											</div>
+
+
+										</div>
+
+										<div class="row">
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Estado Civil:</label>
+					                                <input type="text" name="civil" class="form-control">
+				                                </div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Profesión:</label>
+					                                <input type="text" name="profesion" class="form-control">
+				                                </div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>DPI:</label>
+					                                <input type="text" name="dpi" data-mask="9999 99999 9999" class="form-control" />
+				                                </div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Extendido en:</label>
+					                                <input type="text" name="extendido" class="form-control">
+				                                </div>
+											</div>
+
+										</div>
+
+										<div class="row">
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Dirección:</label>
+					                                <input type="text" name="direccion"  class="form-control">
+				                                </div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label># Celular:</label>
+					                                <input type="text" name="Celular" data-mask="9999 9999" class="form-control">
+				                                </div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label># Casa</label>
+					                                <input type="text" name="casa" data-mask="9999 9999" class="form-control">
+				                                </div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Correo:</label>
+					                                <input type="email" name="email" class="form-control">
+				                                </div>
+											</div>
+
+										</div>
+									</fieldset>
+
+									<h6 class="papa">Trabajo</h6>
+									<fieldset class="papa">
+										<div class="row">
+											<div class="col-md-4">
+												<div class="form-group">
+													<label>Lugar de Trabajo:</label>
+					                                <input type="text" name="trabajo" class="form-control">
+				                                </div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group">
+													<label>Dirección:</label>
+					                                <input type="text" name="d_trabajo" class="form-control">
+				                                </div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group">
+													<label># Telefono de trabajo</label>
+					                                <input type="text" name="t_trabajo" data-mask="9999 9999 ext 99999" class="form-control">
+				                                </div>
+											</div>
+
+
+										</div>
+
+										<div class="row">
+											<div class="form-group">
+												<label>Observaciones:</label>
+			                                    <textarea name="observaciones" rows="6" cols="4" class="form-control"></textarea>
+	                                		</div>
+										</div>										
+									</fieldset>
+
+									<h6>De Pago</h6>
+									<fieldset>
+										<div class="row">
+											<div class="col-md-4">
+												<div class="form-group">
+													<label class="d-block">Descuento en Colegiatura:</label>
+				                                    <input type="text" name="d_col" class="form-control" placeholder="Neto en Quetzales">
+			                                    </div>
+											</div>
+
+											<div class="col-md-8">
+												<div class="form-group">
+													<label>Exonerar</label>
+				                                   <select name="exonerar[]" class="Sinput form-control" multiple="true">
+				                                   		<option >Cuota Anual</option>
+				                                   		<option >Computación</option>
+				                                   		<option>Enero</option>
+				                                   		<option>Febrero</option>
+				                                   		<option>Marzo</option>
+				                                   		<option>Abril</option>
+				                                   		<option>Mayo</option>
+				                                   		<option>Junio</option>
+				                                   		<option>Julio</option>
+				                                   		<option>Agosto</option>
+				                                   		<option>Septiembre</option>
+				                                   		<option>Octubre</option>
+				                                   		<option>Noviembre</option>
+				                                   		<option>Diciembre</option>
+
+				                                   </select>
+
+			                                    </div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-4">
+												<div class="form-group">
+													<label class="d-block">Descuento en Inscripción:</label>
+				                                    <input name="d_ins" type="text" class="form-control" placeholder="Neto en Quetzales">
+			                                    </div>
+											</div>
+											
+											<div class="col-md-3">
+												<div class="form-group">
+													<label>Parentesco:</label>
+					                                <select name="Parentesco" class="form-control">
+					                                	<option value="1">Padre</option>
+					                                	<option value="2">Madre</option>
+					                                	<option value="3">Encargado</option>
+					                                </select>
+				                                </div>
+											</div>
+										</div>
+
+									</fieldset>
+									<h6>Revisar</h6>
+									<fieldset>
+
+
+										<div class="row">
+
+
+
+											<div class="col-md-12">
+
+												<div class="btn-group btn-group-justified">
+													<div class="btn-group">
+														<button type="button" class="btn btn-success update">Actualizar</button>
+													</div>
+
+													<div class="btn-group">
+														<button style="display: none;" type="button" class="btn btn-info imprimir revisar">Imprimir Borrador</button>
+													</div>
+
+													<div class="btn-group">
+														<button style="display: none;" type="submit" class="btn btn-warning revisar save">Guardar</button>
+													</div>
+
+													<div class="btn-group">
+														<button style="display: none;" type="button" class="btn btn-danger revisar reset">Cancelar</button>
+													</div>									
+												</div>
+
+											</div>
+
+
+
+										</div>										
+
+										<div style="display: none;" class="revisar">
+											<div id="imprimir">
+												<div class="row visible-print-block">
+													<div class="col-md-6" style="width: 49%;float: left;">
+														SAE 3.0
+													</div>
+													<div class="col-md-6" style="width: 49%;float: left;">
+														<p align="right" id="tipo"></p>
+													</div>
+
+												</div>
+												<hr />
+												<div class="row" style="margin-bottom: 10px;">
+													<div class="col-md-6" style="width: 49%;float: left;" >
+														<h4>Alumno</h4>
+														<p>Mineduc: <span id="mineduc"></span></p>
+														<p>Nombre: <span id="nombre"></span></p>
+														<p>Apellido: <span id="apellido"></span></p>
+														<p>Genero: <span id="genero"></span></p>
+														<p>Nacimiento: <span id="nacimiento"></span></p>
+														<p>Celular: <span id="celular"></span></p>
+														<p>Correo: <span id="correo"></span></p>
+													</div>
+													<div class="col-md-6" style="width: 49%;float: left;">
+														<h4>Grado a Cursar</h4>
+														<p>Codigo: <span id="codigoA"></span></p>
+														<p>Jornada: <span id="jornada"></span></p>
+														<p>Nivel: <span id="nivel"></span></p>
+														<p>Grado: <span id="grado"></span></p>
+														<p>Sección: <span id="seccion"></span></p>
+														<p>Carrera: <span id="carrera"></span></p>
+														<p>Es graduando: <span id="graduando"></span></p>
+													</div>
+
+												</div>
+												<hr />
+												<div class="row papa" style="margin-bottom: 10px;">
+													<div class="col-md-6" style="width: 49%;float: left;" >
+														<h4>Encargado</h4>
+														<p>Nombre: <span id="n_encargado"></span></p>
+														<p>Apellido: <span id="a_encargado"></span></p>
+														<p>Nacimiento: <span id="fn_encargado"></span></p>
+														<p>Nacionalidad: <span id="nacionalidad"></span></p>
+														<p>Estado Civil: <span id="civil"></span></p>
+														<p>Profesión: <span id="profesion"></span></p>
+														<p>DPI: <span id="dpi"></span></p>
+														<p>Extendido en: <span id="extendido"></span></p>
+														<p>Dirección: <span id="direccion"></span></p>
+														<p>Celular: <span id="Celular"></span></p>
+														<p>Casa: <span id="casa"></span></p>
+														<p>Correo: <span id="email"></span></p>
+													</div>
+													<div class="col-md-6" style="width: 49%;float: left;" >
+														<h4>De Trabajo</h4>
+														<p>Lugar de Trabajo: <span id="trabajo"></span></p>
+														<p>Dirección: <span id="d_trabajo"></span></p>
+														<p>Tel Trabajo y EXT: <span id="t_trabajo"></span></p>
+														<p>Parentesco: <span id="Parentesco"></span></p>
+														<p>Observaciones: <span id="observaciones"></span></p>
+														<h4>De Pago</h4>
+														<p>Descuento en Inscripción: <span id="d_ins"></span></p>
+														<p>Exoneración: <span id="exonerar"></span></p>
+														<p>Descuento en Colegiatura: <span id="d_col"></span></p>
+														
+													</div>
+
+												</div>
+												<hr />
+												<div class="row visible-print-block">
+													<div class="col-md-6" style="margin-bottom: 10px;">
+														<p>f) _____________________________________</p>
+														<p style="padding-left: 5px;"> Firma Padre, Madre o Encargado</p>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</fieldset>
+
+								</form>
+				            </div>
+				            <!-- /saving state -->
+						</div>
+					</div>
+				</div>
+
+			</div>
+			
+
+
+

@@ -1,0 +1,29 @@
+{
+  "short_name": "SAE",
+  "id": "com.gtdesarrollo.sae",
+  "name": "Sistema Administrativo Educativo",
+  "theme_color": "#00bcd4",
+  "display": "standalone",
+  "background_color": "#B2EBF2",
+  "orientation": "landscape",  
+  "start_url": "index.php?launcher=true",
+  "icons": [
+    {
+      "src": "assets/images/icon/launcher-icon-1x.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "assets/images/icon/launcher-icon-2x.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "assets/images/icon/launcher-icon-4x.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+
+  "gcm_sender_id": "103953800507"
+}

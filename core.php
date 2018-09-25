@@ -10,6 +10,7 @@ include("funciones.php");
     $data = array();
 	//Procesos
 
+
   if ($proceso == "login"){
     if(isset($_POST['codigo']) && isset($_POST['pass'])){
       conectar();
@@ -718,3 +719,115 @@ elseif($proceso == "updatefile"){
   print json_encode($info);
   exit;
   }
+
+  elseif($proceso == "inscripcion"){
+    conectar();
+    global $ciclo2,$ciclo;
+    foreach ($_POST as $key => $value) {
+      $$key = $value;
+    }
+
+    $pass = date('y')+date('m')+date('d').date('His');
+    $pass = base64_encode($pass);
+    if ($guardar = $mysqli->prepare("INSERT INTO usuarios (mineduc,codigo,password,nombre,apellido,genero,correo,celular,nacimiento,tipo,parentesco) VALUES (?,?,?,?,?,?,?,?,?,?,?)")) {
+      $guardar->bind_param('sssssssssss', $mineduc,$codigoA,$pass,$nombre,$apellido,$genero,$correo,$celular,$nacimiento,$tipo,$Parentesco);
+      $guardar->execute();
+      $idA = $mysqli->insert_id;
+    }
+      if($idA>0){
+        if($codigoA == ""){
+        $codigoA = $ciclo2.str_pad($idA, 5, "0", STR_PAD_LEFT);
+          if ($guardar = $mysqli->prepare("UPDATE usuarios SET codigo = ? WHERE id = ?")) {
+            $guardar->bind_param('si', $codigoA, $idA);
+            $guardar->execute();
+          }
+        }
+
+      $idP = $idp;
+      if($idp==0){
+        $codigo2 = '0'.$codigoA;
+        $tipo = 1;
+          if ($guardar = $mysqli->prepare("INSERT INTO usuarios (codigo,password,nombre,apellido,correo,celular,nacimiento,tipo,relacion) VALUES (?,?,?,?,?,?,?,?,?)")){
+            $guardar->bind_param('sssssssss', $codigo2, $pass, $n_encargado, $a_encargado, $email, $Celular, $fn_encargado, $tipo, $idA);
+            $guardar->execute();
+            $idP = $mysqli->insert_id;
+          }
+        }
+        if($codigoA == ""){
+        $codigoA = $ciclo2.str_pad($idA, 5, "0", STR_PAD_LEFT);
+          if ($guardar = $mysqli->prepare("UPDATE usuarios SET codigo = ?, relacion = ?  WHERE id = ?")) {
+            $guardar->bind_param('ssi', $codigoA, $idP, $idA);
+            $guardar->execute();
+          }
+        }else{
+          if ($guardar = $mysqli->prepare("UPDATE usuarios SET relacion = ? WHERE id = ?")) {
+            $guardar->bind_param('si', $idP, $idA);
+            $guardar->execute();
+          }
+        }
+
+          if($idP > 0)
+            if ($guardar = $mysqli->prepare("INSERT INTO ciclos (codigo,ciclo,jornada,nivel,grado,seccion,carrera,graduando,tipo) VALUES (?,?,?,?,?,?,?,?,?)")){
+              $guardar->bind_param('sssssssss', $codigoA, $ciclo, $jornada, $nivel, $grado, $seccion, $carrera, $graduando, $tipo);
+              $guardar->execute();
+              $idC = $mysqli->insert_id;
+            }
+          if($d_col != "" && $exonerar != "" && $d_ins !="")
+            if ($guardar = $mysqli->prepare("INSERT INTO depago (codigo,Dcolegiatura,exonerar,Dinscripcion,ciclo) VALUES (?,?,?,?,?)")){
+              $exonerar = implode(",",$exonerar);
+              $guardar->bind_param('sssss', $codigoA, $d_col, $exonerar, $d_ins,$idC);
+              $guardar->execute();
+            }
+
+            if($idC > 0 && $idp == 0)  
+            if ($guardar = $mysqli->prepare("INSERT INTO data (codigo, nacionalidad, civil, profesion, dpi, extendido, direccion, telefono, trabajo, Tdireccion, Ttelefono, observaciones) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")){
+              $guardar->bind_param('ssssssssssss', $codigo2, $nacionalidad, $civil, $profesion, $dpi, $extendido, $direccion, $casa, $trabajo,  $d_trabajo, $t_trabajo, $observaciones);
+              $guardar->execute();
+            }
+      }
+
+      if(mysqli_error($mysqli)){
+        $data['Nerror'] = 1;
+        $data['msg'] = "Ocurrio un error al intentar guardar. \nError: ".mysqli_error($mysqli);        
+      }else{
+        $data['Nerror'] = 0;
+        $data['msg'] = "Registro guardado exitosamente...";
+      }
+      $data['codigo'] = $codigoA;
+      $data['idp'] = $idP ?? "";
+      $data['ida'] = $idA;
+      $data['tipo'] = $tipo;
+
+
+    cerrar_conex();
+    echo json_encode($data);
+    exit;
+  }
+
+  elseif($proceso == "dataINS"){
+    foreach ($_POST as $key => $value) {
+      if($key == 'graduando'){
+        $data[$key] = logico($value);
+      }elseif($key == 'grado'){
+        $data[$key] =  grado_t($value);
+      }elseif($key == 'genero'){
+        $data[$key] =  generoUser($value);
+      }elseif($key == 'Parentesco'){
+        $data[$key] =  parentesco($value);
+      }elseif($key == 'jornada'){
+        $data[$key] =  jornada($value);
+      }elseif($key == 'nivel'){
+        $data[$key] =  nivel($value);
+      }elseif($key == 'carrera'){
+        $data[$key] =  carreras($value);
+      }elseif($key == 'tipo'){
+        $data[$key] =  tipoS($value);
+      }
+      else{
+        $data[$key] = $value;
+      };
+    }
+    echo json_encode($data);
+    exit;
+  }
+
